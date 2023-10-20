@@ -1,12 +1,8 @@
 #include "main.h"
-#include "api"
+#include "api.h"
+#include "variables.h"
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
+// A callback function for LLEMU's center button.
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
@@ -17,78 +13,59 @@ void on_center_button() {
 	}
 }
 
-/**
- * Runs initialization code. This occurs as soon as the program is started.
- *
- * All other competition modes are blocked by initialize; it is recommended
- * to keep execution time for this mode under a few seconds.
- */
+// Runs initialization code. This occurs as soon as the program is started.
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
+	pros::lcd::set_text(1, "Version 1.0");
 
 	pros::lcd::register_btn1_cb(on_center_button);
+
+	// initialize the chassis motors:
+
 }
 
-/**
- * Runs while the robot is in the disabled state of Field Management System or
- * the VEX Competition Switch, following either autonomous or opcontrol. When
- * the robot is enabled, this task will exit.
- */
+// Runs while the robot is in the disabled state
 void disabled() {}
 
-/**
- * Runs after initialize(), and before autonomous when connected to the Field
- * Management System or the VEX Competition Switch. This is intended for
- * competition-specific initialization routines, such as an autonomous selector
- * on the LCD.
- *
- * This task will exit when the robot is enabled and autonomous or opcontrol
- * starts.
- */
+// Runs after initialize(), and before autonomous when connected to the Field Management System or the VEX Competition Switch.
 void competition_initialize() {}
 
-/**
- * Runs the user autonomous code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the autonomous
- * mode. Alternatively, this function may be called in initialize or opcontrol
- * for non-competition testing purposes.
- *
- * If the robot is disabled or communications is lost, the autonomous task
- * will be stopped. Re-enabling the robot will restart the task, not re-start it
- * from where it left off.
- */
+// Runs the user autonomous code.
 void autonomous() {}
 
-/**
- * Runs the operator control code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the operator
- * control mode.
- *
- * If no competition control is connected, this function will run immediately
- * following initialize().
- *
- * If the robot is disabled or communications is lost, the
- * operator control task will be stopped. Re-enabling the robot will restart the
- * task, not resume it from where it left off.
- */
+// Runs the operator control code.
 void opcontrol() {
+	// Objects:
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_mtr(1);
-	pros::Motor right_mtr(2);
+	pros::Motor left1   (LEFT_WHEELS_PORT_1);
+	pros::Motor left2   (LEFT_WHEELS_PORT_2);
+	pros::Motor left3   (LEFT_WHEELS_PORT_3);
+	pros::Motor right1  (RIGHT_WHEELS_PORT_1, true); // 'true' could be removed if neccessary...
+	pros::Motor right2  (RIGHT_WHEELS_PORT_2, true);
+	pros::Motor right3  (RIGHT_WHEELS_PORT_3, true);
 
+	// Driver Code:
 	while (true) {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
 		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
 		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
+
+#ifdef TANK // Compile tank style controls:
 		int left = master.get_analog(ANALOG_LEFT_Y);
 		int right = master.get_analog(ANALOG_RIGHT_Y);
 
-		left_mtr = left;
-		right_mtr = right;
+		left1 = left; left2 = left; left3 = left;
+		right1 = right; right2 = right; right3 = right;
+#else       // Compile arcade style controls:
+		int power = master.get_analog(ANALOG_LEFT_Y);
+		int turn = master.get_analog(ANALOG_RIGHT_X);
+		int left = power + turn;
+		int right = power - turn;
+		
+		left1.move(left); left2.move(left); left3.move(left);
+		right1.move(right); right2.move(right); right3.move(right);
+#endif
 
-		pros::delay(20);
+		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
 }
