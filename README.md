@@ -12,7 +12,7 @@ Serves as an entry point for all the code. Here is were the main code is kept. T
 * **disabled()** : Called when the robot has been disabled (things like braking make most sense here).
 * **competition_initialize()** : This function is called before **autonomous()**, and right after **initialize()**. stuff specific to competition is best here.
 * **autonomous()** : This function is called when our bot is on autonomous mode. All driver code for autonomous mode goes in here.
-* **opcontroll()** : This function is called during driver mode, where the driver has to controll it via a Controller.
+* **opcontrol()** : This function is called during driver mode, where the driver has to controll it via a Controller.
 
 ### Variables.h:
 This file serves as a clean mediator between our code, and our data. This file includes universal constants that can be fine tuned. 
