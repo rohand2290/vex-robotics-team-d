@@ -1,6 +1,5 @@
 #include "main.h"
-#include "api.h"
-#include "variables.h"
+#include "depend.h"
 
 // A callback function for LLEMU's center button.
 void on_center_button() {
@@ -18,10 +17,7 @@ void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Version 1.0");
 
-	pros::lcd::register_btn1_cb(on_center_button);
-
-	// initialize the chassis motors:
-
+	// pros::lcd::register_btn1_cb(on_center_button);
 }
 
 // Runs while the robot is in the disabled state
@@ -44,27 +40,53 @@ void opcontrol() {
 	pros::Motor right2  (RIGHT_WHEELS_PORT_2, true);
 	pros::Motor right3  (RIGHT_WHEELS_PORT_3, true);
 
+	pros::Motor intake_left (INTAKE_PORT_LEFT);
+	pros::Motor intake_right (INTAKE_PORT_RIGHT, true);
+
+	pros::Motor turret (TURRET_PORT);
+
+	pros::ADIDigitalOut puncher1 (PUNCHER_PORT_1, 0);
+	pros::ADIDigitalOut puncher2 (PUNCHER_PORT_2, 0);
+
+	pros::lcd::print(1, "starting code...");
+	pros::delay(1000);
+
 	// Driver Code:
 	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
 
-#ifdef TANK // Compile tank style controls:
-		int left = master.get_analog(ANALOG_LEFT_Y);
-		int right = master.get_analog(ANALOG_RIGHT_Y);
-
-		left1 = left; left2 = left; left3 = left;
-		right1 = right; right2 = right; right3 = right;
-#else       // Compile arcade style controls:
 		int power = master.get_analog(ANALOG_LEFT_Y);
 		int turn = master.get_analog(ANALOG_RIGHT_X);
-		int left = power + turn;
-		int right = power - turn;
+		int left = (power + turn) * MOTOR_PERCENT;
+		int right = (power - turn) * MOTOR_PERCENT;
 		
+		// set the wheels...
 		left1.move(left); left2.move(left); left3.move(left);
 		right1.move(right); right2.move(right); right3.move(right);
-#endif
+
+		if (master.get_digital(DIGITAL_L1)) {
+			intake_left.move(INTAKE_IN_SPEED);
+			intake_right.move(INTAKE_IN_SPEED);
+		} else if (master.get_digital(DIGITAL_R1)) {
+			intake_left.move(INTAKE_OUT_SPEED);
+			intake_right.move(INTAKE_OUT_SPEED);
+		}
+		if (master.get_digital(DIGITAL_UP)) {
+			turret.move(TURRET_SPEED);
+		} else if (master.get_digital(DIGITAL_DOWN)) {
+			turret.move(-TURRET_SPEED);
+		}
+		puncher1.set_value(master.get_digital(DIGITAL_A));
+		puncher2.set_value(master.get_digital(DIGITAL_A));
+
+		pros::lcd::print(1, "left: %i", left);
+		pros::lcd::print(2, "right: %i", right);
+		pros::lcd::print(3, "l1 (intake): %i | r1 (shoot): %i", 
+			master.get_digital(DIGITAL_L1),
+			master.get_digital(DIGITAL_R1));
+		pros::lcd::print(4, "up (turret): %i | dn (turret): %i", 
+			master.get_digital(DIGITAL_UP),
+			master.get_digital(DIGITAL_DOWN));
+		pros::lcd::print(5, "A: %i", master.get_digital(DIGITAL_A));
 
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
