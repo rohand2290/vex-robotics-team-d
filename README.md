@@ -19,3 +19,4 @@ This file serves as a clean mediator between our code, and our data. This file i
 It can store a range of things including ports, numerical constants, etc. 
 
 Please keep in mind that there is no hesitation in abstracting further (a file for motor stuff, math stuff, sensor stuff, etc.), as it might be crucial in the long run.
+Just make sure to include it in this README file with a good explaination, so we can avoid confusion.
