@@ -48,9 +48,14 @@ void opcontrol() {
 	pros::ADIDigitalOut puncher1 (PUNCHER_PORT_1, 0);
 	pros::ADIDigitalOut puncher2 (PUNCHER_PORT_2, 0);
 
+	int initpos = 1;
+	pros::ADIDigitalOut pto1 (PTO_PORT_1, initpos);
+	pros::ADIDigitalOut pto2 (PTO_PORT_2, initpos);
+
 	pros::lcd::print(1, "starting code...");
 	pros::delay(1000);
 
+	bool temp = false;
 	// Driver Code:
 	while (true) {
 
@@ -75,6 +80,17 @@ void opcontrol() {
 		} else if (master.get_digital(DIGITAL_DOWN)) {
 			turret.move(-TURRET_SPEED);
 		}
+		if (master.get_digital(DIGITAL_Y)) {
+			if (!temp) temp = true;
+			else continue;			
+			// toggle
+			if (!initpos) initpos = 1;
+			else initpos = 0;
+
+			pto1.set_value(initpos);
+			pto2.set_value(initpos);
+		} if (!master.get_digital(DIGITAL_Y)) temp = false;
+
 		puncher1.set_value(master.get_digital(DIGITAL_A));
 		puncher2.set_value(master.get_digital(DIGITAL_A));
 
@@ -86,7 +102,9 @@ void opcontrol() {
 		pros::lcd::print(4, "up (turret): %i | dn (turret): %i", 
 			master.get_digital(DIGITAL_UP),
 			master.get_digital(DIGITAL_DOWN));
-		pros::lcd::print(5, "A: %i", master.get_digital(DIGITAL_A));
+		pros::lcd::print(5, "A: %i | initpos (pto): %i", 
+			master.get_digital(DIGITAL_A),
+			initpos);
 
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}

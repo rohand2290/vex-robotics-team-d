@@ -27,7 +27,9 @@
 
 // Puncher:
 #define PUNCHER_PORT_1 19 // Defines the 1st port of the puncher.
-#define PUNCHER_PORT_2 20  
+#define PUNCHER_PORT_2 20 // Defines the 2nd port of the puncher.
+#define PTO_PORT_1 21
+#define PTO_PORT_2 22
 
 // ======== PREFERENCES: =========
 
