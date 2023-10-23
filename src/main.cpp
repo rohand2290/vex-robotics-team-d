@@ -80,16 +80,6 @@ void opcontrol() {
 		} else if (master.get_digital(DIGITAL_DOWN)) {
 			turret.move(-TURRET_SPEED);
 		}
-		if (master.get_digital(DIGITAL_Y)) {
-			if (!temp) temp = true;
-			else continue;			
-			// toggle
-			if (!initpos) initpos = 1;
-			else initpos = 0;
-
-			pto1.set_value(initpos);
-			pto2.set_value(initpos);
-		} if (!master.get_digital(DIGITAL_Y)) temp = false;
 
 		puncher1.set_value(master.get_digital(DIGITAL_A));
 		puncher2.set_value(master.get_digital(DIGITAL_A));
@@ -107,5 +97,16 @@ void opcontrol() {
 			initpos);
 
 		pros::delay(OPCONTROL_LOOP_DELAY);
+
+		if (master.get_digital(DIGITAL_Y)) {
+			if (!temp) temp = true;
+			else continue;			
+			// toggle
+			if (!initpos) initpos = 1;
+			else initpos = 0;
+
+			pto1.set_value(initpos);
+			pto2.set_value(initpos);
+		} if (!master.get_digital(DIGITAL_Y)) temp = false;
 	}
 }
