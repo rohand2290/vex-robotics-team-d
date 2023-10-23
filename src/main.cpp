@@ -33,9 +33,9 @@ void autonomous() {}
 void opcontrol() {
 	// Objects:
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left1   (LEFT_WHEELS_PORT_1);
-	pros::Motor left2   (LEFT_WHEELS_PORT_2);
-	pros::Motor left3   (LEFT_WHEELS_PORT_3);
+	pros::Motor left1          (LEFT_WHEELS_PORT_1);
+	pros::Motor left2          (LEFT_WHEELS_PORT_2);
+	pros::Motor left3          (LEFT_WHEELS_PORT_3);
 	pros::Motor right1  (RIGHT_WHEELS_PORT_1, true); // 'true' could be removed if neccessary...
 	pros::Motor right2  (RIGHT_WHEELS_PORT_2, true);
 	pros::Motor right3  (RIGHT_WHEELS_PORT_3, true);
@@ -56,18 +56,34 @@ void opcontrol() {
 	pros::delay(1000);
 
 	bool temp = false;
+	// Variables for Smooth Drive:
+#ifdef SMOOTH_STYLE
+	int speedr = 0; // speed for right
+	int speedl = 0; // speed for left
+#endif
 	// Driver Code:
 	while (true) {
-
 		int power = master.get_analog(ANALOG_LEFT_Y);
 		int turn = master.get_analog(ANALOG_RIGHT_X);
 		int left = (power + turn) * MOTOR_PERCENT;
 		int right = (power - turn) * MOTOR_PERCENT;
 		
 		// set the wheels...
+#ifndef SMOOTH_STYLE
 		left1.move(left); left2.move(left); left3.move(left);
 		right1.move(right); right2.move(right); right3.move(right);
-
+#else
+		if (speedl != left) { 
+			if (speedl > left) speedl--;
+			else speedl++;
+		}
+		if (speedr != right) {
+			if (speedr > right) speedr--;
+			else speedr++;
+		}
+		left1.move(speedl); left2.move(speedl); left3.move(speedl);
+		right1.move(speedr); right2.move(speedr); right3.move(speedr);
+#endif
 		if (master.get_digital(DIGITAL_L1)) {
 			intake_left.move(INTAKE_IN_SPEED);
 			intake_right.move(INTAKE_IN_SPEED);
