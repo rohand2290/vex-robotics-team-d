@@ -33,12 +33,12 @@ void autonomous() {}
 void opcontrol() {
 	// Objects:
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left1          (LEFT_WHEELS_PORT_1);
-	pros::Motor left2          (LEFT_WHEELS_PORT_2);
+	pros::Motor left1          (LEFT_WHEELS_PORT_1, true);
+	pros::Motor left2          (LEFT_WHEELS_PORT_2, true);
 	pros::Motor left3          (LEFT_WHEELS_PORT_3);
-	pros::Motor right1  (RIGHT_WHEELS_PORT_1, true); // 'true' could be removed if neccessary...
-	pros::Motor right2  (RIGHT_WHEELS_PORT_2, true);
-	pros::Motor right3  (RIGHT_WHEELS_PORT_3, true);
+	pros::Motor right1         (RIGHT_WHEELS_PORT_1); // 'true' could be removed if neccessary...
+	pros::Motor right2         (RIGHT_WHEELS_PORT_2);
+	pros::Motor right3         (RIGHT_WHEELS_PORT_3, true);
 
 	pros::Motor intake_left (INTAKE_PORT_LEFT);
 	pros::Motor intake_right (INTAKE_PORT_RIGHT, true);
@@ -65,8 +65,8 @@ void opcontrol() {
 	while (true) {
 		int power = master.get_analog(ANALOG_LEFT_Y);
 		int turn = master.get_analog(ANALOG_RIGHT_X);
-		int left = (power + turn) * MOTOR_PERCENT;
-		int right = (power - turn) * MOTOR_PERCENT;
+		int left = (power + (turn * TURN_PERCENT)) * MOTOR_PERCENT;
+		int right = (power - (turn * TURN_PERCENT)) * MOTOR_PERCENT;
 		
 		// set the wheels...
 #ifndef SMOOTH_STYLE

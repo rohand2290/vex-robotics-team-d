@@ -10,16 +10,16 @@
 // ======== PORTS: ===========
 
 // Left drive:
-#define LEFT_WHEELS_PORT_1 10 // Defines the 1st port of the left wheels.
-#define LEFT_WHEELS_PORT_2 11 // Defines the 2nd port of the left wheels.
-#define LEFT_WHEELS_PORT_3 12 // Defines the 3rd port of the left wheels.
+#define LEFT_WHEELS_PORT_1 11 // Defines the 1st port of the left wheels.
+#define LEFT_WHEELS_PORT_2 12 // Defines the 2nd port of the left wheels.
+#define LEFT_WHEELS_PORT_3 20 // Defines the 3rd port of the left wheels.
 // Right drive:
-#define RIGHT_WHEELS_PORT_1 13 // Defines the 1st port of the right wheels.
-#define RIGHT_WHEELS_PORT_2 14 // Defines the 2nd port of the right wheels.
-#define RIGHT_WHEELS_PORT_3 15 // Defines the 3rd port of the right wheels.
+#define RIGHT_WHEELS_PORT_1 1 // Defines the 1st port of the right wheels.
+#define RIGHT_WHEELS_PORT_2 4 // Defines the 2nd port of the right wheels.
+#define RIGHT_WHEELS_PORT_3 5 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
-#define INTAKE_PORT_LEFT 16 // Defines the 1st port of the left side of intake.
+#define INTAKE_PORT_LEFT 10 // Defines the 1st port of the left side of intake.
 #define INTAKE_PORT_RIGHT 17 // Defines the 2nd port of the right side of intake.
 
 // Turret:
@@ -34,7 +34,8 @@
 // ======== PREFERENCES: =========
 
 // Driving style:
-#define SMOOTH_STYLE // comment if a smooth style is not desired. (Smooth style is when motors smoothly transition to a speed).
+// #define SMOOTH_STYLE // comment if a smooth style is not desired. (Smooth style is when motors smoothly transition to a speed).
+#define TURN_PERCENT 1 // percentage (0-1) for max turn sensibility.
 
 // Motor speeds:
 #define INTAKE_IN_SPEED 32 // intake speed inwards
