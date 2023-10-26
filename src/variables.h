@@ -34,7 +34,7 @@
 // ======== PREFERENCES: =========
 
 // Driving style:
-// #define SMOOTH_STYLE // comment if a smooth style is not desired. (Smooth style is when motors smoothly transition to a speed).
+#define SMOOTH_STYLE // comment if a smooth style is not desired. (Smooth style is when motors smoothly transition to a speed).
 #define TURN_PERCENT 1 // percentage (0-1) for max turn sensibility.
 
 // Motor speeds:
@@ -49,6 +49,6 @@
 // If it is too large, it might decrease sensitivity and increase lag.
 // this can also be used to change smoothness if smooth drive is enabled.
 // If it is too little, it might starve the proccessor from energy with too much load.
-#define OPCONTROL_LOOP_DELAY 40 // ms
+#define OPCONTROL_LOOP_DELAY 5 // ms
 
 #endif // VARIABLES_H
