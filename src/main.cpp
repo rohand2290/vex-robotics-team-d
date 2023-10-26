@@ -93,8 +93,13 @@ void opcontrol() {
 		}
 		if (master.get_digital(DIGITAL_UP)) {
 			turret.move(TURRET_SPEED);
-		} else if (master.get_digital(DIGITAL_DOWN)) {
+		} else {
+			turret.move(0);
+		}
+		if (master.get_digital(DIGITAL_DOWN)) {
 			turret.move(-TURRET_SPEED);
+		} else {
+			turret.move(0);
 		}
 
 		puncher1.set_value(master.get_digital(DIGITAL_A));
