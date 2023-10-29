@@ -69,21 +69,16 @@ void opcontrol() {
 		int right = (power - (turn * TURN_PERCENT)) * MOTOR_PERCENT;
 		
 		// set the wheels...
-#ifndef SMOOTH_STYLE
-		left1.move(left); left2.move(left); left3.move(left);
-		right1.move(right); right2.move(right); right3.move(right);
-#else
-		if (speedl != left) { 
-			if (speedl > left) speedl--;
-			else speedl++;
-		}
-		if (speedr != right) {
-			if (speedr > right) speedr--;
-			else speedr++;
-		}
+		if (speedl >= left) speedl -= SMOOTH_CONSTANT;
+		else if (speedl < left) speedl += SMOOTH_CONSTANT;
+		
+		if (speedr >= right) speedr -= SMOOTH_CONSTANT;
+		else if (speedr < right) speedr += SMOOTH_CONSTANT;
+
 		left1.move(speedl); left2.move(speedl); left3.move(speedl);
 		right1.move(speedr); right2.move(speedr); right3.move(speedr);
-#endif
+
+		// actions acording to buttons:
 		if (master.get_digital(DIGITAL_L1)) {
 			intake_left.move(INTAKE_IN_SPEED);
 			intake_right.move(INTAKE_IN_SPEED);
@@ -105,6 +100,7 @@ void opcontrol() {
 		puncher1.set_value(master.get_digital(DIGITAL_A));
 		puncher2.set_value(master.get_digital(DIGITAL_A));
 
+		// print sensory info to the sceen:
 		pros::lcd::print(1, "left: %i", left);
 		pros::lcd::print(2, "right: %i", right);
 		pros::lcd::print(3, "l1 (intake): %i | r1 (shoot): %i", 

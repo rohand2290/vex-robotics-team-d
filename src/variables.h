@@ -35,13 +35,14 @@
 
 // Driving style:
 #define SMOOTH_STYLE // comment if a smooth style is not desired. (Smooth style is when motors smoothly transition to a speed).
-#define TURN_PERCENT 1 // percentage (0-1) for max turn sensibility.
+#define SMOOTH_CONSTANT 5
 
 // Motor speeds:
 #define INTAKE_IN_SPEED 32 // intake speed inwards
 #define INTAKE_OUT_SPEED -64 // intake speed inwards
 #define TURRET_SPEED 16 // the turret speed
 #define MOTOR_PERCENT 1 // percentage (0-1) for max power to be used (0.75 means the maximum ever reached will be 75%)
+#define TURN_PERCENT 1 // percentage (0-1) for max turn sensibility.
 
 // ======= Miscelanious: =========
 
