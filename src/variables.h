@@ -34,7 +34,6 @@
 // ======== PREFERENCES: =========
 
 // Driving style:
-#define SMOOTH_STYLE // comment if a smooth style is not desired. (Smooth style is when motors smoothly transition to a speed).
 #define SMOOTH_CONSTANT 5 // This constant effects the smoothness of the transition, the larger the less smooth.
 
 // Motor speeds:
