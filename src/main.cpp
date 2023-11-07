@@ -76,8 +76,10 @@ void opcontrol() {
 
 	bool temp = false;
 	// Variables for Smooth Drive:
+	#ifdef SMOOTH_CONSTANT
 	int speedr = 0; // speed for right
 	int speedl = 0; // speed for left
+	#endif
 	// Driver Code:
 	while (true) {
 		int power = master->get_analog(ANALOG_LEFT_Y);
@@ -87,6 +89,7 @@ void opcontrol() {
 		
 		// set the wheels...
 		// left side:
+		#ifdef SMOOTH_CONSTANT
 		if (speedl >= left) speedl -= SMOOTH_CONSTANT;
 		else if (speedl < left) speedl += SMOOTH_CONSTANT;
 		// right side:
@@ -95,6 +98,10 @@ void opcontrol() {
 
 		left1->move(speedl); left2->move(speedl); left3->move(speedl);
 		right1->move(speedr); right2->move(speedr); right3->move(speedr);
+		#else
+		left1->move(left); left2->move(left); left3->move(left);
+		right1->move(right); right2->move(right); right3->move(right);
+		#endif
 
 		// actions acording to buttons:
 		if (master->get_digital(DIGITAL_L1)) {
