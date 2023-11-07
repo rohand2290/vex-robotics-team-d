@@ -80,21 +80,25 @@ void opcontrol() {
 	int speedl = 0; // speed for left
 	// Driver Code:
 	while (true) {
-		int power = master->get_analog(ANALOG_LEFT_Y);
-		int turn = master->get_analog(ANALOG_RIGHT_X);
-		int left = (power + (turn * TURN_PERCENT)) * MOTOR_PERCENT;
-		int right = (power - (turn * TURN_PERCENT)) * MOTOR_PERCENT;
-		
-		// set the wheels...
-		// left side:
-		if (speedl >= left) speedl -= SMOOTH_CONSTANT;
-		else if (speedl < left) speedl += SMOOTH_CONSTANT;
-		// right side:
-		if (speedr >= right) speedr -= SMOOTH_CONSTANT;
-		else if (speedr < right) speedr += SMOOTH_CONSTANT;
+		int left;
+		int right;
+		{
+			int power = master->get_analog(ANALOG_LEFT_Y);
+			int turn = master->get_analog(ANALOG_RIGHT_X);
+			left = (power + (turn * TURN_PERCENT)) * MOTOR_PERCENT;
+			right = (power - (turn * TURN_PERCENT)) * MOTOR_PERCENT;
+			
+			// set the wheels...
+			// left side:
+			if (speedl >= left) speedl -= SMOOTH_CONSTANT;
+			else if (speedl < left) speedl += SMOOTH_CONSTANT;
+			// right side:
+			if (speedr >= right) speedr -= SMOOTH_CONSTANT;
+			else if (speedr < right) speedr += SMOOTH_CONSTANT;
 
-		left1->move(speedl); left2->move(speedl); left3->move(speedl);
-		right1->move(speedr); right2->move(speedr); right3->move(speedr);
+			left1->move(speedl); left2->move(speedl); left3->move(speedl);
+			right1->move(speedr); right2->move(speedr); right3->move(speedr);
+		}
 
 		// actions acording to buttons:
 		if (master->get_digital(DIGITAL_L1)) {
