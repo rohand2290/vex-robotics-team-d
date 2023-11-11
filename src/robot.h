@@ -6,6 +6,9 @@
 class Robot {
 private:
     Items items;
+    int x;
+    int y;
+    
 public:
     void initialize(Items&);
     ~Robot();

@@ -3,6 +3,8 @@
 
 void Robot::initialize(Items& i) {
     items = i;
+    x = 0;
+    y = 0;
 }
 
 Robot::~Robot() {}
