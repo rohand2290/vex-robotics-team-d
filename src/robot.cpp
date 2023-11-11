@@ -1,10 +1,31 @@
 #include "depend.h"
 #include "robot.h"
 
-void Robot::initialize(Items& i) {
+double Robot::right_abs_dist() { // in terms of inches
+    return WHEEL_C * (items.encoder_right->get_position() / 36000);
+}
+
+double Robot::left_abs_dist() { // in terms of inches
+    return WHEEL_C * (items.encoder_left->get_position() / 36000);
+}
+
+double Robot::center_abs_dist() { // in terms of inches
+    return WHEEL_C * (items.encoder_center->get_position() / 36000);
+}
+
+// desired is in inches
+double Robot::get_error_r(double desired) { return desired - right_abs_dist(); }
+// desired is in inches
+double Robot::get_error_l(double desired) { return desired - left_abs_dist(); }
+// desired is in inches
+double Robot::get_error_c(double desired) { return desired - center_abs_dist(); }
+
+void Robot::initialize(Items &i)
+{
     items = i;
     x = 0;
     y = 0;
+    theta = 0;
 }
 
 Robot::~Robot() {}
@@ -77,3 +98,10 @@ void Robot::set_puncher(int analog) {
 	items.puncher2->set_value(analog);
 }
 
+double Robot::radians_to_degrees(double radians) {
+    return (radians * 180) / PI;
+}
+
+double Robot::degrees_to_radians(double degrees) {
+    return (degrees * PI) / 180;
+}

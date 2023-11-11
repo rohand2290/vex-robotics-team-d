@@ -16,6 +16,9 @@ void Items::initialize()  {
     initpos = 1;
     pto1 = new pros::ADIDigitalOut (PTO_PORT_1, initpos);
     pto2 = new pros::ADIDigitalOut (PTO_PORT_2, initpos);
+    encoder_left = new pros::Rotation (ENCODER_PORT_1);
+    encoder_right = new pros::Rotation (ENCODER_PORT_2);
+    encoder_center = new pros::Rotation (ENCODER_PORT_3);
 }
 
 Items::~Items() {
@@ -33,4 +36,7 @@ Items::~Items() {
     delete puncher2;
     delete pto1;
     delete pto2;
+    delete encoder_left;
+    delete encoder_right;
+    delete encoder_center;
 }

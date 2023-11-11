@@ -22,6 +22,9 @@ public:
     pros::ADIDigitalOut* puncher2;
     pros::ADIDigitalOut* pto1;
     pros::ADIDigitalOut* pto2;
+    pros::Rotation* encoder_left;
+    pros::Rotation* encoder_right;
+    pros::Rotation* encoder_center;
 
     // constructor, connects all harware and ports.
     void initialize();

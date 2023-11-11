@@ -44,6 +44,15 @@
 #define MOTOR_PERCENT 1 // percentage (0-1) for max power to be used (0.75 means the maximum ever reached will be 75%)
 #define TURN_PERCENT 1 // percentage (0-1) for max turn sensibility.
 
+// ======= Auton: ================
+// trackion wheels:
+#define WHEEL_C 2.75 * PI
+// encoder ports:
+#define ENCODER_PORT_1 69 // left
+#define ENCODER_PORT_2 69 // right
+#define ENCODER_PORT_3 69 // center
+
+
 // ======= Miscelanious: =========
 
 // the opcontrol main loop delay. 
@@ -51,5 +60,6 @@
 // this can also be used to change smoothness if smooth drive is enabled.
 // If it is too little, it might starve the proccessor from energy with too much load.
 #define OPCONTROL_LOOP_DELAY 5 // ms
+#define PI (long double)3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482
 
 #endif // VARIABLES_H
