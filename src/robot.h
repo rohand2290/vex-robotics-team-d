@@ -14,10 +14,6 @@ private:
     double right_abs_dist();
     double left_abs_dist();
     double center_abs_dist();
-
-    double get_error_r(double);
-    double get_error_l(double);
-    double get_error_c(double);
 public:
     void initialize(Items&);
     ~Robot();
@@ -40,6 +36,11 @@ public:
     void set_puncher(int analog);
     double radians_to_degrees(double radians);
     double degrees_to_radians(double degrees);
+
+    // error functions:
+    double get_error_r(double);
+    double get_error_l(double);
+    double get_error_c(double);
 };
 
 #endif // ROBOT_H
