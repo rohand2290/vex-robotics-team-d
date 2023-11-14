@@ -26,8 +26,9 @@ void autonomous() {
 	int speedr = 0;
 	int speedl = 0;
 
+	// TODO: 
 	while (true) {
-		integral_r += robot.get_error_r() * AUTON_LOOP_DELAY;
+		// integral_r += robot.get_error_r() * AUTON_LOOP_DELAY;
 
 		pros::delay(AUTON_LOOP_DELAY);
 	}

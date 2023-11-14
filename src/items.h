@@ -9,12 +9,12 @@ struct Items {
 public:
     int initpos;
     pros::Controller* master;
-    pros::Motor* left1;
-    pros::Motor* left2;
-    pros::Motor* left3;
-    pros::Motor* right1;
-    pros::Motor* right2;
-    pros::Motor* right3;
+    pros::Motor* left1; // front
+    pros::Motor* left2; // middle
+    pros::Motor* left3; // back
+    pros::Motor* right1; // front
+    pros::Motor* right2; // middle
+    pros::Motor* right3; // back
     pros::Motor* intake_left;
     pros::Motor* intake_right;
     pros::Motor* turret;
@@ -26,9 +26,9 @@ public:
     pros::Rotation* encoder_right;
     pros::Rotation* encoder_center;
 
-    // constructor, connects all harware and ports.
+    /// @brief Non-default constructor, connects all harware and ports.
     void initialize();
-    // deconstructor, helps end the program without crashing.
+    /// @brief Deconstructor, helps end the program without crashing.
     ~Items();
 };
 
