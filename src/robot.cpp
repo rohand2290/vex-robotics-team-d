@@ -105,3 +105,39 @@ double Robot::radians_to_degrees(double radians) {
 double Robot::degrees_to_radians(double degrees) {
     return (degrees * PI) / 180;
 }
+
+void Robot::update_coords ()
+{
+    double r_and_l_speed = items.encoder_right->get_velocity() - items.encoder_left->get_velocity(); // centidegrees per sec
+    double c_speed = items.encoder_center->get_velocity();
+    // calculate theta:
+    /** ============== LOGIC ====================
+    * just r & l: change in theta = (360000 * right speed - left speed)/(2 * pi * width of robot)
+    * just c: change in theta = (360000 * center speed) / (2 * pi * width of robot)
+    * if change with c != change with r & l:
+    *   some outer force pushed the bot.
+    *   do something to accomadate for this.
+    */
+    double by_rl = (360000 * r_and_l_speed) / (2 * PI * ROBOT_WIDTH);
+    double by_c = (360000 * c_speed) / (2 * PI * ROBOT_WIDTH);
+    if (by_rl - by_c > ODOM_ACCURACY && by_c - by_rl > ODOM_ACCURACY && CHECK_FOR_ENV_FORCES) {
+        env_push_error();
+    }
+    theta += by_c;
+    // calculate distance:
+    /** ============== LOGIC =====================
+     * t = right speed or left speed depending on which is less
+     * vertical translation = sin(theta / 100) * t
+     * horizontal translation = cos(theta / 100) * t
+    */
+    double t = items.encoder_right->get_velocity() > items.encoder_left->get_velocity() ? 
+            items.encoder_left->get_velocity() : items.encoder_right->get_velocity();
+    y += sin(theta - 90) * t; // minus 90 since this is an example of bearing applications.
+    // TODO
+}
+
+// this function is called when an unusual outside force is detected.
+static void env_push_error() {
+    pros::lcd::print(1, "There was an unwanted push on the bot that has been detected. This is part of the auton routine to ensure everything is working.");
+    while (true);
+}

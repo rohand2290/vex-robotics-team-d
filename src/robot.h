@@ -8,14 +8,16 @@ private:
     Items items;
     double x;
     double y;
-    double theta;
+    double theta; // in centidegrees.
 
     // the abs raw distances: (calculate actual distance using rotory sensor)
     double right_abs_dist();
     double left_abs_dist();
     double center_abs_dist();
 public:
-    void initialize(Items&);
+    /// @brief A non default constructor. Should be used in initialize function in main.cpp.
+    /// @param i the universal item object's reference
+    void initialize(Items& i);
     ~Robot();
 
     /// @brief  Set the wheel speed of all on the right 
@@ -60,6 +62,7 @@ public:
     /// @param desired desired distance
     /// @return error as double
     double get_error_c(double desired);
+    void update_coords();
 };
 
 #endif // ROBOT_H

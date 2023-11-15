@@ -46,21 +46,25 @@
 
 // ======= Auton: ================
 // trackion wheels:
-#define WHEEL_C 2.75 * PI
+#define WHEEL_C 2.75 * PI // wheel circumference
 // encoder ports:
 #define ENCODER_PORT_1 69 // left
 #define ENCODER_PORT_2 69 // right
 #define ENCODER_PORT_3 69 // center
+// accuracy adjustments: the smaller, the more accurate. avoid making it 0
+#define ODOM_ACCURACY 0.00001
+#define CHECK_FOR_ENV_FORCES true // check for forces from outside the environment.
 
 
 // ======= Miscelanious: =========
 
-// the opcontrol main loop delay. 
+// loop delay info: 
 // If it is too large, it might decrease sensitivity and increase lag.
 // this can also be used to change smoothness if smooth drive is enabled.
 // If it is too little, it might starve the proccessor from energy with too much load.
 #define OPCONTROL_LOOP_DELAY 5 // ms
 #define AUTON_LOOP_DELAY 5 // ms
 #define PI (long double)3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482
+#define ROBOT_WIDTH 69 // in
 
 #endif // VARIABLES_H

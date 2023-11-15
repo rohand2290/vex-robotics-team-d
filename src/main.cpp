@@ -20,16 +20,8 @@ void competition_initialize() {}
 
 // Runs the user autonomous code.
 void autonomous() {
-	double integral_r = 0;
-	double integral_l = 0;
-	double integral_c = 0;
-	int speedr = 0;
-	int speedl = 0;
-
 	// TODO: 
 	while (true) {
-		// integral_r += robot.get_error_r() * AUTON_LOOP_DELAY;
-
 		pros::delay(AUTON_LOOP_DELAY);
 	}
 }
