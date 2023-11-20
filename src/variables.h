@@ -55,7 +55,6 @@
 #define ODOM_ACCURACY 0.00001
 #define CHECK_FOR_ENV_FORCES true // check for forces from outside the environment.
 
-
 // ======= Miscelanious: =========
 
 // loop delay info: 

@@ -132,8 +132,8 @@ void Robot::update_coords ()
     */
     double t = items.encoder_right->get_velocity() > items.encoder_left->get_velocity() ? 
             items.encoder_left->get_velocity() : items.encoder_right->get_velocity();
-    y += sin(theta - 90) * t; // minus 90 since this is an example of bearing applications.
-    // TODO
+    y += sin(theta + 90) * t; // plus 90 since this is an example of bearing applications.
+    x += cos(theta + 90) * t;
 }
 
 // this function is called when an unusual outside force is detected.

@@ -22,6 +22,9 @@ void competition_initialize() {}
 void autonomous() {
 	// TODO: 
 	while (true) {
+		
+
+		robot.update_coords();
 		pros::delay(AUTON_LOOP_DELAY);
 	}
 }

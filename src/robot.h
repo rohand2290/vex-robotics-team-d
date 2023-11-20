@@ -62,6 +62,7 @@ public:
     /// @param desired desired distance
     /// @return error as double
     double get_error_c(double desired);
+    /// @brief Updates the coordinates after every function call. Call this in a repetitive loop.
     void update_coords();
 };
 
