@@ -57,7 +57,6 @@ void opcontrol() {
 			items.master->get_digital(DIGITAL_DOWN)
 		);
 		robot.set_puncher(items.master->get_digital(DIGITAL_A));
-
 		pros::delay(OPCONTROL_LOOP_DELAY);
 
 		if (items.master->get_digital(DIGITAL_Y)) {
