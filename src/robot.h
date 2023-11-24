@@ -66,7 +66,7 @@ public:
     /// @return error as double
     double get_error_c(double desired);
     /// @brief Updates the coordinates after every function call. Call this in a repetitive loop.
-    void update_coords(int rel_l, int rel_r, int rel_c);
+    void update_coords(double rel_l, double rel_r, double rel_c);
 };
 
 #endif // ROBOT_H

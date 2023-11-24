@@ -112,7 +112,7 @@ static void env_push_error() {
     while (true);
 }
 
-void Robot::update_coords (int rel_l, int rel_r, int rel_c)
+void Robot::update_coords (double rel_l, double rel_r, double rel_c)
 {
     double r_and_l_speed = items.encoder_right->get_velocity() - items.encoder_left->get_velocity(); // centidegrees per sec
     double c_speed = items.encoder_center->get_velocity();
@@ -140,4 +140,8 @@ void Robot::update_coords (int rel_l, int rel_r, int rel_c)
             items.encoder_left->get_velocity() : items.encoder_right->get_velocity();
     y += sin(theta + 90) * t; // plus 90 since this is an example of bearing applications.
     x += cos(theta + 90) * t;
+}
+
+static double calcTheta(double old_theta, double rel_l, double rel_r, double rel_c) {
+    return old_theta + (rel_l - rel_r) / (ROBOT_WIDTH);
 }
