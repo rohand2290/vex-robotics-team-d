@@ -10,20 +10,20 @@
 // ======== PORTS: ===========
 
 // Left drive:
-#define LEFT_WHEELS_PORT_1 11 // Defines the 1st port of the left wheels.
-#define LEFT_WHEELS_PORT_2 12 // Defines the 2nd port of the left wheels.
-#define LEFT_WHEELS_PORT_3 20 // Defines the 3rd port of the left wheels.
+#define LEFT_WHEELS_PORT_1 9 // Defines the 1st port of the left wheels.
+#define LEFT_WHEELS_PORT_2 2 // Defines the 2nd port of the left wheels.
+#define LEFT_WHEELS_PORT_3 1 // Defines the 3rd port of the left wheels.
 // Right drive:
-#define RIGHT_WHEELS_PORT_1 1 // Defines the 1st port of the right wheels.
-#define RIGHT_WHEELS_PORT_2 4 // Defines the 2nd port of the right wheels.
-#define RIGHT_WHEELS_PORT_3 5 // Defines the 3rd port of the right wheels.
+#define RIGHT_WHEELS_PORT_1 19 // Defines the 1st port of the right wheels.
+#define RIGHT_WHEELS_PORT_2 12 // Defines the 2nd port of the right wheels.
+#define RIGHT_WHEELS_PORT_3 11 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
-#define INTAKE_PORT_LEFT 10 // Defines the 1st port of the left side of intake.
-#define INTAKE_PORT_RIGHT 17 // Defines the 2nd port of the right side of intake.
+#define INTAKE_PORT_LEFT 8 // Defines the 1st port of the left side of intake.
+#define INTAKE_PORT_RIGHT 13 // Defines the 2nd port of the right side of intake.
 
 // Turret:
-#define TURRET_PORT 18 // Defines the port of the turret motor.
+#define TURRET_PORT 69 // Defines the port of the turret motor.
 
 // Puncher:
 #define PUNCHER_PORT_1 19 // Defines the 1st port of the puncher.
@@ -46,14 +46,14 @@
 
 // ======= Auton: ================
 // trackion wheels:
-#define WHEEL_C 2.75 * PI // wheel circumference
+#define WHEEL_C 3.54331 * PI // wheel circumference
 // encoder ports:
-#define ENCODER_PORT_1 69 // left
-#define ENCODER_PORT_2 69 // right
-#define ENCODER_PORT_3 69 // center
+#define ENCODER_PORT_1 10 // left parralel
+#define ENCODER_PORT_2 20 // right parralel
+#define ENCODER_PORT_3 3 // center perpendicular
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0
 #define ODOM_ACCURACY 0.00001
-#define CHECK_FOR_ENV_FORCES true // check for forces from outside the environment.
+#define CHECK_FOR_ENV_FORCES false // check for forces from outside the environment.
 
 // ======= Miscelanious: =========
 
@@ -64,6 +64,6 @@
 #define OPCONTROL_LOOP_DELAY 5 // ms
 #define AUTON_LOOP_DELAY 5 // ms
 #define PI (long double)3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482
-#define ROBOT_WIDTH 69 // in
+#define ROBOT_WIDTH 3.54331 // in
 
 #endif // VARIABLES_H

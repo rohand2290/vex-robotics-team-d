@@ -43,27 +43,27 @@ void Robot::set_left_side(int analog) {
 }
 
 // here, y represents power and x represents turn, since this is arcade drive style.
-void Robot::set_speed_chassis(int y, int x, long long line, int* speedr = nullptr, int* speedl = nullptr)
+void Robot::set_speed_chassis(int y, int x, long long line, int& speedr, int& speedl)
 {
 	int left = (y + (x * TURN_PERCENT)) * MOTOR_PERCENT;
 	int right = (y - (x * TURN_PERCENT)) * MOTOR_PERCENT;
 	// set the wheels...
 	#ifdef SMOOTH_CONSTANT
-    if (speedl == nullptr || speedr == nullptr) {
-        // this should not happen...
-        pros::lcd::print(1, "ERROR: The chassis speed function has not been setup correctly."
-        " Look at line %i", line);
-        while (true);
-    }
+    // if (speedl == nullptr || speedr == nullptr) {
+    //     // this should not happen...
+    //     pros::lcd::print(1, "ERROR: The chassis speed function has not been setup correctly."
+    //     " Look at line %i", line);
+    //     while (true);
+    // }
     // left side:
-	if (*speedl >= left) speedl -= SMOOTH_CONSTANT;
-	else if (*speedl < left) speedl += SMOOTH_CONSTANT;
+	if (speedl >= left) speedl -= SMOOTH_CONSTANT;
+	else if (speedl < left) speedl += SMOOTH_CONSTANT;
 	// right side:
-	if (*speedr >= right) speedr -= SMOOTH_CONSTANT;
-	else if (*speedr < right) speedr += SMOOTH_CONSTANT;
+	if (speedr >= right) speedr -= SMOOTH_CONSTANT;
+	else if (speedr < right) speedr += SMOOTH_CONSTANT;
 
-	set_left_side(*speedl);
-	set_right_side(*speedr);
+	set_left_side(speedl);
+	set_right_side(speedr);
 	#else
 	set_left_side(left);
 	set_right_side(right);
@@ -106,20 +106,26 @@ double Robot::degrees_to_radians(double degrees) {
     return (degrees * PI) / 180;
 }
 
-void Robot::update_coords ()
+// this function is called when an -unusual outside force is detected.
+static void env_push_error() {
+    pros::lcd::print(1, "There was an unwanted push on the bot that has been detected. This is part of the auton routine to ensure everything is working.");
+    while (true);
+}
+
+void Robot::update_coords (int rel_l, int rel_r, int rel_c)
 {
     double r_and_l_speed = items.encoder_right->get_velocity() - items.encoder_left->get_velocity(); // centidegrees per sec
     double c_speed = items.encoder_center->get_velocity();
     // calculate theta:
     /** ============== LOGIC ====================
-    * just r & l: change in theta = (360000 * right speed - left speed)/(2 * pi * width of robot)
-    * just c: change in theta = (360000 * center speed) / (2 * pi * width of robot)
+    * just r & l: change in theta = (360000 * right speed - left speed)/(pi * width of robot)
+    * just c: change in theta = (360000 * center speed) / (pi * width of robot)
     * if change with c != change with r & l:
     *   some outer force pushed the bot.
     *   do something to accomadate for this.
     */
-    double by_rl = (360000 * r_and_l_speed) / (2 * PI * ROBOT_WIDTH);
-    double by_c = (360000 * c_speed) / (2 * PI * ROBOT_WIDTH);
+    double by_rl = (360000 * r_and_l_speed) / (PI * ROBOT_WIDTH);
+    double by_c = (360000 * c_speed) / (PI * ROBOT_WIDTH);
     if (by_rl - by_c > ODOM_ACCURACY && by_c - by_rl > ODOM_ACCURACY && CHECK_FOR_ENV_FORCES) {
         env_push_error();
     }
@@ -134,10 +140,4 @@ void Robot::update_coords ()
             items.encoder_left->get_velocity() : items.encoder_right->get_velocity();
     y += sin(theta + 90) * t; // plus 90 since this is an example of bearing applications.
     x += cos(theta + 90) * t;
-}
-
-// this function is called when an unusual outside force is detected.
-static void env_push_error() {
-    pros::lcd::print(1, "There was an unwanted push on the bot that has been detected. This is part of the auton routine to ensure everything is working.");
-    while (true);
 }

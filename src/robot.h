@@ -6,15 +6,18 @@
 class Robot {
 private:
     Items items;
+
+    // the abs raw distances: (calculate actual distance using rotory sensor)
+    
+public:
+    double right_abs_dist();
+    double left_abs_dist();
+    double center_abs_dist();
+
     double x;
     double y;
     double theta; // in centidegrees.
 
-    // the abs raw distances: (calculate actual distance using rotory sensor)
-    double right_abs_dist();
-    double left_abs_dist();
-    double center_abs_dist();
-public:
     /// @brief A non default constructor. Should be used in initialize function in main.cpp.
     /// @param i the universal item object's reference
     void initialize(Items& i);
@@ -31,7 +34,7 @@ public:
     /// @param x the x axis info.
     /// @param speedr helper var
     /// @param speedl helper var
-    void set_speed_chassis(int y, int x, long long line, int* speedr = nullptr, int* speedl = nullptr);
+    void set_speed_chassis(int y, int x, long long line, int& speedr, int& speedl);
     /// @brief Set the intake to in or out
     /// @param analog 1 or 0
     void set_intake(int analog);
@@ -63,7 +66,7 @@ public:
     /// @return error as double
     double get_error_c(double desired);
     /// @brief Updates the coordinates after every function call. Call this in a repetitive loop.
-    void update_coords();
+    void update_coords(int rel_l, int rel_r, int rel_c);
 };
 
 #endif // ROBOT_H
