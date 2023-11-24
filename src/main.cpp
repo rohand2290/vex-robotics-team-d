@@ -71,7 +71,7 @@ void opcontrol()
 			speedr,
 			speedl);
 		// actions acording to buttons:
-		robot.set_intake(items.master->get_digital(DIGITAL_L1));
+		robot.set_intake(items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
 		robot.set_turret(
 			items.master->get_digital(DIGITAL_UP),
 			items.master->get_digital(DIGITAL_DOWN));
@@ -80,16 +80,14 @@ void opcontrol()
 
 		if (items.master->get_digital(DIGITAL_Y))
 		{
-			if (!temp)
-				temp = true;
-			else
-				continue;
+			if (!temp) temp = true;
+			else continue;
 			items.initpos = !items.initpos;
 			items.pto1->set_value(items.initpos);
 			items.pto2->set_value(items.initpos);
 		}
-		if (!items.master->get_digital(DIGITAL_Y))
-			temp = false;
+		if (!items.master->get_digital(DIGITAL_Y)) temp = false;
+		
 		robot.update_coords(rel_l, rel_r, rel_c);
 
 		pros::lcd::print(1, "%f", robot.x);
@@ -121,7 +119,23 @@ MatrixXd local_offset(double new_t, double old_t, double rel_c, double rel_r)
 	{
 		MatrixXd m(2, 1);
 		m(0, 0) = ((rel_c / (new_t - old_t)) + 9.251969);
-		m(0, 1) = ( (rel_r / (new_t - old_t) + (ROBOT_WIDTH / 2));
+		m(0, 1) = (rel_r / (new_t - old_t)) + (ROBOT_WIDTH / 2);
 		return m;
 	}
 }
+
+double avgOrient(double old_t, double new_t) {
+	return old_t + (new_t - old_t) / 2;
+}
+
+double globalOffset(double old_t, double new_t) {
+	double delta_d;
+
+	double r = sqrt(robot.x*robot.x + robot.y*robot.y);
+	double theta = atan2(robot.y, robot.x) - avgOrient(old_t, new_t);
+
+	double x = r * cos(theta);
+	double y = r * sin(theta);
+}
+
+// d final = d initial + change in d

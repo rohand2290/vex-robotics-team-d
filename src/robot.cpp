@@ -16,13 +16,6 @@ double Robot::center_abs_dist()
     return WHEEL_C * (items.encoder_center->get_position() / 36000);
 }
 
-// desired is in inches
-double Robot::get_error_r(double desired) { return desired - right_abs_dist(); }
-// desired is in inches
-double Robot::get_error_l(double desired) { return desired - left_abs_dist(); }
-// desired is in inches
-double Robot::get_error_c(double desired) { return desired - center_abs_dist(); }
-
 void Robot::initialize(Items &i)
 {
     items = i;
@@ -50,16 +43,10 @@ void Robot::set_left_side(int analog)
 // here, y represents power and x represents turn, since this is arcade drive style.
 void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &speedl)
 {
-    int left = (y + (x * TURN_PERCENT)) * MOTOR_PERCENT;
-    int right = (y - (x * TURN_PERCENT)) * MOTOR_PERCENT;
+    int left = (y - (x * TURN_PERCENT)) * MOTOR_PERCENT;
+    int right = (y + (x * TURN_PERCENT)) * MOTOR_PERCENT;
 // set the wheels...
 #ifdef SMOOTH_CONSTANT
-    // if (speedl == nullptr || speedr == nullptr) {
-    //     // this should not happen...
-    //     pros::lcd::print(1, "ERROR: The chassis speed function has not been setup correctly."
-    //     " Look at line %i", line);
-    //     while (true);
-    // }
     // left side:
     if (speedl >= left)
         speedl -= SMOOTH_CONSTANT;
@@ -79,17 +66,20 @@ void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &sp
 #endif
 }
 
-void Robot::set_intake(int analog)
-{ // true means in, false means out
-    if (analog)
+void Robot::set_intake(int analog1, int analog2)
+{
+    if (analog1)
     {
         items.intake_left->move(INTAKE_IN_SPEED);
         items.intake_right->move(INTAKE_IN_SPEED);
     }
-    else
+    else if (analog2)
     {
         items.intake_left->move(INTAKE_OUT_SPEED);
         items.intake_right->move(INTAKE_OUT_SPEED);
+    } else {
+        items.intake_left->move(0);
+        items.intake_right->move(0);
     }
 }
 
