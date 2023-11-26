@@ -62,6 +62,7 @@ void opcontrol()
 		rel_l = robot.left_abs_dist() - old_l;
 		rel_r = robot.right_abs_dist() - old_r;
 		rel_c = robot.center_abs_dist() - old_c;
+		new_t = calcThetaOrient(old_t, rel_l, rel_r, old_t, new_t);
 
 		// set speed chassis
 		robot.set_speed_chassis(
@@ -97,45 +98,58 @@ void opcontrol()
 		old_l = robot.left_abs_dist();
 		old_r = robot.right_abs_dist();
 		old_c = robot.center_abs_dist();
-		new_t = calcTheta(old_t, rel_l, rel_r, rel_c);
+		old_t = new_t;
 	}
 }
 
-double calcTheta(double old_theta, double rel_l, double rel_r, double rel_c)
+double calcThetaOrient(
+	double old_t, 
+	double rel_l, 
+	double rel_r, 
+	double rel_c, 
+	double new_t
+)
 {
-	return old_theta + (rel_l - rel_r) / (ROBOT_WIDTH);
+	MatrixXd mat = local_offset(new_t, old_t, rel_c, rel_r);
+	double avgOr = avgOrient(old_t, new_t);
+	MatrixXd change = globalOffset(old_t, new_t, mat);
+
+	robot.x += change[0];
+	robot.y += change[1];
+
+	return old_t + (rel_l - rel_r) / (ROBOT_WIDTH);
 }
 
 MatrixXd local_offset(double new_t, double old_t, double rel_c, double rel_r)
 {
+	MatrixXd m(2, 1);
 	if (new_t - old_t == 0)
 	{
-		MatrixXd m(2, 1);
 		m(0, 0) = rel_c;
 		m(0, 1) = rel_r;
-		return m;
 	}
 	else
 	{
-		MatrixXd m(2, 1);
 		m(0, 0) = ((rel_c / (new_t - old_t)) + 9.251969);
 		m(0, 1) = (rel_r / (new_t - old_t)) + (ROBOT_WIDTH / 2);
-		return m;
+		m *= 2 * sin(old_t / 2);
 	}
+	return m;
 }
 
 double avgOrient(double old_t, double new_t) {
 	return old_t + (new_t - old_t) / 2;
 }
 
-double globalOffset(double old_t, double new_t) {
-	double delta_d;
-
+MatrixXd globalOffset(double old_t, double new_t, MatrixXd delta_dl) {
 	double r = sqrt(robot.x*robot.x + robot.y*robot.y);
 	double theta = atan2(robot.y, robot.x) - avgOrient(old_t, new_t);
 
 	double x = r * cos(theta);
 	double y = r * sin(theta);
+
+	MatrixXd mat(x, y);
+	return mat;
 }
 
 // d final = d initial + change in d
