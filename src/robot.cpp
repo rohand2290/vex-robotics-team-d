@@ -3,17 +3,17 @@
 
 double Robot::right_abs_dist()
 { // in terms of inches
-    return WHEEL_C * (items.encoder_right->get_position() / 36000);
+    return (items.encoder_right->get_position());
 }
 
 double Robot::left_abs_dist()
 { // in terms of inches
-    return WHEEL_C * (items.encoder_left->get_position() / 36000);
+    return (items.encoder_left->get_position());
 }
 
 double Robot::center_abs_dist()
 { // in terms of inches
-    return WHEEL_C * (items.encoder_center->get_position() / 36000);
+    return (items.encoder_center->get_position());
 }
 
 void Robot::initialize(Items &i)
@@ -22,6 +22,9 @@ void Robot::initialize(Items &i)
     x = 0;
     y = 0;
     theta = 0;
+    items.encoder_left->reset_position();
+    items.encoder_right->reset_position();
+    items.encoder_center->reset_position();
 }
 
 Robot::~Robot() {}
@@ -70,13 +73,13 @@ void Robot::set_intake(int analog1, int analog2)
 {
     if (analog1)
     {
-        items.intake_left->move(INTAKE_IN_SPEED);
-        items.intake_right->move(INTAKE_IN_SPEED);
+        items.intake_left->move(255);
+        items.intake_right->move(255);
     }
     else if (analog2)
     {
-        items.intake_left->move(INTAKE_OUT_SPEED);
-        items.intake_right->move(INTAKE_OUT_SPEED);
+        items.intake_left->move(255);
+        items.intake_right->move(255);
     } else {
         items.intake_left->move(0);
         items.intake_right->move(0);

@@ -1,8 +1,5 @@
 #include "main.h"
 #include "depend.h"
-#include <Eigen/Dense>
-using Eigen::MatrixXd;
-
 Items items;
 Robot robot;
 
@@ -59,10 +56,12 @@ void opcontrol()
 	// Driver Code:
 	while (true)
 	{
-		rel_l = robot.left_abs_dist() - old_l;
-		rel_r = robot.right_abs_dist() - old_r;
-		rel_c = robot.center_abs_dist() - old_c;
-		new_t = calcThetaOrient(old_t, rel_l, rel_r, old_t, new_t);
+		// {
+		// 	rel_l = robot.left_abs_dist() - old_l;
+		// 	rel_r = robot.right_abs_dist() - old_r;
+		// 	rel_c = robot.center_abs_dist() - old_c;
+		// 	new_t = calcThetaOrient(old_t, rel_l, rel_r, old_t, new_t);
+		// }
 
 		// set speed chassis
 		robot.set_speed_chassis(
@@ -91,65 +90,86 @@ void opcontrol()
 		
 		robot.update_coords(rel_l, rel_r, rel_c);
 
-		pros::lcd::print(1, "%f", robot.x);
-		pros::lcd::print(2, "%f", robot.y);
-		pros::lcd::print(3, "%f", robot.theta);
+		pros::lcd::print(1, "right: %i", items.encoder_right->get_position());
+		pros::lcd::print(2, "left: %i", items.encoder_left->get_position());
+		pros::lcd::print(3, "center: %i", items.encoder_center->get_position());
+		pros::lcd::print(4, "right: %i in", (double)items.encoder_right->get_position() / 360000.0);
+		pros::lcd::print(5, "left: %i in", (double)items.encoder_left->get_position() / 360000.0);
+		pros::lcd::print(6, "center: %i in", (double)items.encoder_center->get_position() / 360000.0);
 
-		old_l = robot.left_abs_dist();
-		old_r = robot.right_abs_dist();
-		old_c = robot.center_abs_dist();
-		old_t = new_t;
+		// {
+		// 	old_l = robot.left_abs_dist();
+		// 	old_r = robot.right_abs_dist();
+		// 	old_c = robot.center_abs_dist();
+		// 	old_t = new_t;
+		// }
 	}
 }
 
-double calcThetaOrient(
-	double old_t, 
-	double rel_l, 
-	double rel_r, 
-	double rel_c, 
-	double new_t
-)
-{
-	MatrixXd mat = local_offset(new_t, old_t, rel_c, rel_r);
-	double avgOr = avgOrient(old_t, new_t);
-	MatrixXd change = globalOffset(old_t, new_t, mat);
+// ODOM =====================================================================================================
+// double calcThetaOrient( // calculates all the changes and updates them & finds the change in theta.
+// 	double old_t, 
+// 	double rel_l, 
+// 	double rel_r, 
+// 	double rel_c, 
+// 	double new_t
+// )
+// {
+// 	MatrixXd mat = local_offset(new_t, old_t, rel_c, rel_r);
+// 	double avgOr = avgOrient(old_t, new_t);
+// 	MatrixXd change = globalOffset(old_t, new_t, mat);
 
-	robot.x += change[0];
-	robot.y += change[1];
+// 	robot.x += change[0];
+// 	robot.y += change[1];
 
-	return old_t + (rel_l - rel_r) / (ROBOT_WIDTH);
-}
+// 	return old_t + (rel_l - rel_r) / (ROBOT_WIDTH);
+// }
+// MatrixXd local_offset(double new_t, double old_t, double rel_c, double rel_r)
+// {
+// 	MatrixXd m(2, 1);
+// 	if (new_t - old_t == 0)
+// 	{
+// 		m(0, 0) = rel_c;
+// 		m(0, 1) = rel_r;
+// 	}
+// 	else
+// 	{
+// 		m(0, 0) = rel_c / (new_t - old_t) + 9.251969;
+// 		m(0, 1) = rel_r / (new_t - old_t) + (ROBOT_WIDTH / 2);
+// 		m *= 2 * sin(old_t / 2);
+// 	}
+// 	return m;
+// }
+// double avgOrient(double old_t, double new_t) {
+// 	return old_t + (new_t - old_t) / 2;
+// }
+// MatrixXd globalOffset(double old_t, double new_t, MatrixXd delta_dl) {
+// 	double r = sqrt(robot.x*robot.x + robot.y*robot.y);
+// 	double theta = atan2(robot.y, robot.x) - avgOrient(old_t, new_t);
 
-MatrixXd local_offset(double new_t, double old_t, double rel_c, double rel_r)
-{
-	MatrixXd m(2, 1);
-	if (new_t - old_t == 0)
-	{
-		m(0, 0) = rel_c;
-		m(0, 1) = rel_r;
-	}
-	else
-	{
-		m(0, 0) = ((rel_c / (new_t - old_t)) + 9.251969);
-		m(0, 1) = (rel_r / (new_t - old_t)) + (ROBOT_WIDTH / 2);
-		m *= 2 * sin(old_t / 2);
-	}
-	return m;
-}
+// 	double x = r * cos(theta);
+// 	double y = r * sin(theta);
 
-double avgOrient(double old_t, double new_t) {
-	return old_t + (new_t - old_t) / 2;
-}
+// 	MatrixXd mat(x, y);
+// 	return mat;
+// }
 
-MatrixXd globalOffset(double old_t, double new_t, MatrixXd delta_dl) {
-	double r = sqrt(robot.x*robot.x + robot.y*robot.y);
-	double theta = atan2(robot.y, robot.x) - avgOrient(old_t, new_t);
+// PID ===========================================================================================================
+// double P(double error) { return error * KP; }
+// double I(double error, double& integral, Waypoint& goal) {
+// 	integral += error;
+// 	if (goal.x == robot.x && goal.y == robot.y || error == 0) { // TODO: WARNING
+// 		integral = 0;
+// 	}
+// 	if (ERROR_MAX < error || ERROR_MIN > error) {
+// 		integral = 0;
+// 	}
+// 	return integral * KI;
+// }
+// double D(double& prev_error, double error) {
+// 	return (error - prev_error) * KD;
+// }
+// double PIDPower(double error, double& integral, double& prev_error, Waypoint& goal) {
+// 	return P(error) + I(error, integral, goal) + D(prev_error, error);
+// }
 
-	double x = r * cos(theta);
-	double y = r * sin(theta);
-
-	MatrixXd mat(x, y);
-	return mat;
-}
-
-// d final = d initial + change in d

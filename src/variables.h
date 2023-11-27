@@ -46,14 +46,20 @@
 
 // ======= Auton: ================
 // trackion wheels:
-#define WHEEL_C 3.54331 * PI // wheel circumference
+#define WHEEL_C 2.75 * PI // wheel circumference
 // encoder ports:
 #define ENCODER_PORT_1 10 // left parralel
-#define ENCODER_PORT_2 20 // right parralel
+#define ENCODER_PORT_2 14 // right parralel
 #define ENCODER_PORT_3 3 // center perpendicular
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0
 #define ODOM_ACCURACY 0.00001
 #define CHECK_FOR_ENV_FORCES false // check for forces from outside the environment.
+// PID Constants:
+#define KP 69
+#define KI 69
+#define KD 69
+#define ERROR_MAX 69
+#define ERROR_MIN 69 
 
 // ======= Miscelanious: =========
 

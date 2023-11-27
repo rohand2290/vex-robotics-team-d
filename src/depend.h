@@ -9,6 +9,7 @@
 #include "items.h"
 #include <math.h>
 #include "robot.h"
+#include "waypoint.h"
 
 
 #endif // DEPEND_H
