@@ -3,17 +3,20 @@
 
 double Robot::right_abs_dist()
 { // in terms of inches
-    return (items.encoder_right->get_position());
+    int normal = (int)items.encoder_right->get_position();
+    return (normal / 360000.0) * WHEEL_C;
 }
 
 double Robot::left_abs_dist()
 { // in terms of inches
-    return (items.encoder_left->get_position());
+    int normal = (int)items.encoder_left->get_position();
+    return (normal / 360000.0) * WHEEL_C;
 }
 
 double Robot::center_abs_dist()
 { // in terms of inches
-    return (items.encoder_center->get_position());
+    int normal = (int)items.encoder_center->get_position();
+    return (normal / 360000.0) * WHEEL_C;
 }
 
 void Robot::initialize(Items &i)

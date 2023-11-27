@@ -4,13 +4,16 @@
 // includes all header files...
 // there is no need to import within the other files...
 
+#include "variables.h"
+
 #define TERMINATE() while (true) pros::delay(1000)
+#define ABS(x) x > 0 ? x : -x
+#define ARE_SAME(x, y) ABS(x - y) < ACCURACY ? true : false
 
 #include "api.h"
 #include <math.h>
 
 #include "vectorxd.h"
-#include "variables.h"
 #include "items.h"
 #include "robot.h"
 #include "waypoint.h"
