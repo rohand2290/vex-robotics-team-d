@@ -50,11 +50,18 @@
 #define ENCODER_PORT_2 14 // right parralel
 #define ENCODER_PORT_3 3 // center perpendicular
 // PID Constants:
-#define KP 69
-#define KI 69
-#define KD 69
-#define ERROR_MAX 69
-#define ERROR_MIN 69 
+// power:
+#define POWER_KP 69
+#define POWER_KI 69
+#define POWER_KD 69
+#define POWER_ERROR_MAX 69
+#define POWER_ERROR_MIN 69
+// turn:
+#define TURN_KP 69
+#define TURN_KI 69
+#define TURN_KD 69
+#define TURN_ERROR_MAX 69
+#define TURN_ERROR_MIN 69
 
 // ======= Miscelanious: =========
 

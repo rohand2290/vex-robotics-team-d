@@ -8,6 +8,7 @@ private:
     // robot coordinates (later to be synced with Robot class)
     double *x;
     double *y;
+    double *theta;
     // robot class:
     Robot robot;
     // old cached variables:

@@ -68,6 +68,7 @@ void Location::initialize(Robot& r) {
     robot = r;
     x = &r.x;
     y = &r.y;
+    theta = &r.theta;
 }
 double Location::calc_theta_orient()
 {
@@ -111,8 +112,9 @@ void Location::update() {
     VectorXD<2> vect = local_offset();
     double avgOr = avg_orient();
     VectorXD<2> change = global_offset(vect);
+    *theta += avgOr;
     *x += change.getIndex(0);
-    *y += change.getIndex(0);
+    *y += change.getIndex(1);
 
     // save new vars to cache:
     old_l = robot.left_abs_dist();
