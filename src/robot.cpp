@@ -81,8 +81,8 @@ void Robot::set_intake(int analog1, int analog2)
     }
     else if (analog2)
     {
-        items.intake_left->move(255);
-        items.intake_right->move(255);
+        items.intake_left->move(-255);
+        items.intake_right->move(-255);
     } else {
         items.intake_left->move(0);
         items.intake_right->move(0);

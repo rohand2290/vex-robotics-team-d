@@ -11,16 +11,16 @@
 
 // Left drive:
 #define LEFT_WHEELS_PORT_1 9 // Defines the 1st port of the left wheels.
-#define LEFT_WHEELS_PORT_2 2 // Defines the 2nd port of the left wheels.
-#define LEFT_WHEELS_PORT_3 1 // Defines the 3rd port of the left wheels.
+#define LEFT_WHEELS_PORT_2 20 // Defines the 2nd port of the left wheels.
+#define LEFT_WHEELS_PORT_3 10 // Defines the 3rd port of the left wheels.
 // Right drive:
-#define RIGHT_WHEELS_PORT_1 19 // Defines the 1st port of the right wheels.
-#define RIGHT_WHEELS_PORT_2 12 // Defines the 2nd port of the right wheels.
-#define RIGHT_WHEELS_PORT_3 11 // Defines the 3rd port of the right wheels.
+#define RIGHT_WHEELS_PORT_1 11 // Defines the 1st port of the right wheels.
+#define RIGHT_WHEELS_PORT_2 1 // Defines the 2nd port of the right wheels.
+#define RIGHT_WHEELS_PORT_3 2 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
-#define INTAKE_PORT_LEFT 8 // Defines the 1st port of the left side of intake.
-#define INTAKE_PORT_RIGHT 13 // Defines the 2nd port of the right side of intake.
+#define INTAKE_PORT_LEFT 16 // Defines the 1st port of the left side of intake.
+#define INTAKE_PORT_RIGHT 4 // Defines the 2nd port of the right side of intake.
 
 // Turret:
 #define TURRET_PORT 69 // Defines the port of the turret motor.
@@ -46,9 +46,9 @@
 // trackion wheels:
 #define WHEEL_C 2.75 * PI // wheel circumference
 // encoder ports:
-#define ENCODER_PORT_1 10 // left parralel
-#define ENCODER_PORT_2 14 // right parralel
-#define ENCODER_PORT_3 3 // center perpendicular
+#define ENCODER_PORT_1 5 // left parralell
+#define ENCODER_PORT_2 3 // right parralell
+#define ENCODER_PORT_3 8 // center perpendicular
 // PID Constants:
 // power:
 #define POWER_KP 69
