@@ -38,8 +38,6 @@
 #define SMOOTH_CONSTANT 5 // This constant effects the smoothness of the transition, the larger the less smooth.
 
 // Motor speeds:
-#define INTAKE_IN_SPEED 32 // intake speed inwards
-#define INTAKE_OUT_SPEED -64 // intake speed inwards
 #define TURRET_SPEED 16 // the turret speed
 #define MOTOR_PERCENT 1 // percentage (0-1) for max power to be used (0.75 means the maximum ever reached will be 75%)
 #define TURN_PERCENT 1 // percentage (0-1) for max turn sensibility.
@@ -51,9 +49,6 @@
 #define ENCODER_PORT_1 10 // left parralel
 #define ENCODER_PORT_2 14 // right parralel
 #define ENCODER_PORT_3 3 // center perpendicular
-// accuracy adjustments: the smaller, the more accurate. avoid making it 0
-#define ODOM_ACCURACY 0.00001
-#define CHECK_FOR_ENV_FORCES false // check for forces from outside the environment.
 // PID Constants:
 #define KP 69
 #define KI 69
@@ -71,5 +66,7 @@
 #define AUTON_LOOP_DELAY 5 // ms
 #define PI (long double)3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482
 #define ROBOT_WIDTH 3.54331 // in
+// accuracy adjustments: the smaller, the more accurate. avoid making it 0
+#define ACCURACY 0.00001
 
 #endif // VARIABLES_H

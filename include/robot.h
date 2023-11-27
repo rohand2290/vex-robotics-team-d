@@ -52,8 +52,6 @@ public:
     /// @param degrees degrees as double
     /// @return radians as double
     double degrees_to_radians(double degrees);
-    /// @brief Updates the coordinates after every function call. Call this in a repetitive loop.
-    void update_coords(double rel_l, double rel_r, double rel_c);
 };
 
 #endif // ROBOT_H
