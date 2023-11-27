@@ -63,9 +63,9 @@ void opcontrol()
 		pros::lcd::print(1, "right: %i", items.encoder_right->get_position());
 		pros::lcd::print(2, "left: %i", items.encoder_left->get_position());
 		pros::lcd::print(3, "center: %i", items.encoder_center->get_position());
-		pros::lcd::print(4, "right: %i in", (double)items.encoder_right->get_position() / 360000.0);
-		pros::lcd::print(5, "left: %i in", (double)items.encoder_left->get_position() / 360000.0);
-		pros::lcd::print(6, "center: %i in", (double)items.encoder_center->get_position() / 360000.0);
+		pros::lcd::print(4, "right: %f in", robot.right_abs_dist());
+		pros::lcd::print(5, "left: %f in", robot.left_abs_dist());
+		pros::lcd::print(6, "center: %f in", robot.center_abs_dist());
 
 		map.update();
 
