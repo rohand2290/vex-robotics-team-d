@@ -5,8 +5,8 @@
 
 class Robot {
 private:
-    Items items;
 public:
+    Items items;
     // the abs raw distances: (calculate actual distance using rotory sensor)
     double right_abs_dist();
     double left_abs_dist();

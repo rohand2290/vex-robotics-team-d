@@ -122,3 +122,45 @@ void Location::update() {
 	old_c = robot.center_abs_dist();
 	old_t = new_t;
 }
+
+double Location::P(double error, bool isturn) { 
+	return error * (isturn ? TURN_KP : POWER_KP); 
+}
+double Location::I(double error, double& integral, Waypoint& goal, bool isturn) {
+	integral += error;
+	if (goal.x == robot.x && goal.y == robot.y || error == 0) { // TODO: WARNING
+		integral = 0;
+	}
+	double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
+	double min = (isturn ? TURN_ERROR_MIN : POWER_ERROR_MIN);
+	if (max < error || min > error) {
+		integral = 0;
+	}
+	return integral * (isturn ? TURN_KI : POWER_KI);
+}
+double Location::D(double& prev_error, double error, bool isturn) {
+	return (error - prev_error) * (isturn ? TURN_KD : POWER_KD);
+}
+double Location::PID(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn) {
+	return P(error, isturn) + I(error, integral, goal, isturn) + D(prev_error, error, isturn);
+}
+VectorXD<2> Location::updatePID(Waypoint& goal) {
+    double error_x = *x - goal.x;
+    double error_y = *y - goal.y;
+    error = sqrt(error_x * error_x + error_y + error_y);
+    error_turn = 
+        atan2(*y, *x) - robot.degrees_to_radians((robot.items.encoder_center->get_position() % 360000) / 100);
+
+    // pid stuff:
+
+    double power = PID(error, integral, prev_error, goal, false);
+    double turn = PID(error_turn, integral_turn, prev_error_turn, goal, true);
+
+    VectorXD<2> v(power, turn);
+    /////////////
+
+    prev_error = error;
+    prev_error_turn = error_turn;
+
+    return v;
+}

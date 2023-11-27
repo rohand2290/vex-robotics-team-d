@@ -82,26 +82,3 @@ void opcontrol()
 	}
 }
 
-// PID ===========================================================================================================
-double P(double error, bool isturn) { 
-	return error * (isturn ? TURN_KP : POWER_KP); 
-}
-double I(double error, double& integral, Waypoint& goal, bool isturn) {
-	integral += error;
-	if (goal.x == robot.x && goal.y == robot.y || error == 0) { // TODO: WARNING
-		integral = 0;
-	}
-	double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
-	double min = (isturn ? TURN_ERROR_MIN : POWER_ERROR_MIN);
-	if (max < error || min > error) {
-		integral = 0;
-	}
-	return integral * (isturn ? TURN_KI : POWER_KI);
-}
-double D(double& prev_error, double error, bool isturn) {
-	return (error - prev_error) * (isturn ? TURN_KD : POWER_KD);
-}
-double PID(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn) {
-	return P(error, isturn) + I(error, integral, goal, isturn) + D(prev_error, error, isturn);
-}
-

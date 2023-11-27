@@ -22,15 +22,28 @@ private:
 	double rel_l = 0;
 	double rel_r = 0;
 	double rel_c = 0;
+    // PID:
+    double error = 0;
+    double prev_error = 0;
+    double integral = 0;
+    double error_turn = 0;
+    double prev_error_turn = 0;
+    double integral_turn = 0;
 public:
     void initialize(Robot& r);
     void update();
     
+    // ODOM:
     double calc_theta_orient();
     VectorXD<2> local_offset();
     double avg_orient();
-    
     VectorXD<2> global_offset(VectorXD<2> delta_dl);
+    // PID:
+    double P(double error, bool isturn);
+    double I(double error, double& integral, Waypoint& goal, bool isturn);
+    double D(double& prev_error, double error, bool isturn);
+    double PID(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn);
+    VectorXD<2> updatePID(Waypoint& goal);
 };
 
 #endif // LOCATION_H
