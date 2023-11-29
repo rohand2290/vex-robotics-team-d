@@ -12,6 +12,7 @@
 
 #include "api.h"
 #include <math.h>
+#include <vector>
 
 #include "vectorxd.h"
 #include "items.h"

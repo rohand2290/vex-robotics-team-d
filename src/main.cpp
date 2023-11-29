@@ -3,6 +3,7 @@
 Items items;
 Robot robot;
 Location map;
+Path road;
 
 // Runs initialization code. This occurs as soon as the program is started.
 void initialize()
@@ -12,6 +13,7 @@ void initialize()
 	items.initialize();
 	robot.initialize(items);
 	map.initialize(robot);
+	road.initialize(10, 10);
 }
 
 // Runs while the robot is in the disabled state
@@ -38,6 +40,7 @@ void opcontrol()
 	// pros::delay(1000);
 
 	bool temp = false;
+	bool auton = false;
 // Variables for Smooth Drive:
 #ifdef SMOOTH_CONSTANT
 	int speedr = 0; // speed for right
@@ -46,6 +49,10 @@ void opcontrol()
 	// Driver Code:
 	while (true)
 	{
+		// PID TEST +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		if (items.master->get_digital(DIGITAL_B)) auton = true;
+		else if (auton );
+		// DRIVE TRAIN ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		// set speed chassis
 		robot.set_speed_chassis(
 			items.master->get_analog(ANALOG_LEFT_Y),
@@ -60,13 +67,9 @@ void opcontrol()
 			items.master->get_digital(DIGITAL_DOWN));
 		robot.set_puncher(items.master->get_digital(DIGITAL_A));
 
-		pros::lcd::print(1, "right: %i", items.encoder_right->get_position());
-		pros::lcd::print(2, "left: %i", items.encoder_left->get_position());
-		pros::lcd::print(3, "center: %i", items.encoder_center->get_position());
-		pros::lcd::print(4, "right: %f in", robot.right_abs_dist());
-		pros::lcd::print(5, "left: %f in", robot.left_abs_dist());
-		pros::lcd::print(6, "center: %f in", robot.center_abs_dist());
-
+		pros::lcd::print(1, "x: %f", robot.x);
+		pros::lcd::print(2, "y: %f", robot.y);
+		pros::lcd::print(3, "theta: %f", robot.theta);
 		map.update();
 
 		pros::delay(OPCONTROL_LOOP_DELAY);
