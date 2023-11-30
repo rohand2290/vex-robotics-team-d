@@ -30,7 +30,7 @@ void autonomous()
 		if (items.master->get_digital(DIGITAL_A)) return;
 		if (items.master->get_digital(DIGITAL_B)) {
 			// send to remote:
-			items.master->print(1, 1, "(%f, %f) bearing %f [abs: %f]", robot.x, robot.y, robot.theta, robot.get_abs_angle());
+			items.master->print(0, 0, "(%f, %f) bearing %f [abs: %f]", robot.x, robot.y, robot.theta, robot.get_abs_angle());
 		}
 		pros::lcd::print(1, "x: %f", robot.x);
 		pros::lcd::print(2, "y: %f", robot.y);

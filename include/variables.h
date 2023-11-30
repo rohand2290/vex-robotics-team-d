@@ -46,7 +46,7 @@
 // trackion wheels:
 #define WHEEL_C 2.75 * PI // wheel circumference
 // find difference from pivot point (point that doesnt move during rotation) and center odom.
-#define PIVOT_P_TO_PERP_ODOM 69 // in
+#define PIVOT_P_TO_PERP_ODOM 3.5 // in
 // encoder ports:
 #define ENCODER_PORT_1 5 // left parralell
 #define ENCODER_PORT_2 3 // right parralell
@@ -57,13 +57,13 @@
 #define POWER_KI 69
 #define POWER_KD 69
 #define POWER_ERROR_MAX 69
-#define POWER_ERROR_MIN 69
+#define POWER_ERROR_MIN -69
 // turn:
 #define TURN_KP 69
 #define TURN_KI 69
 #define TURN_KD 69
 #define TURN_ERROR_MAX 69
-#define TURN_ERROR_MIN 69
+#define TURN_ERROR_MIN -69
 
 // ======= Miscelanious: =========
 

@@ -5,12 +5,12 @@
 
 class Location {
 private:
-    // robot coordinates (later to be synced with Robot class)
+    // robot coordinates
     double *x;
     double *y;
     double *theta;
     // robot class:
-    Robot robot;
+    Robot* robot;
     // old cached variables:
 	double old_l = 0;
 	double old_r = 0;

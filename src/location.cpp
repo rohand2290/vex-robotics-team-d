@@ -65,7 +65,7 @@ int VectorXD<N>::size() const { return N; }
 
 
 void Location::initialize(Robot& r) {
-    robot = r;
+    robot = &r;
     x = &r.x;
     y = &r.y;
     theta = &r.theta;
@@ -103,9 +103,9 @@ VectorXD<2> Location::global_offset(VectorXD<2> delta_dl) {
 }
 void Location::update() {
     // update variables:
-    rel_l = robot.left_abs_dist() - old_l;
-	rel_r = robot.right_abs_dist() - old_r;
-	rel_c = robot.center_abs_dist() - old_c;
+    rel_l = robot->left_abs_dist() - old_l;
+	rel_r = robot->right_abs_dist() - old_r;
+	rel_c = robot->center_abs_dist() - old_c;
 	new_t = calc_theta_orient();
 
     // calculate and update coordinates:
@@ -117,9 +117,9 @@ void Location::update() {
     *y += change.getIndex(1);
 
     // save new vars to cache:
-    old_l = robot.left_abs_dist();
-	old_r = robot.right_abs_dist();
-	old_c = robot.center_abs_dist();
+    old_l = robot->left_abs_dist();
+	old_r = robot->right_abs_dist();
+	old_c = robot->center_abs_dist();
 	old_t = new_t;
 }
 
@@ -128,7 +128,7 @@ double Location::P(double error, bool isturn) {
 }
 double Location::I(double error, double& integral, Waypoint& goal, bool isturn) {
 	integral += error;
-	if (goal.x == robot.x && goal.y == robot.y || error == 0) { // TODO: WARNING
+	if (goal.x == *x && goal.y == *y || error == 0) { // TODO: WARNING
 		integral = 0;
 	}
 	double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
@@ -149,10 +149,9 @@ VectorXD<2> Location::updatePID(Waypoint& goal) {
     double error_y = *y - goal.y;
     error = sqrt(error_x * error_x + error_y + error_y);
     error_turn = 
-        atan2(*y, *x) - robot.degrees_to_radians((robot.items.encoder_center->get_position() % 360000) / 100);
+        atan2(*y, *x) - robot->degrees_to_radians(robot->center_abs_dist() / 100);
 
     // pid stuff:
-
     double power = PID(error, integral, prev_error, goal, false);
     double turn = PID(error_turn, integral_turn, prev_error_turn, goal, true);
 

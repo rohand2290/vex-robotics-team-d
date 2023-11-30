@@ -11,6 +11,9 @@ public:
     double right_abs_dist();
     double left_abs_dist();
     double center_abs_dist();
+    /// @brief Gets where the robot in pointing in degrees or radians.
+    /// @param rad radians or not (degrees)
+    /// @return bearing angle
     double get_abs_angle(bool rad = true);
 
     double x;
