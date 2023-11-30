@@ -26,11 +26,21 @@ void competition_initialize() {}
 void autonomous()
 {
 	// TODO:
-	// while (true) {
+	while (true) {
+		if (items.master->get_digital(DIGITAL_A)) return;
+		if (items.master->get_digital(DIGITAL_B)) {
+			// send to remote:
+			items.master->print(1, 1, "(%f, %f) bearing %f [abs: %f]", robot.x, robot.y, robot.theta, robot.get_abs_angle());
+		}
+		pros::lcd::print(1, "x: %f", robot.x);
+		pros::lcd::print(2, "y: %f", robot.y);
+		pros::lcd::print(3, "theta: %f", robot.theta);
+		pros::lcd::print(4, "abs theta: %f", robot.get_abs_angle());
+		pros::lcd::print(5, "press A to exit or B to send to remote...");
 
-	// 	robot.update_coords();
-	// 	pros::delay(AUTON_LOOP_DELAY);
-	// }
+		map.update();
+		pros::delay(AUTON_LOOP_DELAY);
+	}
 }
 
 // Runs the operator control code.
@@ -41,17 +51,14 @@ void opcontrol()
 
 	bool temp = false;
 	bool auton = false;
-// Variables for Smooth Drive:
-#ifdef SMOOTH_CONSTANT
+	// Variables for Smooth Drive:
+	#ifdef SMOOTH_CONSTANT
 	int speedr = 0; // speed for right
 	int speedl = 0; // speed for left
-#endif
+	#endif
 	// Driver Code:
 	while (true)
 	{
-		// PID TEST +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		if (items.master->get_digital(DIGITAL_B)) auton = true;
-		else if (auton );
 		// DRIVE TRAIN ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		// set speed chassis
 		robot.set_speed_chassis(
@@ -70,6 +77,7 @@ void opcontrol()
 		pros::lcd::print(1, "x: %f", robot.x);
 		pros::lcd::print(2, "y: %f", robot.y);
 		pros::lcd::print(3, "theta: %f", robot.theta);
+		pros::lcd::print(4, "abs theta: %f", robot.get_abs_angle());
 		map.update();
 
 		pros::delay(OPCONTROL_LOOP_DELAY);

@@ -19,6 +19,15 @@ double Robot::center_abs_dist()
     return (normal / 360000.0) * WHEEL_C;
 }
 
+double Robot::get_abs_angle(bool rad) {
+    // logic: arc-length = WHEEL_C
+    //      : radius = perpendicular sensor - point of pivoting
+    //      : theta / arc-length = 2 * pi / 2 * pi * radius
+    //      => theta =  arc-length / radius RADIANS
+    double theta = center_abs_dist() / PIVOT_P_TO_PERP_ODOM;
+    return rad ? theta : radians_to_degrees(theta);
+}
+
 void Robot::initialize(Items &i)
 {
     items = i;

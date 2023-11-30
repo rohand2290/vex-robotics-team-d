@@ -4,8 +4,8 @@
 // TODO:
 
 struct Waypoint {
-    int x;
-    int y;
+    double x;
+    double y;
 };
 
 class Path {

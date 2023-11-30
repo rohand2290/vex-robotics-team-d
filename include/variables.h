@@ -45,6 +45,8 @@
 // ======= Auton: ================
 // trackion wheels:
 #define WHEEL_C 2.75 * PI // wheel circumference
+// find difference from pivot point (point that doesnt move during rotation) and center odom.
+#define PIVOT_P_TO_PERP_ODOM 69 // in
 // encoder ports:
 #define ENCODER_PORT_1 5 // left parralell
 #define ENCODER_PORT_2 3 // right parralell

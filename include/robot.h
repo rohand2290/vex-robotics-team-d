@@ -11,6 +11,7 @@ public:
     double right_abs_dist();
     double left_abs_dist();
     double center_abs_dist();
+    double get_abs_angle(bool rad = true);
 
     double x;
     double y;
