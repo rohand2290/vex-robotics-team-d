@@ -14,7 +14,7 @@ public:
     /// @brief Gets where the robot in pointing in degrees or radians.
     /// @param rad radians or not (degrees)
     /// @return bearing angle
-    double get_abs_angle(bool rad = true);
+    double get_abs_angle(bool rad = false);
 
     double x;
     double y;

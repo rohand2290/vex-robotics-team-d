@@ -120,8 +120,7 @@ void Robot::set_turret(int up, int down)
 
 void Robot::set_puncher(int analog)
 {
-    items.puncher1->set_value(analog);
-    items.puncher2->set_value(analog);
+    items.puncher->set_value(analog);
 }
 
 double Robot::radians_to_degrees(double radians)

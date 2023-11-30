@@ -60,9 +60,22 @@ template <int N>
 int VectorXD<N>::size() const { return N; }
 
 
-
-
-
+/// @brief Converts standrad angles to thier bearings due north
+/// @param deg standrad in degrees
+/// @return bearing in degrees
+static double standrad_to_bearing(double deg) {
+    double b = 90 - deg;
+    if (b >= 0) return b;
+    else return b + 360;
+}
+/// @brief Converts standrad angles to thier bearings due north
+/// @param rad standrad in radians
+/// @return bearing in radians
+static double standrad_to_bearing_rad(double rad) {
+    double b = PI / 2 - rad;
+    if (b >= 0) return b;
+    else return b + 2 * PI;
+}
 
 void Location::initialize(Robot& r) {
     robot = &r;
@@ -77,7 +90,7 @@ double Location::calc_theta_orient()
 VectorXD<2> Location::local_offset()
 {
     VectorXD<2> v;
-    if (new_t - old_t == 0) {
+    if (ARE_SAME(new_t, old_t)) {
         v.setIndex(0, rel_c);
         v.setIndex(1, rel_r);
     }
@@ -128,7 +141,7 @@ double Location::P(double error, bool isturn) {
 }
 double Location::I(double error, double& integral, Waypoint& goal, bool isturn) {
 	integral += error;
-	if (goal.x == *x && goal.y == *y || error == 0) { // TODO: WARNING
+	if (ARE_SAME(goal.x, *x) && ARE_SAME(goal.y, *y) || ARE_SAME(error, 0)) {
 		integral = 0;
 	}
 	double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
@@ -141,15 +154,18 @@ double Location::I(double error, double& integral, Waypoint& goal, bool isturn) 
 double Location::D(double& prev_error, double error, bool isturn) {
 	return (error - prev_error) * (isturn ? TURN_KD : POWER_KD);
 }
+
 double Location::PID(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn) {
 	return P(error, isturn) + I(error, integral, goal, isturn) + D(prev_error, error, isturn);
 }
+
 VectorXD<2> Location::updatePID(Waypoint& goal) {
     double error_x = *x - goal.x;
     double error_y = *y - goal.y;
     error = sqrt(error_x * error_x + error_y + error_y);
-    error_turn = 
-        atan2(*y, *x) - robot->degrees_to_radians(robot->center_abs_dist() / 100);
+    error_turn = robot->radians_to_degrees(
+        standrad_to_bearing_rad(atan2(*y, *x)) - robot->degrees_to_radians(robot->center_abs_dist() / 100)
+    );
 
     // pid stuff:
     double power = PID(error, integral, prev_error, goal, false);

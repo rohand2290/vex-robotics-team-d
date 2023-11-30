@@ -18,10 +18,9 @@ public:
     pros::Motor* intake_left;
     pros::Motor* intake_right;
     pros::Motor* turret;
-    pros::ADIDigitalOut* puncher1;
-    pros::ADIDigitalOut* puncher2;
-    pros::ADIDigitalOut* pto1;
-    pros::ADIDigitalOut* pto2;
+    pros::ADIDigitalOut* puncher;
+    pros::ADIDigitalOut* pto;
+    pros::ADIDigitalOut* wings;
     pros::Rotation* encoder_left;
     pros::Rotation* encoder_right;
     pros::Rotation* encoder_center;

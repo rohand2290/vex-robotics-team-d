@@ -27,10 +27,10 @@ void autonomous()
 {
 	// TODO:
 	while (true) {
-		if (items.master->get_digital(DIGITAL_A)) return;
+		if (items.master->get_digital(DIGITAL_A)) break;
 		if (items.master->get_digital(DIGITAL_B)) {
 			// send to remote:
-			items.master->print(0, 0, "(%f, %f) bearing %f [abs: %f]", robot.x, robot.y, robot.theta, robot.get_abs_angle());
+			items.master->print(0, 0, "(%i,%i)b%i", (int)robot.x, (int)robot.y, (int)robot.get_abs_angle());
 		}
 		pros::lcd::print(1, "x: %f", robot.x);
 		pros::lcd::print(2, "y: %f", robot.y);
@@ -46,6 +46,8 @@ void autonomous()
 // Runs the operator control code.
 void opcontrol()
 {
+	// UNCOMMENT FOLLOWING TO STOP AUTON TESTING:
+	autonomous();
 	// pros::lcd::print(1, "starting drive train...");
 	// pros::delay(1000);
 
@@ -81,15 +83,10 @@ void opcontrol()
 		map.update();
 
 		pros::delay(OPCONTROL_LOOP_DELAY);
-		if (items.master->get_digital(DIGITAL_Y))
-		{
-			if (!temp) temp = true;
-			else continue;
-			items.initpos = !items.initpos;
-			items.pto1->set_value(items.initpos);
-			items.pto2->set_value(items.initpos);
-		}
-		if (!items.master->get_digital(DIGITAL_Y)) temp = false;
+		
+		if (items.master->get_digital_new_press(DIGITAL_Y)) items.initpos = !items.initpos;
+		items.pto->set_value(items.initpos);
+		items.wings->set_value(items.master->get_digital(DIGITAL_R1));
 	}
 }
 

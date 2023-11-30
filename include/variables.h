@@ -26,10 +26,9 @@
 #define TURRET_PORT 69 // Defines the port of the turret motor.
 
 // Puncher:
-#define PUNCHER_PORT_1 19 // Defines the 1st port of the puncher.
-#define PUNCHER_PORT_2 20 // Defines the 2nd port of the puncher.
-#define PTO_PORT_1 21
-#define PTO_PORT_2 22
+#define PUNCHER_PORT 'A'
+#define PTO_PORT 'B'
+#define WINGS_PORT 'C'
 
 // ======== PREFERENCES: =========
 
@@ -53,15 +52,15 @@
 #define ENCODER_PORT_3 8 // center perpendicular
 // PID Constants:
 // power:
-#define POWER_KP 69
-#define POWER_KI 69
-#define POWER_KD 69
+#define POWER_KP 1
+#define POWER_KI 1
+#define POWER_KD 1
 #define POWER_ERROR_MAX 69
 #define POWER_ERROR_MIN -69
 // turn:
-#define TURN_KP 69
-#define TURN_KI 69
-#define TURN_KD 69
+#define TURN_KP 1
+#define TURN_KI 1
+#define TURN_KD 1
 #define TURN_ERROR_MAX 69
 #define TURN_ERROR_MIN -69
 
