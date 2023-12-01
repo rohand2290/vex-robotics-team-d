@@ -26,3 +26,10 @@ void Path::add_queue(double x, double y) {
 int Path::size() {
     return cpp_vect.size();
 }
+
+bool Path::goal_reached(double x, double y) {
+    if (ABS(x - get_latest().x) < allowable_error || ABS(y - get_latest().y) < allowable_error) {
+        return true;
+    }
+    return false;
+}

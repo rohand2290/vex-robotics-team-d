@@ -41,8 +41,8 @@ static void test_angle_odom() {
 
 	while (robot.theta <= 360 || robot.theta >= -360) {
 		UPDATE_COORDS();
-		robot.set_left_side(-127);
-		robot.set_right_side(127);
+		robot.set_left_side(-255);
+		robot.set_right_side(255);
 	}
 
 	pros::lcd::print(0, "TEST COMPLETE. Check for inaccuracies...");
@@ -57,15 +57,14 @@ void autonomous()
 	pros::lcd::print(0, "(%f, %f)", road.get_latest().x, road.get_latest().y);
 	while (!items.master->get_digital(DIGITAL_A)) pros::delay(AUTON_LOOP_DELAY);
 
-	Waypoint current_goal;
-	while (true) {
+	Waypoint current_goal = road.get_latest();
+	while (!road.goal_reached(robot.x, robot.y)) {
 		if (items.master->get_digital(DIGITAL_A)) break;
 		if (items.master->get_digital(DIGITAL_B)) {
 			// send to remote:
 			items.master->print(0, 0, "(%i,%i)b%i", (int)robot.x, (int)robot.y, (int)robot.theta);
 		}
-		
-		current_goal = road.get_latest();
+
 		std::vector<double> vect = map.updatePID(current_goal);
 
 		robot.set_right_side(vect[0] + vect[1]);
