@@ -4,8 +4,8 @@
 #define UPDATE_COORDS() {\
 			std::vector<double> vect = map.update();\
 			robot.theta = map.normalize(robot.get_abs_angle());\
-			robot.x += vect[0];\
-			robot.y += vect[1]; }
+			robot.x = vect[0];\
+			robot.y = vect[1]; }
 
 Items items;
 Robot robot;
@@ -20,7 +20,7 @@ void initialize()
 	items.initialize();
 	robot.initialize(items);
 	map.initialize(robot);
-	road.initialize(28, 28);
+	road.initialize(10, 10);
 }
 
 // Runs while the robot is in the disabled state
@@ -116,9 +116,9 @@ void opcontrol()
 			robot.set_puncher(items.master->get_digital(DIGITAL_A));
 
 			UPDATE_COORDS();
-			pros::lcd::print(1, "x: %f", robot.x);
-			pros::lcd::print(2, "y: %f", robot.y);
-			pros::lcd::print(3, "abs theta: %i", robot.theta);
+			pros::lcd::print(0, "x: %f", robot.x);
+			pros::lcd::print(1, "y: %f", robot.y);
+			pros::lcd::print(2, "abs theta: %i", robot.theta);
 
 			if (items.master->get_digital_new_press(DIGITAL_Y)) items.initpos = !items.initpos;
 			items.pto->set_value(items.initpos);

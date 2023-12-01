@@ -133,8 +133,8 @@ std::vector<double> Location::update() {
     // VectorXD<2> change = global_offset(vect);
     // *theta += avgOr;
     std::vector<double> arr = {
-        ((rel_l + rel_r) / 2) * sin(robot->get_abs_angle(true)),
-        ((rel_l + rel_r) / 2) * cos(robot->get_abs_angle(true)),
+        ((robot->left_abs_dist() + robot->right_abs_dist()) / 2) * sin(robot->get_abs_angle(true)),
+        ((robot->left_abs_dist() + robot->right_abs_dist()) / 2) * cos(robot->get_abs_angle(true)),
     };
 
     // save new vars to cache:
