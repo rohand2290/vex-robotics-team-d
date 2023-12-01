@@ -120,8 +120,7 @@ int Location::normalize(double deg) {
     return ret;
 }
 
-double* Location::update() {
-    double arr[2];
+std::vector<double> Location::update() {
     // update variables:
     rel_l = robot->left_abs_dist() - old_l;
 	rel_r = robot->right_abs_dist() - old_r;
@@ -133,8 +132,10 @@ double* Location::update() {
     // double avgOr = avg_orient();
     // VectorXD<2> change = global_offset(vect);
     // *theta += avgOr;
-    arr[0] = ((rel_l + rel_r) / 2) * sin(robot->get_abs_angle(true));
-    arr[1] = ((rel_l + rel_r) / 2) * cos(robot->get_abs_angle(true));
+    std::vector<double> arr = {
+        ((rel_l + rel_r) / 2) * sin(robot->get_abs_angle(true)),
+        ((rel_l + rel_r) / 2) * cos(robot->get_abs_angle(true)),
+    };
 
     // save new vars to cache:
     old_l = robot->left_abs_dist();
@@ -168,7 +169,7 @@ double Location::PID(double error, double& integral, double& prev_error, Waypoin
 	return P(error, isturn) + I(error, integral, goal, isturn) + D(prev_error, error, isturn);
 }
 
-VectorXD<2> Location::updatePID(Waypoint& goal) {
+std::vector<double> Location::updatePID(Waypoint& goal) {
     double error_x = *x - goal.x;
     double error_y = *y - goal.y;
     error = sqrt(error_x * error_x + error_y + error_y);
@@ -180,7 +181,7 @@ VectorXD<2> Location::updatePID(Waypoint& goal) {
     double power = PID(error, integral, prev_error, goal, false);
     double turn = PID(error_turn, integral_turn, prev_error_turn, goal, true);
 
-    VectorXD<2> v(power, turn);
+    std::vector<double> v = {power, turn};
     /////////////
 
     prev_error = error;

@@ -31,7 +31,7 @@ private:
 public:
     void initialize(Robot& r);
     int normalize(double deg); // returns an angle back from 0 - 360 bearing north (north is its initial position)
-    double* update(); // returns a double array
+    std::vector<double> update(); // returns a double array
     
     // ODOM:
     double calc_theta_orient();
@@ -43,7 +43,7 @@ public:
     double I(double error, double& integral, Waypoint& goal, bool isturn);
     double D(double& prev_error, double error, bool isturn);
     double PID(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn);
-    VectorXD<2> updatePID(Waypoint& goal);
+    std::vector<double> updatePID(Waypoint& goal);
 };
 
 #endif // LOCATION_H
