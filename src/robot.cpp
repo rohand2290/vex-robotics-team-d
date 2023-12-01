@@ -33,7 +33,7 @@ void Robot::initialize(Items &i)
     items = i;
     x = 0;
     y = 0;
-    theta = 0;
+    theta = 45; // change depending on start pos
     items.encoder_left->reset_position();
     items.encoder_right->reset_position();
     items.encoder_center->reset_position();

@@ -20,7 +20,7 @@ void initialize()
 	items.initialize();
 	robot.initialize(items);
 	map.initialize(robot);
-	road.initialize(10, 10);
+	road.initialize(28, 28);
 }
 
 // Runs while the robot is in the disabled state
@@ -54,12 +54,12 @@ void autonomous()
 {
 	pros::lcd::clear();
 	pros::lcd::print(0, "press A to start PID test point:");
-	pros::lcd::print(0, "(%f, %f)", road.get_latest().x, road.get_latest().y);
+	pros::lcd::print(1, "(%f, %f)", road.get_latest().x, road.get_latest().y);
 	while (!items.master->get_digital(DIGITAL_A)) pros::delay(AUTON_LOOP_DELAY);
 
 	Waypoint current_goal = road.get_latest();
-	while (!road.goal_reached(robot.x, robot.y)) {
-		if (items.master->get_digital(DIGITAL_A)) break;
+	while (true) {
+		if (items.master->get_digital(DIGITAL_X)) break;
 		if (items.master->get_digital(DIGITAL_B)) {
 			// send to remote:
 			items.master->print(0, 0, "(%i,%i)b%i", (int)robot.x, (int)robot.y, (int)robot.theta);
@@ -73,7 +73,7 @@ void autonomous()
 		pros::lcd::print(0, "x: %f", robot.x);
 		pros::lcd::print(1, "y: %f", robot.y);
 		pros::lcd::print(2, "theta: %f", robot.theta);
-		pros::lcd::print(3, "press A to exit or B to send to remote...");
+		pros::lcd::print(3, "press X to exit or B to send to remote...");
 		UPDATE_COORDS();
 		pros::delay(AUTON_LOOP_DELAY);
 	}
