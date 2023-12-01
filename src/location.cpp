@@ -81,7 +81,6 @@ void Location::initialize(Robot& r) {
     robot = &r;
     x = &r.x;
     y = &r.y;
-    theta = &r.theta;
 }
 double Location::calc_theta_orient()
 {
@@ -114,7 +113,15 @@ VectorXD<2> Location::global_offset(VectorXD<2> delta_dl) {
     VectorXD<2> vect(x, y);
     return vect;
 }
-void Location::update() {
+int Location::normalize(double deg) {
+    int ret = (int)deg;
+    while (ret < 0) ret += 360;
+    while (ret > 360) ret -= 360;
+    return ret;
+}
+
+double* Location::update() {
+    double arr[2];
     // update variables:
     rel_l = robot->left_abs_dist() - old_l;
 	rel_r = robot->right_abs_dist() - old_r;
@@ -122,18 +129,20 @@ void Location::update() {
 	new_t = calc_theta_orient();
 
     // calculate and update coordinates:
-    VectorXD<2> vect = local_offset();
-    double avgOr = avg_orient();
-    VectorXD<2> change = global_offset(vect);
-    *theta += avgOr;
-    *x += change.getIndex(0);
-    *y += change.getIndex(1);
+    // VectorXD<2> vect = local_offset();
+    // double avgOr = avg_orient();
+    // VectorXD<2> change = global_offset(vect);
+    // *theta += avgOr;
+    arr[0] = ((rel_l + rel_r) / 2) * sin(robot->get_abs_angle(true));
+    arr[1] = ((rel_l + rel_r) / 2) * cos(robot->get_abs_angle(true));
 
     // save new vars to cache:
     old_l = robot->left_abs_dist();
 	old_r = robot->right_abs_dist();
 	old_c = robot->center_abs_dist();
 	old_t = new_t;
+
+    return arr;
 }
 
 double Location::P(double error, bool isturn) { 

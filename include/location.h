@@ -8,7 +8,6 @@ private:
     // robot coordinates
     double *x;
     double *y;
-    double *theta;
     // robot class:
     Robot* robot;
     // old cached variables:
@@ -31,7 +30,8 @@ private:
     double integral_turn = 0;
 public:
     void initialize(Robot& r);
-    void update();
+    int normalize(double deg); // returns an angle back from 0 - 360 bearing north (north is its initial position)
+    double* update(); // returns a double array
     
     // ODOM:
     double calc_theta_orient();

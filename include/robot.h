@@ -18,7 +18,7 @@ public:
 
     double x;
     double y;
-    double theta; // in centidegrees.
+    int theta; // in centidegrees.
 
     /// @brief A non default constructor. Should be used in initialize function in main.cpp.
     /// @param i the universal item object's reference
