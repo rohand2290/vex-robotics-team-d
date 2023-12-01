@@ -175,7 +175,7 @@ std::vector<double> Location::updatePID(Waypoint& goal) {
     error = sqrt(error_x * error_x + error_y + error_y);
     error_turn = robot->radians_to_degrees(
         standrad_to_bearing_rad(atan2(*y, *x)) - robot->degrees_to_radians(robot->center_abs_dist() / 100)
-    );
+    ) * PIVOT_P_TO_PERP_ODOM / 2;
 
     // pid stuff:
     double power = PID(error, integral, prev_error, goal, false);

@@ -39,7 +39,7 @@ static void test_angle_odom() {
 	pros::lcd::print(0, "press A to test angle odom...");
 	while (!items.master->get_digital(DIGITAL_A)) pros::delay(20);
 
-	while (robot.theta != 360 || robot.theta != -360) {
+	while (robot.theta <= 360 || robot.theta >= -360) {
 		UPDATE_COORDS();
 		robot.set_left_side(-127);
 		robot.set_right_side(127);
