@@ -12,10 +12,10 @@ class Path {
 private:
     std::vector<Waypoint> cpp_vect;
 public:
-    double allowable_error = 0;
+    double allowable_error = 0.25;
 
     void initialize(double x, double y);
-    bool goal_reached(double x, double y);
+    bool goal_reached(Waypoint& goal, double x, double y);
 
     Waypoint get_latest();
     void pop_latest();

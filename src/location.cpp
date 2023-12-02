@@ -59,7 +59,17 @@ VectorXD<N> VectorXD<N>::sub_by_vect(VectorXD<N> Vect) {
 template <int N>
 int VectorXD<N>::size() const { return N; }
 
-
+int Location::normalize(double deg) {
+    int ret = (int)deg;
+    while (ret < 0) ret += 360;
+    while (ret >= 360) ret -= 360;
+    return ret;
+}
+static double NORM_RAD(double deg) {
+    while (deg < 0) deg += 2 * PI;
+    while (deg >= 2 * PI) deg -= 2 * PI;
+    return deg;
+}
 /// @brief Converts standrad angles to thier bearings due north
 /// @param deg standrad in degrees
 /// @return bearing in degrees
@@ -72,6 +82,7 @@ static double standrad_to_bearing(double deg) {
 /// @param rad standrad in radians
 /// @return bearing in radians
 static double standrad_to_bearing_rad(double rad) {
+    rad = NORM_RAD(rad);
     double b = PI / 2 - rad;
     if (b >= 0) return b;
     else return b + 2 * PI;
@@ -112,12 +123,6 @@ VectorXD<2> Location::global_offset(VectorXD<2> delta_dl) {
     
     VectorXD<2> vect(x, y);
     return vect;
-}
-int Location::normalize(double deg) {
-    int ret = (int)deg;
-    while (ret < 0) ret += 360;
-    while (ret > 360) ret -= 360;
-    return ret;
 }
 
 std::vector<double> Location::update() {
@@ -170,14 +175,22 @@ double Location::PID(double error, double& integral, double& prev_error, Waypoin
 	return P(error, isturn) + I(error, integral, goal, isturn) + D(prev_error, error, isturn);
 }
 
+static double angle_diff(double x, double y) {
+    if (x - 180 <= y) return x - y;
+    else return y - 360;
+}
 std::vector<double> Location::updatePID(Waypoint& goal) {
     double error_x = *x - goal.x;
     double error_y = *y - goal.y;
 
-    error = sqrt(error_x*error_x + error_y*error_y);
-    error_turn = robot->radians_to_degrees(
-        standrad_to_bearing_rad(atan2(*y, *x)) - robot->degrees_to_radians(robot->get_abs_angle())
-    ) * PIVOT_P_TO_PERP_ODOM / 2;
+    int c = 1;
+    if (*x > goal.x || *y > goal.y) c *= -1;
+    error = c * sqrt(error_x*error_x + error_y*error_y);
+    
+    error_turn = angle_diff(
+        robot->radians_to_degrees(standrad_to_bearing_rad(atan2(*y, *x))),
+        robot->get_abs_angle()
+    ) * PIVOT_P_TO_PERP_ODOM;
 
     // pid stuff:
     double power = PID(error, integral, prev_error, goal, false);

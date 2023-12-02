@@ -54,15 +54,15 @@
 #define ANGLE_START 0 // bearing front
 // PID Constants:
 // power:
-#define POWER_KP 5
+#define POWER_KP 7.6
 #define POWER_KI 1
-#define POWER_KD 1
-#define POWER_ERROR_MAX 69
-#define POWER_ERROR_MIN -69
+#define POWER_KD 2.26
+#define POWER_ERROR_MAX 100
+#define POWER_ERROR_MIN -100
 // turn:
-#define TURN_KP 0
-#define TURN_KI 0
-#define TURN_KD 0
+#define TURN_KP 1
+#define TURN_KI 1
+#define TURN_KD 1
 #define TURN_ERROR_MAX 69
 #define TURN_ERROR_MIN -69
 
@@ -78,5 +78,7 @@
 #define ROBOT_WIDTH 3.54331 // in
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0
 #define ACCURACY 0.00001
+// where we start:
+#define START_RED_ALLY
 
 #endif // VARIABLES_H

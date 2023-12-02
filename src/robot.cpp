@@ -84,7 +84,7 @@ void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &sp
 
 void Robot::set_intake(int analog1, int analog2)
 {
-    if (items.initpos) {
+    if (!items.initpos) {
         if (analog1)
         {
             items.intake_left->move(255);

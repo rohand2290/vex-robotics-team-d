@@ -1,6 +1,17 @@
 #include "main.h"
 #include "depend.h"
 
+#ifdef START_RED_ALLY
+std::vector<std::vector<int>> roadway = {
+	{8, 8},
+};
+#else
+std::vector<int[]> roadway = {
+	
+};
+#endif
+
+
 #define UPDATE_COORDS() {\
 			std::vector<double> vect = map.update();\
 			robot.theta = map.normalize(robot.get_abs_angle());\
@@ -20,7 +31,7 @@ void initialize()
 	items.initialize();
 	robot.initialize(items);
 	map.initialize(robot);
-	road.initialize(0, 20);
+	road.initialize(10, 10);
 }
 
 // Runs while the robot is in the disabled state
@@ -61,35 +72,35 @@ void autonomous()
 	pros::lcd::print(1, "(%f, %f)", road.get_latest().x, road.get_latest().y);
 	while (!items.master->get_digital(DIGITAL_A)) pros::delay(AUTON_LOOP_DELAY);
 
-	Waypoint current_goal = road.get_latest();
-	while (true) {
-		if (items.master->get_digital(DIGITAL_X)) break;
-		if (items.master->get_digital(DIGITAL_B)) {
-			// send to remote:
-			items.master->print(0, 0, "(%i,%i)b%i", (int)robot.x, (int)robot.y, (int)robot.theta);
+	for (int i = 0; i < roadway.size(); ++i) {
+		Waypoint current_goal = road.get_latest();
+		while (!road.goal_reached(current_goal, robot.x, robot.y)) {
+			if (items.master->get_digital(DIGITAL_X)) break;
+
+			std::vector<double> vect = map.updatePID(current_goal);
+
+			robot.set_right_side(vect[0] + vect[1]);
+			robot.set_left_side(vect[0] - vect[1]);
+			
+			pros::lcd::print(0, "x pow: %f", robot.x);
+			pros::lcd::print(1, "y pow: %f", robot.y);
+			pros::lcd::print(2, "theta: %f", robot.theta);
+			pros::lcd::print(3, "press X to exit or B to send to remote...");
+			items.master->print(0, 0, "%f", robot.y);
+			UPDATE_COORDS();
+			pros::delay(AUTON_LOOP_DELAY);
 		}
-
-		std::vector<double> vect = map.updatePID(current_goal);
-
-		robot.set_right_side(vect[0] + vect[1]);
-		robot.set_left_side(vect[0] - vect[1]);
-		
-		pros::lcd::print(0, "x pow: %f", robot.x);
-		pros::lcd::print(1, "y pow: %f", robot.y);
-		pros::lcd::print(2, "theta: %f", robot.theta);
-		pros::lcd::print(3, "press X to exit or B to send to remote...");
-		UPDATE_COORDS();
-		pros::delay(AUTON_LOOP_DELAY);
+		// reset x & y
+		// delete current goal
 	}
-
-	// end of auton:
-	items.master->clear();
-	items.master->print(0, 0, "GO!"); 
 }
 
 // Runs the operator control code.
 void opcontrol()
 {
+	// end of auton:
+	items.master->clear();
+	items.master->print(0, 0, "GO!"); 
 	// UNCOMMENT FOLLOWING TO STOP AUTON TESTING:
 	autonomous();
 
