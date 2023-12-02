@@ -20,6 +20,17 @@ void Items::initialize()  {
     encoder_center = new pros::Rotation (ENCODER_PORT_3);
 }
 
+void Items::stop() {
+    left1->brake();
+    left2->brake();
+    left3->brake();
+    right1->brake();
+    right2->brake();
+    right3->brake();
+    intake_left->brake();
+    intake_right->brake();
+}
+
 Items::~Items() {
     delete master;
     delete left1;

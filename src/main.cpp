@@ -1,16 +1,44 @@
 #include "main.h"
 #include "depend.h"
 
+struct Instruction {
+	double move;
+	bool is_turn;
+	std::string command;
+};
+
 #ifdef START_RED_ALLY
-std::vector<std::vector<int>> roadway = {
-	{8, 8},
+std::vector<Instruction> roadway = {
+	{8, 0, ""},
+	{-60, 1, ""},
+	{28.8, 0, ""},
+	{0, 0, "OUT"},
+	{-28.8, 0, ""},
+	{-130, 1, ""},
+	{12.8, 0, "IN"},
+	{-125, 1, ""},
+	{19, 0, ""},
+	{-25, 1, ""},
+	{26, 0, ""},
+	{45, 0, ""}
 };
 #else
-std::vector<int[]> roadway = {
-	
+std::vector<Instruction> roadway = {
+	{8, 0, ""},
+	{90, 1, ""},
+	{20.8, 0, ""},
+	{0, 0, "OUT"},
+	{-20.8, 0},
+	{90, 1, ""},
+	{12.8, 0, "IN"},
+	{-12.8, 0, ""},
+	{110, 1, ""},
+	{19, 0, ""},
+	{40, 1, ""},
+	{26, 0, ""},
+	{45, 1, ""},
 };
 #endif
-
 
 #define UPDATE_COORDS() {\
 			std::vector<double> vect = map.update();\
@@ -35,14 +63,10 @@ void initialize()
 }
 
 // Runs while the robot is in the disabled state
-void disabled() {}
+void disabled() { items.stop(); }
 
 // Runs after initialize(), and before autonomous when connected to the Field Management System or the VEX Competition Switch.
-void competition_initialize() { 
-	pros::lcd::clear(); 
-	items.master->clear();
-	items.master->print(0, 0, "Auton..."); 
-}
+void competition_initialize() {}
 
 // Test of abs theta measurement:
 static void test_angle_odom() {
@@ -68,13 +92,35 @@ static void test_angle_odom() {
 void autonomous()
 {
 	pros::lcd::clear();
-	pros::lcd::print(0, "press A to start PID test point:");
-	pros::lcd::print(1, "(%f, %f)", road.get_latest().x, road.get_latest().y);
-	while (!items.master->get_digital(DIGITAL_A)) pros::delay(AUTON_LOOP_DELAY);
+	// UNCOMMENT WHEN TESTING:
+	// pros::lcd::print(0, "press A to start PID test point:");
+	// pros::lcd::print(1, "(%f, %f)", road.get_latest().x, road.get_latest().y);
+	// while (!items.master->get_digital(DIGITAL_A)) pros::delay(AUTON_LOOP_DELAY);
 
-	for (int i = 0; i < roadway.size(); ++i) {
-		Waypoint current_goal = road.get_latest();
-		while (!road.goal_reached(current_goal, robot.x, robot.y)) {
+	for (Instruction ins : roadway) {
+		if (ins.command == "IN") {
+			items.intake_left->move(-255);
+			items.intake_right->move(-255);
+		} else if (ins.command == "OUT") {
+			items.intake_left->move(255);
+			items.intake_right->move(255);
+		}
+
+		double need_theta = robot.theta;
+		double goal_x = robot.x;
+		double goal_y = robot.y;
+
+		if (ins.is_turn) {
+			need_theta = robot.theta + ins.move;
+		} else {
+			goal_x = sin(robot.theta) * ins.move;
+			goal_y = cos(robot.theta) * ins.move;
+		}
+
+
+		Waypoint current_goal = {goal_x, goal_y};
+
+		while (true) {
 			if (items.master->get_digital(DIGITAL_X)) break;
 
 			std::vector<double> vect = map.updatePID(current_goal);
@@ -82,27 +128,27 @@ void autonomous()
 			robot.set_right_side(vect[0] + vect[1]);
 			robot.set_left_side(vect[0] - vect[1]);
 			
-			pros::lcd::print(0, "x pow: %f", robot.x);
-			pros::lcd::print(1, "y pow: %f", robot.y);
-			pros::lcd::print(2, "theta: %f", robot.theta);
+			pros::lcd::print(0, "x goal: %f", goal_x);
+			pros::lcd::print(1, "y goal: %f", goal_y);
+			pros::lcd::print(2, "theta goal: %f", need_theta);
 			pros::lcd::print(3, "press X to exit or B to send to remote...");
 			items.master->print(0, 0, "%f", robot.y);
 			UPDATE_COORDS();
 			pros::delay(AUTON_LOOP_DELAY);
 		}
-		// reset x & y
-		// delete current goal
+		robot.x = 0;
+		robot.y = 0;
+		// road.pop_latest();
 	}
 }
 
 // Runs the operator control code.
 void opcontrol()
 {
+	items.stop();
 	// end of auton:
 	items.master->clear();
 	items.master->print(0, 0, "GO!"); 
-	// UNCOMMENT FOLLOWING TO STOP AUTON TESTING:
-	autonomous();
 
 	bool temp = false;
 	bool auton = false;
@@ -129,12 +175,6 @@ void opcontrol()
 				items.master->get_digital(DIGITAL_UP),
 				items.master->get_digital(DIGITAL_DOWN));
 			robot.set_puncher(items.master->get_digital(DIGITAL_A));
-
-			UPDATE_COORDS();
-			pros::lcd::print(0, "x: %f", robot.x);
-			pros::lcd::print(1, "y: %f", robot.y);
-			pros::lcd::print(2, "abs theta: %i", robot.theta);
-			items.master->print(0, 0, "(%i,%i)b%i", (int)robot.x, (int)robot.y, (int)robot.theta);
 
 			if (items.master->get_digital_new_press(DIGITAL_Y)) items.initpos = !items.initpos;
 			items.pto->set_value(items.initpos);

@@ -34,7 +34,7 @@
 
 // Driving style:
 // uncomment the following line if smooth drive is not desired...
-#define SMOOTH_CONSTANT 5 // This constant effects the smoothness of the transition, the larger the less smooth.
+#define SMOOTH_CONSTANT 1 // This constant effects the smoothness of the transition, the larger the less smooth.
 
 // Motor speeds:
 #define TURRET_SPEED 16 // the turret speed
@@ -79,6 +79,6 @@
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0
 #define ACCURACY 0.00001
 // where we start:
-#define START_RED_ALLY
+// #define START_RED_ALLY
 
 #endif // VARIABLES_H

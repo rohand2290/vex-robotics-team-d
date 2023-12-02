@@ -27,6 +27,7 @@ public:
 
     /// @brief Non-default constructor, connects all harware and ports.
     void initialize();
+    void stop();
     /// @brief Deconstructor, helps end the program without crashing.
     ~Items();
 };

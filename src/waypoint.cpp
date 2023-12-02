@@ -31,5 +31,5 @@ bool Path::goal_reached(Waypoint& goal, double x, double y) {
     if (ABS(x - goal.x) < allowable_error && ABS(y - goal.y) < allowable_error) {
         return true;
     }
-    return false;
+    else return false;
 }

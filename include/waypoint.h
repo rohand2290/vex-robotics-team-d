@@ -6,6 +6,7 @@
 struct Waypoint {
     double x;
     double y;
+    std::string command = "";
 };
 
 class Path {
