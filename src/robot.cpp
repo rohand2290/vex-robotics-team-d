@@ -24,7 +24,8 @@ double Robot::get_abs_angle(bool rad) {
     //      : radius = perpendicular sensor - point of pivoting
     //      : theta / arc-length = 2 * pi / 2 * pi * radius
     //      => theta =  arc-length / radius RADIANS
-    double theta = center_abs_dist() / PIVOT_P_TO_PERP_ODOM;
+    //double mag = (right_abs_dist() - left_abs_dist());
+    double theta = (center_abs_dist()) / PIVOT_P_TO_PERP_ODOM;
     return rad ? theta : radians_to_degrees(theta);
 }
 
@@ -33,7 +34,7 @@ void Robot::initialize(Items &i)
     items = i;
     x = 0;
     y = 0;
-    theta = 45; // change depending on start pos
+    theta = ANGLE_START; // change depending on start pos
     items.encoder_left->reset_position();
     items.encoder_right->reset_position();
     items.encoder_center->reset_position();
@@ -83,18 +84,20 @@ void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &sp
 
 void Robot::set_intake(int analog1, int analog2)
 {
-    if (analog1)
-    {
-        items.intake_left->move(255);
-        items.intake_right->move(255);
-    }
-    else if (analog2)
-    {
-        items.intake_left->move(-255);
-        items.intake_right->move(-255);
-    } else {
-        items.intake_left->move(0);
-        items.intake_right->move(0);
+    if (items.initpos) {
+        if (analog1)
+        {
+            items.intake_left->move(255);
+            items.intake_right->move(255);
+        }
+        else if (analog2)
+        {
+            items.intake_left->move(-255);
+            items.intake_right->move(-255);
+        } else {
+            items.intake_left->move(0);
+            items.intake_right->move(0);
+        }
     }
 }
 

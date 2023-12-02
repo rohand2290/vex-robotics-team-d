@@ -21,6 +21,8 @@ private:
 	double rel_l = 0;
 	double rel_r = 0;
 	double rel_c = 0;
+public:
+
     // PID:
     double error = 0;
     double prev_error = 0;
@@ -28,7 +30,7 @@ private:
     double error_turn = 0;
     double prev_error_turn = 0;
     double integral_turn = 0;
-public:
+
     void initialize(Robot& r);
     int normalize(double deg); // returns an angle back from 0 - 360 bearing north (north is its initial position)
     std::vector<double> update(); // returns a double array

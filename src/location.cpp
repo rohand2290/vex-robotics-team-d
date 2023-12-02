@@ -132,9 +132,10 @@ std::vector<double> Location::update() {
     // double avgOr = avg_orient();
     // VectorXD<2> change = global_offset(vect);
     // *theta += avgOr;
+
     std::vector<double> arr = {
-        ((robot->left_abs_dist() + robot->right_abs_dist()) / 2) * sin(robot->get_abs_angle(true)),
-        ((robot->left_abs_dist() + robot->right_abs_dist()) / 2) * cos(robot->get_abs_angle(true)),
+        (((rel_l + rel_r) / 2 * sin(robot->get_abs_angle(true)))) / 0.08203342547, // conversion factor...
+        (((rel_l + rel_r) / 2 * cos(robot->get_abs_angle(true)))) / 0.08203342547,
     };
 
     // save new vars to cache:
@@ -172,7 +173,8 @@ double Location::PID(double error, double& integral, double& prev_error, Waypoin
 std::vector<double> Location::updatePID(Waypoint& goal) {
     double error_x = *x - goal.x;
     double error_y = *y - goal.y;
-    error = sqrt(error_x * error_x + error_y + error_y);
+
+    error = sqrt(error_x*error_x + error_y*error_y);
     error_turn = robot->radians_to_degrees(
         standrad_to_bearing_rad(atan2(*y, *x)) - robot->degrees_to_radians(robot->get_abs_angle())
     ) * PIVOT_P_TO_PERP_ODOM / 2;

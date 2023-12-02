@@ -4,8 +4,8 @@
 #define UPDATE_COORDS() {\
 			std::vector<double> vect = map.update();\
 			robot.theta = map.normalize(robot.get_abs_angle());\
-			robot.x = vect[0];\
-			robot.y = vect[1]; }
+			robot.x += vect[0];\
+			robot.y += vect[1]; }
 
 Items items;
 Robot robot;
@@ -20,7 +20,7 @@ void initialize()
 	items.initialize();
 	robot.initialize(items);
 	map.initialize(robot);
-	road.initialize(10, 10);
+	road.initialize(0, 20);
 }
 
 // Runs while the robot is in the disabled state
@@ -39,11 +39,15 @@ static void test_angle_odom() {
 	pros::lcd::print(0, "press A to test angle odom...");
 	while (!items.master->get_digital(DIGITAL_A)) pros::delay(20);
 
-	while (robot.theta <= 360 || robot.theta >= -360) {
+	while (robot.theta < 180) {
 		UPDATE_COORDS();
-		robot.set_left_side(-255);
-		robot.set_right_side(255);
+		robot.set_left_side(-60);
+		robot.set_right_side(60);
+		items.master->print(0, 0, "(%i,%i)b%i", (int)robot.x, (int)robot.y, (int)robot.theta);
 	}
+
+	robot.set_left_side(0);
+	robot.set_right_side(0);
 
 	pros::lcd::print(0, "TEST COMPLETE. Check for inaccuracies...");
 	TERMINATE();
@@ -70,8 +74,8 @@ void autonomous()
 		robot.set_right_side(vect[0] + vect[1]);
 		robot.set_left_side(vect[0] - vect[1]);
 		
-		pros::lcd::print(0, "x: %f", robot.x);
-		pros::lcd::print(1, "y: %f", robot.y);
+		pros::lcd::print(0, "x pow: %f", robot.x);
+		pros::lcd::print(1, "y pow: %f", robot.y);
 		pros::lcd::print(2, "theta: %f", robot.theta);
 		pros::lcd::print(3, "press X to exit or B to send to remote...");
 		UPDATE_COORDS();
@@ -119,6 +123,7 @@ void opcontrol()
 			pros::lcd::print(0, "x: %f", robot.x);
 			pros::lcd::print(1, "y: %f", robot.y);
 			pros::lcd::print(2, "abs theta: %i", robot.theta);
+			items.master->print(0, 0, "(%i,%i)b%i", (int)robot.x, (int)robot.y, (int)robot.theta);
 
 			if (items.master->get_digital_new_press(DIGITAL_Y)) items.initpos = !items.initpos;
 			items.pto->set_value(items.initpos);

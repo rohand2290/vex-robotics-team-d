@@ -19,7 +19,7 @@
 #define RIGHT_WHEELS_PORT_3 2 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
-#define INTAKE_PORT_LEFT 16 // Defines the 1st port of the left side of intake.
+#define INTAKE_PORT_LEFT 8 // Defines the 1st port of the left side of intake.
 #define INTAKE_PORT_RIGHT 4 // Defines the 2nd port of the right side of intake.
 
 // Turret:
@@ -45,14 +45,16 @@
 // trackion wheels:
 #define WHEEL_C 2.75 * PI // wheel circumference
 // find difference from pivot point (point that doesnt move during rotation) and center odom.
-#define PIVOT_P_TO_PERP_ODOM 0.44 // in
+#define PIVOT_P_TO_PERP_ODOM -0.44 // in
 // encoder ports:
 #define ENCODER_PORT_1 5 // left parralell
 #define ENCODER_PORT_2 3 // right parralell
-#define ENCODER_PORT_3 8 // center perpendicular
+#define ENCODER_PORT_3 6 // center perpendicular
+// Start Angle:
+#define ANGLE_START 0 // bearing front
 // PID Constants:
 // power:
-#define POWER_KP 1
+#define POWER_KP 5
 #define POWER_KI 1
 #define POWER_KD 1
 #define POWER_ERROR_MAX 69
@@ -70,8 +72,8 @@
 // If it is too large, it might decrease sensitivity and increase lag.
 // this can also be used to change smoothness if smooth drive is enabled.
 // If it is too little, it might starve the proccessor from energy with too much load.
-#define OPCONTROL_LOOP_DELAY 5 // ms
-#define AUTON_LOOP_DELAY 5 // ms
+#define OPCONTROL_LOOP_DELAY 1 // ms
+#define AUTON_LOOP_DELAY 1 // ms
 #define PI 3.141592653589793
 #define ROBOT_WIDTH 3.54331 // in
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0
