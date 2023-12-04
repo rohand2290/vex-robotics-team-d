@@ -59,14 +59,20 @@ void initialize()
 	items.initialize();
 	robot.initialize(items);
 	map.initialize(robot);
-	road.initialize(10, 10);
+	road.initialize(0, 10);
+
+	// TEST:
+	road.pop_latest();
+	road.add_queue((Waypoint){90, 0, true, ""}); 
 }
 
 // Runs while the robot is in the disabled state
 void disabled() { items.stop(); }
 
 // Runs after initialize(), and before autonomous when connected to the Field Management System or the VEX Competition Switch.
-void competition_initialize() {}
+void competition_initialize() {
+	 
+}
 
 // Test of abs theta measurement:
 static void test_angle_odom() {
@@ -92,59 +98,51 @@ static void test_angle_odom() {
 void autonomous()
 {
 	pros::lcd::clear();
-	// UNCOMMENT WHEN TESTING:
-	// pros::lcd::print(0, "press A to start PID test point:");
-	// pros::lcd::print(1, "(%f, %f)", road.get_latest().x, road.get_latest().y);
-	// while (!items.master->get_digital(DIGITAL_A)) pros::delay(AUTON_LOOP_DELAY);
+	// // UNCOMMENT WHEN TESTING:
+	// // pros::lcd::print(0, "press A to start PID test point:");
+	// // pros::lcd::print(1, "(%f, %f)", road.get_latest().x, road.get_latest().y);
+	// // while (!items.master->get_digital(DIGITAL_A)) pros::delay(AUTON_LOOP_DELAY);
 
-	for (Instruction ins : roadway) {
-		if (ins.command == "IN") {
-			items.intake_left->move(-255);
-			items.intake_right->move(-255);
-		} else if (ins.command == "OUT") {
-			items.intake_left->move(255);
-			items.intake_right->move(255);
-		}
+	// for (int i = 0; i < road.size(); ++i) {
+	// 	Waypoint current_goal = road.get_latest();
+	// 	current_goal.execute_command(robot);
 
-		double need_theta = robot.theta;
-		double goal_x = robot.x;
-		double goal_y = robot.y;
+	// 	for (int j = 0; j < 100 * sqrt(current_goal.x*current_goal.x + current_goal.y*current_goal.y); ++j) {
+	// 		std::vector<double> vect = map.updatePID(current_goal);
 
-		if (ins.is_turn) {
-			need_theta = robot.theta + ins.move;
-		} else {
-			goal_x = sin(robot.theta) * ins.move;
-			goal_y = cos(robot.theta) * ins.move;
-		}
-
-
-		Waypoint current_goal = {goal_x, goal_y};
-
-		while (true) {
-			if (items.master->get_digital(DIGITAL_X)) break;
-
-			std::vector<double> vect = map.updatePID(current_goal);
-
-			robot.set_right_side(vect[0] + vect[1]);
-			robot.set_left_side(vect[0] - vect[1]);
+	// 		if (current_goal.is_turn) {
+	// 			robot.set_right_side(-vect[1]);
+	// 			robot.set_left_side(vect[1]);
+	// 		} else {
+	// 			robot.set_right_side(vect[0]);
+	// 			robot.set_left_side(vect[0]);
+	// 		}
 			
-			pros::lcd::print(0, "x goal: %f", goal_x);
-			pros::lcd::print(1, "y goal: %f", goal_y);
-			pros::lcd::print(2, "theta goal: %f", need_theta);
-			pros::lcd::print(3, "press X to exit or B to send to remote...");
-			items.master->print(0, 0, "%f", robot.y);
-			UPDATE_COORDS();
-			pros::delay(AUTON_LOOP_DELAY);
-		}
-		robot.x = 0;
-		robot.y = 0;
-		// road.pop_latest();
+	// 		pros::lcd::print(0, "x: %f", robot.x);
+	// 		pros::lcd::print(1, "y: %f", robot.y);
+	// 		pros::lcd::print(2, "theta: %i", robot.theta);
+	// 		UPDATE_COORDS();
+	// 		pros::delay(AUTON_LOOP_DELAY);
+	// 		items.master->print(0, 0, "%f", robot.x);
+	// 	}
+	// 	robot.x = 0;
+	// 	robot.y = 0;
+	// 	road.pop_latest();
+	// }
+	robot.set_left_side(255);
+	robot.set_right_side(255);
+	pros::delay(2000);
+	while (true)
+	{
+		robot.set_left_side(-64);
+		robot.set_right_side(64);
 	}
 }
 
 // Runs the operator control code.
 void opcontrol()
 {
+	// autonomous();
 	items.stop();
 	// end of auton:
 	items.master->clear();
@@ -152,6 +150,7 @@ void opcontrol()
 
 	bool temp = false;
 	bool auton = false;
+	int initpos3 = false;
 	// Variables for Smooth Drive:
 	#ifdef SMOOTH_CONSTANT
 	int speedr = 0; // speed for right
@@ -177,8 +176,11 @@ void opcontrol()
 			robot.set_puncher(items.master->get_digital(DIGITAL_A));
 
 			if (items.master->get_digital_new_press(DIGITAL_Y)) items.initpos = !items.initpos;
+			if (items.master->get_digital_new_press(DIGITAL_R1)) items.initpos2 = !items.initpos2;
+			if (items.master->get_digital_new_press(DIGITAL_A)) initpos3 = !initpos3;
 			items.pto->set_value(items.initpos);
-			items.wings->set_value(items.master->get_digital(DIGITAL_R1));
+			items.wings->set_value(items.initpos2);
+			items.puncher->set_value(initpos3);
 		}
 
 		pros::delay(OPCONTROL_LOOP_DELAY);

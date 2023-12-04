@@ -179,24 +179,26 @@ static double angle_diff(double x, double y) {
     if (x - 180 <= y) return x - y;
     else return y - 360;
 }
+// static double toTheta(double x, double y) {
+// 	if (x <= PI / 2 && x >= 3 * PI / 2) return atan(y / x);
+// 	else return PI + atan(y / x);
+// }
 std::vector<double> Location::updatePID(Waypoint& goal) {
     double error_x = *x - goal.x;
     double error_y = *y - goal.y;
 
-    int c = 1;
-    if (*x > goal.x || *y > goal.y) c *= -1;
-    error = c * sqrt(error_x*error_x + error_y*error_y);
-    
-    error_turn = angle_diff(
-        robot->radians_to_degrees(standrad_to_bearing_rad(atan2(*y, *x))),
-        robot->get_abs_angle()
-    ) * PIVOT_P_TO_PERP_ODOM;
+    if (goal.is_turn) {
+        error = (goal.x - robot->get_abs_angle()) * PIVOT_P_TO_PERP_ODOM;
+    } else {
+        int c = 1;
+        if (*x > goal.x || *y > goal.y) c *= -1;
+        error = c * sqrt(error_x*error_x + error_y*error_y);
+    }
 
     // pid stuff:
-    double power = PID(error, integral, prev_error, goal, false);
-    double turn = PID(error_turn, integral_turn, prev_error_turn, goal, true);
+    double pid = PID(error, integral, prev_error, goal, goal.is_turn);
 
-    std::vector<double> v = {power, turn};
+    std::vector<double> v = {pid, pid};
     /////////////
 
     prev_error = error;

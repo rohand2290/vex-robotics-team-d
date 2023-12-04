@@ -6,7 +6,9 @@
 struct Waypoint {
     double x;
     double y;
+    bool is_turn = false;
     std::string command = "";
+    void execute_command(Robot& robot);
 };
 
 class Path {

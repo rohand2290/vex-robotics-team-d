@@ -14,6 +14,7 @@ void Items::initialize()  {
     puncher = new pros::ADIDigitalOut (PUNCHER_PORT, 0);
     wings = new pros::ADIDigitalOut (WINGS_PORT);
     initpos = false;
+    initpos2 = false;
     pto = new pros::ADIDigitalOut (PTO_PORT, initpos);
     encoder_left = new pros::Rotation (ENCODER_PORT_1);
     encoder_right = new pros::Rotation (ENCODER_PORT_2);

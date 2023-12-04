@@ -34,7 +34,7 @@
 
 // Driving style:
 // uncomment the following line if smooth drive is not desired...
-#define SMOOTH_CONSTANT 1 // This constant effects the smoothness of the transition, the larger the less smooth.
+#define SMOOTH_CONSTANT 20 // This constant effects the smoothness of the transition, the larger the less smooth.
 
 // Motor speeds:
 #define TURRET_SPEED 16 // the turret speed
@@ -45,7 +45,7 @@
 // trackion wheels:
 #define WHEEL_C 2.75 * PI // wheel circumference
 // find difference from pivot point (point that doesnt move during rotation) and center odom.
-#define PIVOT_P_TO_PERP_ODOM -0.44 // in
+#define PIVOT_P_TO_PERP_ODOM 0.32 // in
 // encoder ports:
 #define ENCODER_PORT_1 5 // left parralell
 #define ENCODER_PORT_2 3 // right parralell
@@ -54,13 +54,13 @@
 #define ANGLE_START 0 // bearing front
 // PID Constants:
 // power:
-#define POWER_KP 7.6
+#define POWER_KP 7.85
 #define POWER_KI 1
 #define POWER_KD 2.26
 #define POWER_ERROR_MAX 100
 #define POWER_ERROR_MIN -100
 // turn:
-#define TURN_KP 1
+#define TURN_KP 2.85
 #define TURN_KI 1
 #define TURN_KD 1
 #define TURN_ERROR_MAX 69

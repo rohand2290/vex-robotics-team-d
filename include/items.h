@@ -8,6 +8,7 @@
 struct Items {
 public:
     int initpos;
+    int initpos2;
     pros::Controller* master;
     pros::Motor* left1; // front
     pros::Motor* left2; // middle
