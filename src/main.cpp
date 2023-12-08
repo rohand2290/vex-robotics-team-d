@@ -35,6 +35,7 @@ void competition_initialize() {
 	 
 }
 
+/*
 // Test of abs theta measurement:
 static void test_angle_odom() {
 	pros::lcd::clear();
@@ -54,6 +55,7 @@ static void test_angle_odom() {
 	pros::lcd::print(0, "TEST COMPLETE. Check for inaccuracies...");
 	TERMINATE();
 }
+*/
 
 // Runs the user autonomous code.
 void autonomous()
