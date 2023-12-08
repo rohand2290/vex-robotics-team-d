@@ -1,45 +1,6 @@
 #include "main.h"
 #include "depend.h"
 
-struct Instruction {
-	double move;
-	bool is_turn;
-	std::string command;
-};
-
-#ifdef START_RED_ALLY
-std::vector<Instruction> roadway = {
-	{8, 0, ""},
-	{-60, 1, ""},
-	{28.8, 0, ""},
-	{0, 0, "OUT"},
-	{-28.8, 0, ""},
-	{-130, 1, ""},
-	{12.8, 0, "IN"},
-	{-125, 1, ""},
-	{19, 0, ""},
-	{-25, 1, ""},
-	{26, 0, ""},
-	{45, 0, ""}
-};
-#else
-std::vector<Instruction> roadway = {
-	{8, 0, ""},
-	{90, 1, ""},
-	{20.8, 0, ""},
-	{0, 0, "OUT"},
-	{-20.8, 0},
-	{90, 1, ""},
-	{12.8, 0, "IN"},
-	{-12.8, 0, ""},
-	{110, 1, ""},
-	{19, 0, ""},
-	{40, 1, ""},
-	{26, 0, ""},
-	{45, 1, ""},
-};
-#endif
-
 #define UPDATE_COORDS() {\
 			std::vector<double> vect = map.update();\
 			robot.theta = map.normalize(robot.get_abs_angle());\
