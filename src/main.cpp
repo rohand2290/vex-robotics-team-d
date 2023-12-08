@@ -22,18 +22,13 @@ void initialize()
 	map.initialize(robot);
 	road.initialize(0, 10);
 
-	// TEST:
-	road.pop_latest();
-	road.add_queue((Waypoint){90, 0, true, ""}); 
-}
+	// use array to initialize road
 
+}
 // Runs while the robot is in the disabled state
 void disabled() { items.stop(); }
-
 // Runs after initialize(), and before autonomous when connected to the Field Management System or the VEX Competition Switch.
-void competition_initialize() {
-	 
-}
+void competition_initialize() {}
 
 /*
 // Test of abs theta measurement:
@@ -61,44 +56,30 @@ static void test_angle_odom() {
 void autonomous()
 {
 	pros::lcd::clear();
-	// // UNCOMMENT WHEN TESTING:
-	// // pros::lcd::print(0, "press A to start PID test point:");
-	// // pros::lcd::print(1, "(%f, %f)", road.get_latest().x, road.get_latest().y);
-	// // while (!items.master->get_digital(DIGITAL_A)) pros::delay(AUTON_LOOP_DELAY);
+	// UNCOMMENT WHEN TESTING:
+	// pros::lcd::print(0, "press A to start PID test point:");
+	// pros::lcd::print(1, "(%f, %f)", road.get_latest().x, road.get_latest().y);
+	// while (!items.master->get_digital(DIGITAL_A)) pros::delay(AUTON_LOOP_DELAY);
 
-	// for (int i = 0; i < road.size(); ++i) {
-	// 	Waypoint current_goal = road.get_latest();
-	// 	current_goal.execute_command(robot);
+	for (int i = 0; i < road.size(); ++i) {
+		Waypoint current_goal = road.get_latest();
+		current_goal.execute_command(robot);
 
-	// 	for (int j = 0; j < 100 * sqrt(current_goal.x*current_goal.x + current_goal.y*current_goal.y); ++j) {
-	// 		std::vector<double> vect = map.updatePID(current_goal);
+		for (int j = 0; j < 100 * sqrt(current_goal.x*current_goal.x + current_goal.y*current_goal.y); ++j) {
+			std::vector<double> vect = map.updatePID(current_goal);
 
-	// 		if (current_goal.is_turn) {
-	// 			robot.set_right_side(-vect[1]);
-	// 			robot.set_left_side(vect[1]);
-	// 		} else {
-	// 			robot.set_right_side(vect[0]);
-	// 			robot.set_left_side(vect[0]);
-	// 		}
+			robot.set_right_side(vect[0] - vect[1]);
+			robot.set_left_side(vect[0] + vect[1]);
 			
-	// 		pros::lcd::print(0, "x: %f", robot.x);
-	// 		pros::lcd::print(1, "y: %f", robot.y);
-	// 		pros::lcd::print(2, "theta: %i", robot.theta);
-	// 		UPDATE_COORDS();
-	// 		pros::delay(AUTON_LOOP_DELAY);
-	// 		items.master->print(0, 0, "%f", robot.x);
-	// 	}
-	// 	robot.x = 0;
-	// 	robot.y = 0;
-	// 	road.pop_latest();
-	// }
-	robot.set_left_side(255);
-	robot.set_right_side(255);
-	pros::delay(2000);
-	while (true)
-	{
-		robot.set_left_side(-64);
-		robot.set_right_side(64);
+			pros::lcd::print(0, "x: %f", robot.x);
+			pros::lcd::print(1, "y: %f", robot.y);
+			pros::lcd::print(2, "theta: %i", robot.theta);
+			UPDATE_COORDS();
+			pros::delay(AUTON_LOOP_DELAY);
+		}
+		robot.x = 0;
+		robot.y = 0;
+		road.pop_latest();
 	}
 }
 
@@ -122,7 +103,6 @@ void opcontrol()
 	// Driver Code:
 	while (true)
 	{
-		{
 			// DRIVE TRAIN ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			// set speed chassis
 			robot.set_speed_chassis(
@@ -144,9 +124,8 @@ void opcontrol()
 			items.pto->set_value(items.initpos);
 			items.wings->set_value(items.initpos2);
 			items.puncher->set_value(initpos3);
-		}
-
-		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
+
+	pros::delay(OPCONTROL_LOOP_DELAY);
 }
 
