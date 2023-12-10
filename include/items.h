@@ -19,7 +19,6 @@ public:
     pros::Motor* intake_left;
     pros::Motor* intake_right;
     pros::Motor* flywheel;
-    pros::ADIDigitalOut* puncher;
     pros::ADIDigitalOut* pto;
     pros::ADIDigitalOut* wings;
     pros::Rotation* encoder_left;

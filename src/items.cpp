@@ -42,7 +42,6 @@ Items::~Items() {
     delete intake_left;
     delete intake_right;
     delete flywheel;
-    delete puncher;
     delete pto;
     delete wings;
     delete encoder_left;

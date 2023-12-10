@@ -94,7 +94,6 @@ void opcontrol()
 
 	bool temp = false;
 	bool auton = false;
-	int initpos3 = false;
 	// Variables for Smooth Drive:
 	#ifdef SMOOTH_CONSTANT
 	int speedr = 0; // speed for right
@@ -119,10 +118,8 @@ void opcontrol()
 
 			if (items.master->get_digital_new_press(DIGITAL_Y)) items.initpos = !items.initpos;
 			if (items.master->get_digital_new_press(DIGITAL_R1)) items.initpos2 = !items.initpos2;
-			if (items.master->get_digital_new_press(DIGITAL_A)) initpos3 = !initpos3;
 			items.pto->set_value(items.initpos);
 			items.wings->set_value(items.initpos2);
-			items.puncher->set_value(initpos3);
 
 			pros::delay(OPCONTROL_LOOP_DELAY);
 	}
