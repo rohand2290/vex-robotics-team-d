@@ -190,6 +190,15 @@ static double toTheta(double x, double y, Robot& robot) {
     }
     return 180 + ret;
 }
+
+static double angleDifference(double start, double end) {
+    double red = ABS(end-start);
+    if (red >= 180) {
+        return red - 360;
+    }
+    return red;
+}
+
 std::vector<double> Location::updatePID(Waypoint& goal) {
     double error_x = *x - goal.x;
     double error_y = *y - goal.y;
