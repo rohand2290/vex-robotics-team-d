@@ -179,11 +179,16 @@ double Location::PID(double error, double& integral, double& prev_error, Waypoin
 static double toTheta(double x, double y, Robot& robot) {
     double ret = atan(y/x);
     ret = robot.radians_to_degrees(ret);
-    if (ret < 0)
-    {
-        ret = 360 + ret;
+    if (x>=0 && y>=0) {
+        return ret;
     }
-    return ret;
+    if (x>=0 && y<0) {
+        return 360 + ret;
+    }
+    if (x < 0 && y >= 0) {
+        return 180 + ret;
+    }
+    return 180 + ret;
 }
 std::vector<double> Location::updatePID(Waypoint& goal) {
     double error_x = *x - goal.x;
