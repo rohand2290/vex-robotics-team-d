@@ -114,6 +114,16 @@ VectorXD<2> Location::local_offset()
 double Location::avg_orient() { 
     return old_t + (new_t - old_t) / 2; 
 }
+
+static double toTheta(double x, double y, Robot& robot) {
+    double ret = atan(y/x);
+    ret = robot.radians_to_degrees(ret);
+    if (ret < 0)
+    {
+        ret = 360 + ret;
+    }
+    return ret;
+}
 VectorXD<2> Location::global_offset(VectorXD<2> delta_dl) {
     double r = sqrt((*x) * (*x) + (*y) * (*y));
     double theta = atan2(*y, *x) - avg_orient();
