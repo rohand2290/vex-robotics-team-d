@@ -44,10 +44,7 @@ public:
     /// @brief Set the turret move based on up or down.
     /// @param up make turret go up (1, 0)
     /// @param down make turret go down (1, 0)
-    void set_turret(int up, int down);
-    /// @brief Set the puncher, either shot (on) or reload (off)
-    /// @param analog puncher value (1, 0)
-    void set_puncher(int analog);
+    void set_flywheel(int up, int down);
     /// @brief Converts radians to degrees
     /// @param radians radians as double
     /// @return coresponding degrees as double

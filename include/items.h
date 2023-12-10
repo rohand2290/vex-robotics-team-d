@@ -18,7 +18,7 @@ public:
     pros::Motor* right3; // back
     pros::Motor* intake_left;
     pros::Motor* intake_right;
-    pros::Motor* turret;
+    pros::Motor* flywheel;
     pros::ADIDigitalOut* puncher;
     pros::ADIDigitalOut* pto;
     pros::ADIDigitalOut* wings;

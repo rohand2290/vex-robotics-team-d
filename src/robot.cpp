@@ -101,29 +101,24 @@ void Robot::set_intake(int analog1, int analog2)
     }
 }
 
-void Robot::set_turret(int up, int down)
+void Robot::set_flywheel(int up, int down)
 {
     if (up)
     {
-        items.turret->move(TURRET_SPEED);
+        items.flywheel->move(FLYWHEEL_SPEED);
     }
     else
     {
-        items.turret->move(0);
+        items.flywheel->move(0);
     }
     if (down)
     {
-        items.turret->move(-TURRET_SPEED);
+        items.flywheel->move(-FLYWHEEL_SPEED);
     }
     else
     {
-        items.turret->move(0);
+        items.flywheel->move(0);
     }
-}
-
-void Robot::set_puncher(int analog)
-{
-    items.puncher->set_value(analog);
 }
 
 double Robot::radians_to_degrees(double radians)

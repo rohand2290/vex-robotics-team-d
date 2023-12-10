@@ -10,8 +10,7 @@ void Items::initialize()  {
     right3 = new pros::Motor (RIGHT_WHEELS_PORT_3, true);
     intake_left = new pros::Motor (INTAKE_PORT_LEFT);
     intake_right = new pros::Motor (INTAKE_PORT_RIGHT, true);
-    turret = new pros::Motor(TURRET_PORT);
-    puncher = new pros::ADIDigitalOut (PUNCHER_PORT, 0);
+    flywheel = new pros::Motor(FLYWHEEL_PORT);
     wings = new pros::ADIDigitalOut (WINGS_PORT);
     initpos = false;
     initpos2 = false;
@@ -42,7 +41,7 @@ Items::~Items() {
     delete right3;
     delete intake_left;
     delete intake_right;
-    delete turret;
+    delete flywheel;
     delete puncher;
     delete pto;
     delete wings;

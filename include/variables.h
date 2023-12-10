@@ -23,10 +23,9 @@
 #define INTAKE_PORT_RIGHT 4 // Defines the 2nd port of the right side of intake.
 
 // Turret:
-#define TURRET_PORT 69 // Defines the port of the turret motor.
+#define FLYWHEEL_PORT 69 // Defines the port of the turret motor.
 
 // Puncher:
-#define PUNCHER_PORT 'A'
 #define PTO_PORT 'B'
 #define WINGS_PORT 'C'
 
@@ -37,7 +36,7 @@
 #define SMOOTH_CONSTANT 20 // This constant effects the smoothness of the transition, the larger the less smooth.
 
 // Motor speeds:
-#define TURRET_SPEED 16 // the turret speed
+#define FLYWHEEL_SPEED 255 // the turret speed
 #define MOTOR_PERCENT 1 // percentage (0-1) for max power to be used (0.75 means the maximum ever reached will be 75%)
 #define TURN_PERCENT 1 // percentage (0-1) for max turn sensibility.
 

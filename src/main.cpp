@@ -56,10 +56,6 @@ static void test_angle_odom() {
 void autonomous()
 {
 	pros::lcd::clear();
-	// UNCOMMENT WHEN TESTING:
-	// pros::lcd::print(0, "press A to start PID test point:");
-	// pros::lcd::print(1, "(%f, %f)", road.get_latest().x, road.get_latest().y);
-	// while (!items.master->get_digital(DIGITAL_A)) pros::delay(AUTON_LOOP_DELAY);
 
 	for (int i = 0; i < road.size(); ++i) {
 		Waypoint current_goal = road.get_latest();
@@ -81,6 +77,10 @@ void autonomous()
 		robot.y = 0;
 		road.pop_latest();
 	}
+
+	pros::lcd::clear();
+	pros::lcd::print(0, "ROUTINE COMPLETE...");
+	TERMINATE();
 }
 
 // Runs the operator control code.
@@ -113,10 +113,9 @@ void opcontrol()
 				speedl);
 			// actions acording to buttons:
 			robot.set_intake(items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
-			robot.set_turret(
+			robot.set_flywheel(
 				items.master->get_digital(DIGITAL_UP),
 				items.master->get_digital(DIGITAL_DOWN));
-			robot.set_puncher(items.master->get_digital(DIGITAL_A));
 
 			if (items.master->get_digital_new_press(DIGITAL_Y)) items.initpos = !items.initpos;
 			if (items.master->get_digital_new_press(DIGITAL_R1)) items.initpos2 = !items.initpos2;
@@ -124,8 +123,8 @@ void opcontrol()
 			items.pto->set_value(items.initpos);
 			items.wings->set_value(items.initpos2);
 			items.puncher->set_value(initpos3);
-	}
 
-	pros::delay(OPCONTROL_LOOP_DELAY);
+			pros::delay(OPCONTROL_LOOP_DELAY);
+	}
 }
 
