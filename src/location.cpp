@@ -207,7 +207,7 @@ std::vector<double> Location::updatePID(Waypoint& goal) {
     if (*x > goal.x || *y > goal.y) c *= -1;
     error = c * sqrt(error_x*error_x + error_y*error_y);
 
-    error_turn = robot->get_abs_angle() - toTheta(goal.x, goal.y, robot);
+    error_turn = angleDifference(robot->get_abs_angle(), toTheta(goal.x, goal.y, robot));
 
     // pid stuff:
     double power = PID(error, integral, prev_error, goal, false);
