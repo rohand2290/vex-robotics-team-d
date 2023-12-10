@@ -114,16 +114,6 @@ VectorXD<2> Location::local_offset()
 double Location::avg_orient() { 
     return old_t + (new_t - old_t) / 2; 
 }
-
-static double toTheta(double x, double y, Robot& robot) {
-    double ret = atan(y/x);
-    ret = robot.radians_to_degrees(ret);
-    if (ret < 0)
-    {
-        ret = 360 + ret;
-    }
-    return ret;
-}
 VectorXD<2> Location::global_offset(VectorXD<2> delta_dl) {
     double r = sqrt((*x) * (*x) + (*y) * (*y));
     double theta = atan2(*y, *x) - avg_orient();
@@ -185,10 +175,16 @@ double Location::PID(double error, double& integral, double& prev_error, Waypoin
 	return P(error, isturn) + I(error, integral, goal, isturn) + D(prev_error, error, isturn);
 }
 
-// static double toTheta(double x, double y) {
-// 	if (x <= PI / 2 && x >= 3 * PI / 2) return atan(y / x);
-// 	else return PI + atan(y / x);
-// }
+
+static double toTheta(double x, double y, Robot& robot) {
+    double ret = atan(y/x);
+    ret = robot.radians_to_degrees(ret);
+    if (ret < 0)
+    {
+        ret = 360 + ret;
+    }
+    return ret;
+}
 std::vector<double> Location::updatePID(Waypoint& goal) {
     double error_x = *x - goal.x;
     double error_y = *y - goal.y;
