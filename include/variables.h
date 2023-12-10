@@ -10,13 +10,13 @@
 // ======== PORTS: ===========
 
 // Left drive:
-#define LEFT_WHEELS_PORT_1 9 // Defines the 1st port of the left wheels.
-#define LEFT_WHEELS_PORT_2 20 // Defines the 2nd port of the left wheels.
-#define LEFT_WHEELS_PORT_3 10 // Defines the 3rd port of the left wheels.
+#define LEFT_WHEELS_PORT_1 18 // Defines the 1st port of the left wheels.
+#define LEFT_WHEELS_PORT_2 19 // Defines the 2nd port of the left wheels.
+#define LEFT_WHEELS_PORT_3 20 // Defines the 3rd port of the left wheels.
 // Right drive:
-#define RIGHT_WHEELS_PORT_1 11 // Defines the 1st port of the right wheels.
-#define RIGHT_WHEELS_PORT_2 1 // Defines the 2nd port of the right wheels.
-#define RIGHT_WHEELS_PORT_3 2 // Defines the 3rd port of the right wheels.
+#define RIGHT_WHEELS_PORT_1 13 // Defines the 1st port of the right wheels.
+#define RIGHT_WHEELS_PORT_2 12 // Defines the 2nd port of the right wheels.
+#define RIGHT_WHEELS_PORT_3 11 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
 #define INTAKE_PORT_LEFT 8 // Defines the 1st port of the left side of intake.
@@ -46,9 +46,9 @@
 // find difference from pivot point (point that doesnt move during rotation) and center odom.
 #define PIVOT_P_TO_PERP_ODOM 0.32 // in
 // encoder ports:
-#define ENCODER_PORT_1 5 // left parralell
-#define ENCODER_PORT_2 3 // right parralell
-#define ENCODER_PORT_3 6 // center perpendicular
+#define ENCODER_PORT_1 17 // left parralell
+#define ENCODER_PORT_2 14 // right parralell
+#define ENCODER_PORT_3 16 // center perpendicular
 // Start Angle:
 #define ANGLE_START 0 // bearing front
 // PID Constants:
@@ -62,8 +62,8 @@
 #define TURN_KP 2.85
 #define TURN_KI 1
 #define TURN_KD 1
-#define TURN_ERROR_MAX 69
-#define TURN_ERROR_MIN -69
+#define TURN_ERROR_MAX 100
+#define TURN_ERROR_MIN -100
 
 // ======= Miscelanious: =========
 
