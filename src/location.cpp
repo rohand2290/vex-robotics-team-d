@@ -176,9 +176,9 @@ double Location::PID(double error, double& integral, double& prev_error, Waypoin
 }
 
 
-static double toTheta(double x, double y, Robot& robot) {
+static double toTheta(double x, double y, Robot* robot) {
     double ret = atan(y/x);
-    ret = robot.radians_to_degrees(ret);
+    ret = robot->radians_to_degrees(ret);
     if (x>=0 && y>=0) {
         return ret;
     }
@@ -207,7 +207,7 @@ std::vector<double> Location::updatePID(Waypoint& goal) {
     if (*x > goal.x || *y > goal.y) c *= -1;
     error = c * sqrt(error_x*error_x + error_y*error_y);
 
-    error_turn = robot->get_abs_angle() - toTheta(goal.x, goal.y);
+    error_turn = robot->get_abs_angle() - toTheta(goal.x, goal.y, robot);
 
     // pid stuff:
     double power = PID(error, integral, prev_error, goal, false);
