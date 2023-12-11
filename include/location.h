@@ -13,9 +13,11 @@ private:
     // old cached variables:
 	double old_l = 0;
 	double old_r = 0;
+    double old_th = 0;
 	// change variables. Show change from previous set of data.
 	double rel_l = 0;
 	double rel_r = 0;
+    double rel_th = 0;
     // PID:
     double error = 0;
     double prev_error = 0;

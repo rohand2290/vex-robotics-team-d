@@ -39,9 +39,7 @@ void autonomous()
 
 		while (!road.goal_reached(current_goal, robot.x, robot.y)) {
 			std::vector<double> vect = map.updatePID(current_goal);
-
-			robot.set_right_side(vect[0] - vect[1]);
-			robot.set_left_side(vect[0] + vect[1]);
+			robot.set_both_sides(vect[0] - vect[1], vect[0] + vect[1]);
 			
 			pros::lcd::print(0, "x: %f", robot.x);
 			pros::lcd::print(1, "y: %f", robot.y);
@@ -84,27 +82,27 @@ void opcontrol()
 	// Driver Code:
 	while (true)
 	{
-			// DRIVE TRAIN ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			// set speed chassis
-			robot.set_speed_chassis(
-				items.master->get_analog(ANALOG_LEFT_Y),
-				items.master->get_analog(ANALOG_RIGHT_X),
-				__LINE__,
-				speedr,
-				speedl
-			);
-			// actions acording to buttons:
-			robot.set_intake(items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
-			robot.set_flywheel(items.master->get_digital_new_press(DIGITAL_UP));
-			robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1));
-			robot.set_pto(items.master->get_digital(DIGITAL_Y));
+		// DRIVE TRAIN ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		// set speed chassis
+		robot.set_speed_chassis(
+			items.master->get_analog(ANALOG_LEFT_Y),
+			items.master->get_analog(ANALOG_RIGHT_X),
+			__LINE__,
+			speedr,
+			speedl
+		);
+		// actions acording to buttons:
+		robot.set_intake(items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
+		robot.set_flywheel(items.master->get_digital_new_press(DIGITAL_UP));
+		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1));
+		robot.set_pto(items.master->get_digital(DIGITAL_Y));
 
-			pros::lcd::print(0, "%i", robot.theta);
-			items.master->print(0, 0, "%i", robot.theta);
+		pros::lcd::print(0, "%i", robot.theta);
+		items.master->print(0, 0, "%i", robot.theta);
 
-			UPDATE_COORDS();
+		UPDATE_COORDS();
 
-			pros::delay(OPCONTROL_LOOP_DELAY);
+		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
 }
 

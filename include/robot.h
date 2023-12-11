@@ -9,7 +9,7 @@ public:
     Items items;
     double x;
     double y;
-    int theta; // in centidegrees.
+    int theta; // in degrees.
 
     /// @brief Right absolute distance since start
     /// @return abs distance in inches
@@ -29,12 +29,16 @@ public:
     void initialize(Items& i);
     /// @brief Default destructor...
     ~Robot();
-    /// @brief  Set the wheel speed of all on the right 
+    /// @brief Set the wheel speed of all on the right 
     /// @param analog speed in analog
     void set_right_side(int analog);
     /// @brief  Set the wheel speed of all on the left.
     /// @param analog speed in analog
     void set_left_side(int analog);
+    /// @brief Sets both sides of the chasis to a specific speed. Use this if loop delay is small.
+    /// @param right analog of the right 
+    /// @param left analog of the left
+    void set_both_sides(int right, int left);
     /// @brief Set the speed of all the wheels on the chassis, depending on commands given from controller.
     /// @param y the y axis info.
     /// @param x the x axis info.

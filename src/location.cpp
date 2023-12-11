@@ -107,19 +107,32 @@ void Location::initialize(Robot& r) {
 }
 
 std::vector<double> Location::update() {
-    // update variables:
+    // TODO:
     rel_l = robot->left_abs_dist() - old_l;
 	rel_r = robot->right_abs_dist() - old_r;
+    rel_th = robot->get_abs_angle() - old_th;
     robot->theta = normalize(robot->get_abs_angle());
 
+    if (rel_th == 0) rel_th = 0.000000001;
+
+    double mag = ((rel_l + rel_r) / (rel_th)) * sin(robot->degrees_to_radians(rel_th) / 2);
     std::vector<double> arr = {
-        (((rel_l + rel_r) / 2 * sin(robot->theta))) / 0.08203342547, // conversion factor...
-        (((rel_l + rel_r) / 2 * cos(robot->theta))) / 0.08203342547,
+        mag * sin(robot->degrees_to_radians(rel_th)),
+        mag * cos(robot->degrees_to_radians(rel_th))
     };
+
+    // std::vector<double> arr = {
+    //     (((rel_l + rel_r) / 2 * sin(robot->degrees_to_radians(robot->theta)))) / 0.08203342547, // conversion factor...
+    //     (((rel_l + rel_r) / 2 * cos(robot->degrees_to_radians(robot->theta)))) / 0.08203342547,
+    // };
+
+    robot->x += arr[0];
+    robot->y += arr[1];
 
     // save new vars to cache:
     old_l = robot->left_abs_dist();
 	old_r = robot->right_abs_dist();
+    old_th = robot->get_abs_angle();
 
     return arr;
 }
@@ -172,14 +185,17 @@ static double angleDifference(double start, double end) {
 }
 
 std::vector<double> Location::updatePID(Waypoint& goal) {
-    double error_x = *x - goal.x;
-    double error_y = *y - goal.y;
+    double error_x = robot->x - goal.x;
+    double error_y = robot->y - goal.y;
     
     int c = 1;
-    if (*x > goal.x || *y > goal.y) c *= -1;
+    if (robot->x > goal.x || robot->y > goal.y) c *= -1;
     error = c * sqrt(error_x*error_x + error_y*error_y);
 
-    error_turn = angleDifference(robot->get_abs_angle(), toTheta(goal.x, goal.y, robot)) * PIVOT_P_TO_PERP_ODOM;
+    error_turn = angleDifference(
+        robot->get_abs_angle(), 
+        standrad_to_bearing(toTheta(goal.x, goal.y, robot))
+    ) * PIVOT_P_TO_PERP_ODOM;
 
     // pid stuff:
     double power = PID(error, integral, prev_error, goal, false);

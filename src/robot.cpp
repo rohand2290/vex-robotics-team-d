@@ -56,6 +56,16 @@ void Robot::set_left_side(int analog)
     items.right3->move(analog);
 }
 
+void Robot::set_both_sides(int right, int left)
+{
+    items.right1->move(right);
+    items.left1->move(left);
+    items.left2->move(left);
+    items.right2->move(right);
+    items.right3->move(right);
+    items.left3->move(left);
+}
+
 void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &speedl)
 {
     int left = (y - (x * TURN_PERCENT)) * MOTOR_PERCENT;
@@ -76,8 +86,8 @@ void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &sp
     set_left_side(speedl);
     set_right_side(speedr);
 #else
-    set_left_side(left);
     set_right_side(right);
+    set_left_side(left);
 #endif
 }
 
