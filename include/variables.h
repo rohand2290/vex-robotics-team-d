@@ -33,7 +33,7 @@
 
 // Driving style:
 // uncomment the following line if smooth drive is not desired...
-#define SMOOTH_CONSTANT 20 // This constant effects the smoothness of the transition, the larger the less smooth.
+// #define SMOOTH_CONSTANT 20 // This constant effects the smoothness of the transition, the larger the less smooth.
 
 // Motor speeds:
 #define FLYWHEEL_SPEED 255 // the turret speed
@@ -71,8 +71,8 @@
 // If it is too large, it might decrease sensitivity and increase lag.
 // this can also be used to change smoothness if smooth drive is enabled.
 // If it is too little, it might starve the proccessor from energy with too much load.
-#define OPCONTROL_LOOP_DELAY 1 // ms
-#define AUTON_LOOP_DELAY 1 // ms
+#define OPCONTROL_LOOP_DELAY 5 // ms
+#define AUTON_LOOP_DELAY 5 // ms
 #define PI 3.141592653589793
 #define ROBOT_WIDTH 3.54331 // in
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0

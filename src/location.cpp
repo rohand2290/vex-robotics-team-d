@@ -176,28 +176,28 @@ double Location::PID(double error, double& integral, double& prev_error, Waypoin
 }
 
 
-// static double toTheta(double x, double y, Robot* robot) {
-//     double ret = atan(y/x);
-//     ret = robot->radians_to_degrees(ret);
-//     if (x>=0 && y>=0) {
-//         return ret;
-//     }
-//     if (x>=0 && y<0) {
-//         return 360 + ret;
-//     }
-//     if (x < 0 && y >= 0) {
-//         return 180 + ret;
-//     }
-//     return 180 + ret;
-// }
+static double toTheta(double x, double y, Robot* robot) {
+    double ret = atan(y/x);
+    ret = robot->radians_to_degrees(ret);
+    if (x>=0 && y>=0) {
+        return ret;
+    }
+    if (x>=0 && y<0) {
+        return 360 + ret;
+    }
+    if (x < 0 && y >= 0) {
+        return 180 + ret;
+    }
+    return 180 + ret;
+}
 
-// static double angleDifference(double start, double end) {
-//     double red = ABS(end-start);
-//     if (red >= 180) {
-//         return red - 360;
-//     }
-//     return red;
-// }
+static double angleDifference(double start, double end) {
+    double red = ABS(end-start);
+    if (red >= 180) {
+        return red - 360;
+    }
+    return red;
+}
 
 std::vector<double> Location::updatePID(Waypoint& goal) {
     double error_x = *x - goal.x;
@@ -207,7 +207,7 @@ std::vector<double> Location::updatePID(Waypoint& goal) {
     if (*x > goal.x || *y > goal.y) c *= -1;
     error = c * sqrt(error_x*error_x + error_y*error_y);
 
-    // error_turn = angleDifference(robot->get_abs_angle(), toTheta(goal.x, goal.y, robot));
+    error_turn = angleDifference(robot->get_abs_angle(), toTheta(goal.x, goal.y, robot)) * PIVOT_P_TO_PERP_ODOM;
 
     // pid stuff:
     double power = PID(error, integral, prev_error, goal, false);

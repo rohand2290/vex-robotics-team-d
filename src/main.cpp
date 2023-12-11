@@ -55,28 +55,33 @@ static void test_angle_odom() {
 // Runs the user autonomous code.
 void autonomous()
 {
-	pros::lcd::clear();
+	// pros::lcd::clear();
 
-	for (int i = 0; i < road.size(); ++i) {
-		Waypoint current_goal = road.get_latest();
-		current_goal.execute_command(robot);
+	// for (int i = 0; i < road.size(); ++i) {
+	// 	Waypoint current_goal = road.get_latest();
+	// 	current_goal.execute_command(robot);
 
-		for (int j = 0; j < 100 * sqrt(current_goal.x*current_goal.x + current_goal.y*current_goal.y); ++j) {
-			std::vector<double> vect = map.updatePID(current_goal);
+	// 	for (int j = 0; j < 100 * sqrt(current_goal.x*current_goal.x + current_goal.y*current_goal.y); ++j) {
+	// 		std::vector<double> vect = map.updatePID(current_goal);
 
-			robot.set_right_side(vect[0] - vect[1]);
-			robot.set_left_side(vect[0] + vect[1]);
+	// 		robot.set_right_side(vect[0] - vect[1]);
+	// 		robot.set_left_side(vect[0] + vect[1]);
 			
-			pros::lcd::print(0, "x: %f", robot.x);
-			pros::lcd::print(1, "y: %f", robot.y);
-			pros::lcd::print(2, "theta: %i", robot.theta);
-			UPDATE_COORDS();
-			pros::delay(AUTON_LOOP_DELAY);
-		}
-		robot.x = 0;
-		robot.y = 0;
-		road.pop_latest();
-	}
+	// 		pros::lcd::print(0, "x: %f", robot.x);
+	// 		pros::lcd::print(1, "y: %f", robot.y);
+	// 		pros::lcd::print(2, "theta: %i", robot.theta);
+	// 		UPDATE_COORDS();
+	// 		pros::delay(AUTON_LOOP_DELAY);
+	// 	}
+	// 	robot.x = 0;
+	// 	robot.y = 0;
+	// 	road.pop_latest();
+	// }
+
+	items.left1->move_velocity(50); items.left2->move_velocity(50); items.left3->move_velocity(50);
+	items.right1->move_velocity(50); items.right2->move_velocity(50); items.right3->move_velocity(50);
+	pros::delay(2000);
+	items.stop();
 
 	pros::lcd::clear();
 	pros::lcd::print(0, "ROUTINE COMPLETE...");
@@ -86,7 +91,7 @@ void autonomous()
 // Runs the operator control code.
 void opcontrol()
 {
-	// autonomous();
+	//autonomous();
 	items.stop();
 	// end of auton:
 	items.master->clear();
@@ -95,10 +100,8 @@ void opcontrol()
 	bool temp = false;
 	bool auton = false;
 	// Variables for Smooth Drive:
-	#ifdef SMOOTH_CONSTANT
 	int speedr = 0; // speed for right
 	int speedl = 0; // speed for left
-	#endif
 	// Driver Code:
 	while (true)
 	{
@@ -109,7 +112,8 @@ void opcontrol()
 				items.master->get_analog(ANALOG_RIGHT_X),
 				__LINE__,
 				speedr,
-				speedl);
+				speedl
+			);
 			// actions acording to buttons:
 			robot.set_intake(items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
 			robot.set_flywheel(
@@ -120,6 +124,11 @@ void opcontrol()
 			if (items.master->get_digital_new_press(DIGITAL_R1)) items.initpos2 = !items.initpos2;
 			items.pto->set_value(items.initpos);
 			items.wings->set_value(items.initpos2);
+
+			pros::lcd::print(0, "%i", robot.theta);
+			items.master->print(0, 0, "%i", robot.theta);
+
+			UPDATE_COORDS();
 
 			pros::delay(OPCONTROL_LOOP_DELAY);
 	}
