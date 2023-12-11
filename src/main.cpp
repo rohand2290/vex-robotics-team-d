@@ -81,17 +81,6 @@ void autonomous()
 		robot.y = 0;
 		road.pop_latest();
 	}
-
-	/*
-	items.left1->move_velocity(50); items.left2->move_velocity(50); items.left3->move_velocity(50);
-	items.right1->move_velocity(50); items.right2->move_velocity(50); items.right3->move_velocity(50);
-	pros::delay(2000);
-	items.stop();
-
-	pros::lcd::clear();
-	pros::lcd::print(0, "ROUTINE COMPLETE...");
-	TERMINATE();
-	*/
 }
 
 // Runs the operator control code.

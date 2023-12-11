@@ -37,9 +37,18 @@ bool Path::goal_reached(Waypoint& goal, double x, double y) {
 }
 
 void Waypoint::execute_command(Robot& robot) {
-    // =================================== TODO ====================================
     if (command == "") {
         robot.items.intake_left->brake();
         robot.items.intake_right->brake();
+    } else if (command == "INTAKE") {
+        robot.items.intake_left->move(-255);
+        robot.items.intake_right->move(-255);
+    } else if (command == "OUTAKE") {
+        robot.items.intake_left->move(255);
+        robot.items.intake_right->move(255);
+    } else if (command == "WINGS") {
+        robot.set_wings(1);
+    } else if (command == "EXTEND") {
+        // =================================== TODO ====================================
     }
 }
