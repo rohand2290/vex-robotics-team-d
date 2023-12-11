@@ -59,29 +59,41 @@ VectorXD<N> VectorXD<N>::sub_by_vect(VectorXD<N> Vect) {
 template <int N>
 int VectorXD<N>::size() const { return N; }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int Location::normalize(double deg) {
     int ret = (int)deg;
     while (ret < 0) ret += 360;
     while (ret >= 360) ret -= 360;
     return ret;
 }
-static double NORM_RAD(double deg) {
+
+static double NORM_RAD(double deg) { // normalize radians from 0 - 2 pi
     while (deg < 0) deg += 2 * PI;
     while (deg >= 2 * PI) deg -= 2 * PI;
     return deg;
 }
-/// @brief Converts standrad angles to thier bearings due north
-/// @param deg standrad in degrees
-/// @return bearing in degrees
-static double standrad_to_bearing(double deg) {
+static double standrad_to_bearing(double deg) { // Converts standrad angles to thier bearings due north 
     double b = 90 - deg;
     if (b >= 0) return b;
     else return b + 360;
 }
-/// @brief Converts standrad angles to thier bearings due north
-/// @param rad standrad in radians
-/// @return bearing in radians
-static double standrad_to_bearing_rad(double rad) {
+static double standrad_to_bearing_rad(double rad) { // Converts standrad angles to thier bearings due north
     rad = NORM_RAD(rad);
     double b = PI / 2 - rad;
     if (b >= 0) return b;
@@ -93,61 +105,21 @@ void Location::initialize(Robot& r) {
     x = &r.x;
     y = &r.y;
 }
-double Location::calc_theta_orient()
-{
-    return old_t + (rel_l - rel_r) / (ROBOT_WIDTH);
-}
-VectorXD<2> Location::local_offset()
-{
-    VectorXD<2> v;
-    if (ARE_SAME(new_t, old_t)) {
-        v.setIndex(0, rel_c);
-        v.setIndex(1, rel_r);
-    }
-    else {
-        v.setIndex(0, rel_c / (new_t - old_t) + 9.251969);
-        v.setIndex(1, rel_r / (new_t - old_t) + (ROBOT_WIDTH / 2));
-        v.mult(2 * sin(old_t / 2));
-    }
-    return v;
-}
-double Location::avg_orient() { 
-    return old_t + (new_t - old_t) / 2; 
-}
-VectorXD<2> Location::global_offset(VectorXD<2> delta_dl) {
-    double r = sqrt((*x) * (*x) + (*y) * (*y));
-    double theta = atan2(*y, *x) - avg_orient();
-    
-    double x = r * cos(theta);
-    double y = r * sin(theta);
-    
-    VectorXD<2> vect(x, y);
-    return vect;
-}
 
 std::vector<double> Location::update() {
     // update variables:
     rel_l = robot->left_abs_dist() - old_l;
 	rel_r = robot->right_abs_dist() - old_r;
-	rel_c = robot->center_abs_dist() - old_c;
-	new_t = calc_theta_orient();
-
-    // calculate and update coordinates:
-    // VectorXD<2> vect = local_offset();
-    // double avgOr = avg_orient();
-    // VectorXD<2> change = global_offset(vect);
-    // *theta += avgOr;
+    robot->theta = normalize(robot->get_abs_angle());
 
     std::vector<double> arr = {
-        (((rel_l + rel_r) / 2 * sin(robot->get_abs_angle(true)))) / 0.08203342547, // conversion factor...
-        (((rel_l + rel_r) / 2 * cos(robot->get_abs_angle(true)))) / 0.08203342547,
+        (((rel_l + rel_r) / 2 * sin(robot->theta))) / 0.08203342547, // conversion factor...
+        (((rel_l + rel_r) / 2 * cos(robot->theta))) / 0.08203342547,
     };
 
     // save new vars to cache:
     old_l = robot->left_abs_dist();
 	old_r = robot->right_abs_dist();
-	old_c = robot->center_abs_dist();
-	old_t = new_t;
 
     return arr;
 }

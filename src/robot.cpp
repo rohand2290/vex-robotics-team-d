@@ -56,12 +56,11 @@ void Robot::set_left_side(int analog)
     items.right3->move(analog);
 }
 
-// here, y represents power and x represents turn, since this is arcade drive style.
 void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &speedl)
 {
     int left = (y - (x * TURN_PERCENT)) * MOTOR_PERCENT;
     int right = (y + (x * TURN_PERCENT)) * MOTOR_PERCENT;
-// set the wheels...
+    // set the wheels...
 #ifdef SMOOTH_CONSTANT
     // left side:
     if (speedl >= left)
@@ -84,41 +83,36 @@ void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &sp
 
 void Robot::set_intake(int analog1, int analog2)
 {
-    if (!items.initpos) {
-        if (analog1)
-        {
-            items.intake_left->move(255);
-            items.intake_right->move(255);
-        }
-        else if (analog2)
-        {
-            items.intake_left->move(-255);
-            items.intake_right->move(-255);
-        } else {
-            items.intake_left->move(0);
-            items.intake_right->move(0);
-        }
+    if (analog1)
+    {
+        items.intake_left->move(255);
+        items.intake_right->move(255);
+    }
+    else if (analog2)
+    {
+        items.intake_left->move(-255);
+        items.intake_right->move(-255);
+    } else {
+        items.intake_left->move(0);
+        items.intake_right->move(0);
     }
 }
 
-void Robot::set_flywheel(int up, int down)
+void Robot::set_flywheel(int stick)
 {
-    if (up)
-    {
-        items.flywheel->move(FLYWHEEL_SPEED);
-    }
-    else
-    {
-        items.flywheel->move(0);
-    }
-    if (down)
-    {
-        items.flywheel->move(-FLYWHEEL_SPEED);
-    }
-    else
-    {
-        items.flywheel->move(0);
-    }
+    if (stick) items.flywheel_pos = !items.flywheel_pos;
+    items.flywheel->move(items.flywheel_pos ? 255 : 0);
+}
+
+void Robot::set_wings(int stick)
+{
+    if (stick) items.wing_pos = !items.wing_pos;
+    items.wings->set_value(items.wing_pos);
+}
+
+void Robot::set_pto(int input)
+{
+    items.pto->set_value(input);
 }
 
 double Robot::radians_to_degrees(double radians)

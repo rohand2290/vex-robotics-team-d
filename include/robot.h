@@ -7,24 +7,28 @@ class Robot {
 private:
 public:
     Items items;
-    // the abs raw distances: (calculate actual distance using rotory sensor)
+    double x;
+    double y;
+    int theta; // in centidegrees.
+
+    /// @brief Right absolute distance since start
+    /// @return abs distance in inches
     double right_abs_dist();
+    /// @brief Left absolute distance since start
+    /// @return abs distance in inches
     double left_abs_dist();
+    /// @brief Center absolute distance since start
+    /// @return abs distance in inches
     double center_abs_dist();
     /// @brief Gets where the robot in pointing in degrees or radians.
     /// @param rad radians or not (degrees)
     /// @return bearing angle
     double get_abs_angle(bool rad = false);
-
-    double x;
-    double y;
-    int theta; // in centidegrees.
-
     /// @brief A non default constructor. Should be used in initialize function in main.cpp.
     /// @param i the universal item object's reference
     void initialize(Items& i);
+    /// @brief Default destructor...
     ~Robot();
-
     /// @brief  Set the wheel speed of all on the right 
     /// @param analog speed in analog
     void set_right_side(int analog);
@@ -41,10 +45,15 @@ public:
     /// @param analog1 1 or 0
     /// @param analog2 1 or 0
     void set_intake(int analog1, int analog2);
-    /// @brief Set the turret move based on up or down.
-    /// @param up make turret go up (1, 0)
-    /// @param down make turret go down (1, 0)
-    void set_flywheel(int up, int down);
+    /// @brief Set the flywheel in sticky format.
+    /// @param stick input button
+    void set_flywheel(int stick);
+    /// @brief Set the wings in sticky format.
+    /// @param stick input button
+    void set_wings(int stick);
+    /// @brief Set the PTO [format not decided]
+    /// @param input digital input
+    void set_pto(int input);
     /// @brief Converts radians to degrees
     /// @param radians radians as double
     /// @return coresponding degrees as double

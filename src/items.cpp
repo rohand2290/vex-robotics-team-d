@@ -13,9 +13,9 @@ void Items::initialize()  {
     intake_right = new pros::Motor (INTAKE_PORT_RIGHT, true);
     flywheel = new pros::Motor(FLYWHEEL_PORT);
     wings = new pros::ADIDigitalOut (WINGS_PORT);
-    initpos = false;
-    initpos2 = false;
-    pto = new pros::ADIDigitalOut (PTO_PORT, initpos);
+    flywheel_pos = false;
+    wing_pos = false;
+    pto = new pros::ADIDigitalOut (PTO_PORT);
     encoder_left = new pros::Rotation (ENCODER_PORT_1);
     encoder_right = new pros::Rotation (ENCODER_PORT_2);
     encoder_center = new pros::Rotation (ENCODER_PORT_3);
@@ -23,13 +23,14 @@ void Items::initialize()  {
 
 void Items::stop() {
     left1->brake();
-    left2->brake();
-    left3->brake();
     right1->brake();
     right2->brake();
+    left2->brake();
+    left3->brake();
     right3->brake();
     intake_left->brake();
     intake_right->brake();
+    flywheel->brake();
 }
 
 Items::~Items() {

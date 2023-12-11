@@ -28,24 +28,14 @@ int Path::size() {
 }
 
 bool Path::goal_reached(Waypoint& goal, double x, double y) {
-    if (ABS(x - goal.x) < allowable_error && ABS(y - goal.y) < allowable_error) {
-        return true;
-    }
-    else return false;
+    double distance = sqrt(x*x + y*y);
+    return distance <= allowable_error;
 }
 
 void Waypoint::execute_command(Robot& robot) {
+    // =================================== TODO ====================================
     if (command == "") {
         robot.items.intake_left->brake();
         robot.items.intake_right->brake();
-    } else if (command == "OUT") {
-        robot.items.intake_left->move(255);
-        robot.items.intake_right->move(255);
-    } else if (command == "IN") {
-        robot.items.intake_left->move(-255);
-        robot.items.intake_right->move(-255);
-    } else if (command == "TOGGLE") {
-        robot.items.initpos = !robot.items.initpos;
-        robot.items.pto->set_value(robot.items.initpos);
     }
 }

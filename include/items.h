@@ -7,8 +7,9 @@
 // Struct file that contains the objects to all hardware devices.
 struct Items {
 public:
-    int initpos;
-    int initpos2;
+    int flywheel_pos;
+    int wing_pos;
+    int pto_pos;
     pros::Controller* master;
     pros::Motor* left1; // front
     pros::Motor* left2; // middle
@@ -27,6 +28,7 @@ public:
 
     /// @brief Non-default constructor, connects all harware and ports.
     void initialize();
+    /// @brief Stops all motors systematically.
     void stop();
     /// @brief Deconstructor, helps end the program without crashing.
     ~Items();
