@@ -4,6 +4,10 @@ void Path::initialize(double x, double y) {
     add_queue(x, y);
 }
 
+void Path::initialize(const std::vector<Waypoint> a) {
+    cpp_vect = a;
+}
+
 Waypoint Path::get_latest() {
     return cpp_vect[0];
 }

@@ -6,6 +6,34 @@
 			robot.x += vect[0];\
 			robot.y += vect[1]; }
 
+const std::vector<Waypoint> spawn1 = {
+	{27, 32.17},
+	{42, 0},
+	{0, 26.2, "WINGS"},
+	{35, 0},
+	{0, 27},
+	{16.97, 16.97},
+	{24, 0, "INTAKE"},
+	{52, 0, "MATCH_LOAD"},
+	{0, 30},
+	{28.99, 28.99},
+	{24, 0},
+};
+
+const std::vector<Waypoint> spawn2 = { // TODO
+	{27, 32.17},
+	{42, 0},
+	{0, 26.2, "WINGS"},
+	{35, 0},
+	{0, 27},
+	{16.97, 16.97},
+	{24, 0, "INTAKE"},
+	{52, 0, "MATCH_LOAD"},
+	{0, 30},
+	{28.99, 28.99},
+	{24, 0},
+};
+
 Items items;
 Robot robot;
 Location map;
@@ -19,8 +47,9 @@ void initialize()
 	items.initialize();
 	robot.initialize(items);
 	map.initialize(robot);
-	road.initialize(0, 10);
 	// use array to initialize road
+	road.initialize(spawn1);
+
 }
 
 // Runs while the robot is in the disabled state

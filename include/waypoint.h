@@ -23,6 +23,9 @@ public:
     /// @param x x coord of first waypoint
     /// @param y y coord of first waypoint
     void initialize(double x, double y);
+    /// @brief Non-default constructor
+    /// @param a vector of all points to add to path
+    void initialize(std::vector<Waypoint> a);
     /// @brief Checks if the given goal in queue has been reached.
     /// @param goal goal to check
     /// @param x x coord of bot

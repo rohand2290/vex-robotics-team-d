@@ -107,7 +107,6 @@ void Location::initialize(Robot& r) {
 }
 
 std::vector<double> Location::update() {
-    // TODO:
     rel_l = robot->left_abs_dist() - old_l;
 	rel_r = robot->right_abs_dist() - old_r;
     rel_th = robot->get_abs_angle() - old_th;
