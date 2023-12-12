@@ -24,7 +24,7 @@ double Robot::get_abs_angle(bool rad) {
     //      : radius = perpendicular sensor - point of pivoting
     //      : theta / arc-length = 2 * pi / 2 * pi * radius
     //      => theta =  arc-length / radius RADIANS
-    double mag = (left_abs_dist() - right_abs_dist());
+    double mag = (center_abs_dist());
     double theta = mag / PIVOT_P_TO_PERP_ODOM;
     return rad ? theta : radians_to_degrees(theta);
 }
@@ -86,8 +86,7 @@ void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &sp
     set_left_side(speedl);
     set_right_side(speedr);
 #else
-    set_right_side(right);
-    set_left_side(left);
+    set_both_sides(right, left);
 #endif
 }
 

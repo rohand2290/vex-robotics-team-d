@@ -112,21 +112,21 @@ std::vector<double> Location::update() {
     rel_th = robot->get_abs_angle() - old_th;
     robot->theta = normalize(robot->get_abs_angle());
 
-    if (rel_th == 0) rel_th = 0.000000001;
+    // if (rel_th == 0) rel_th = 0.000000001;
 
-    double mag = ((rel_l + rel_r) / (rel_th)) * sin(robot->degrees_to_radians(rel_th) / 2);
-    std::vector<double> arr = {
-        mag * sin(robot->degrees_to_radians(rel_th)),
-        mag * cos(robot->degrees_to_radians(rel_th))
-    };
-
+    // double mag = ((rel_l + rel_r) / (rel_th)) * sin(robot->degrees_to_radians(rel_th) / 2);
     // std::vector<double> arr = {
-    //     (((rel_l + rel_r) / 2 * sin(robot->degrees_to_radians(robot->theta)))) / 0.08203342547, // conversion factor...
-    //     (((rel_l + rel_r) / 2 * cos(robot->degrees_to_radians(robot->theta)))) / 0.08203342547,
+    //     mag * sin(robot->degrees_to_radians(rel_th)) / 0.08203342547,
+    //     mag * cos(robot->degrees_to_radians(rel_th)) / 0.08203342547
     // };
 
-    robot->x += arr[0];
-    robot->y += arr[1];
+    std::vector<double> arr = {
+        ((((rel_l + rel_r) / 2 * sin(robot->degrees_to_radians(robot->theta)))) / 0.08203342547), // conversion factor...
+        ((((rel_l + rel_r) / 2 * cos(robot->degrees_to_radians(robot->theta)))) / 0.08203342547),
+    };
+
+    // robot->x += arr[0];
+    // robot->y += arr[1];
 
     // save new vars to cache:
     old_l = robot->left_abs_dist();

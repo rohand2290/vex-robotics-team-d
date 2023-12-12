@@ -16,7 +16,7 @@ void Items::initialize()  {
     flywheel_pos = false;
     wing_pos = false;
     pto = new pros::ADIDigitalOut (PTO_PORT);
-    encoder_left = new pros::Rotation (ENCODER_PORT_1);
+    encoder_left = new pros::Rotation (ENCODER_PORT_1, true);
     encoder_right = new pros::Rotation (ENCODER_PORT_2);
     encoder_center = new pros::Rotation (ENCODER_PORT_3);
 }

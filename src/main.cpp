@@ -116,7 +116,8 @@ void opcontrol()
 		robot.set_pto(items.master->get_digital(DIGITAL_Y));
 
 		pros::lcd::print(0, "%i", robot.theta);
-		items.master->print(0, 0, "%i", robot.theta);
+		pros::lcd::print(1, "%f", robot.x);
+		pros::lcd::print(2, "%f", robot.y);
 
 		UPDATE_COORDS();
 
