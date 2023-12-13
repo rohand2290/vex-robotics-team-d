@@ -22,12 +22,16 @@
 #define INTAKE_PORT_LEFT 8 // Defines the 1st port of the left side of intake.
 #define INTAKE_PORT_RIGHT 4 // Defines the 2nd port of the right side of intake.
 
-// Turret:
+// Flywheel:
 #define FLYWHEEL_PORT 69 // Defines the port of the turret motor.
 
-// Puncher:
+// Pistons:
+#define INTAKE_PISTON_PORT 'A'
 #define PTO_PORT 'B'
 #define WINGS_PORT 'C'
+
+// IMU:
+#define IMU_PORT 15
 
 // ======== PREFERENCES: =========
 
@@ -43,6 +47,7 @@
 // ======= Auton: ================
 // trackion wheels:
 #define WHEEL_C 2.75 * PI // wheel circumference
+#define TICKS_PER_REVOLUTION 300
 // find difference from pivot point (point that doesnt move during rotation) and center odom.
 #define PIVOT_P_TO_PERP_ODOM 0.56 // in
 // encoder ports:
@@ -53,15 +58,15 @@
 #define ANGLE_START 0 // bearing front
 // PID Constants:
 // power:
-#define POWER_KP 7.85
-#define POWER_KI 1
-#define POWER_KD 2.26
+#define POWER_KP 5
+#define POWER_KI 0
+#define POWER_KD 5
 #define POWER_ERROR_MAX 100
 #define POWER_ERROR_MIN -100
 // turn:
-#define TURN_KP 2.85
-#define TURN_KI 1
-#define TURN_KD 1
+#define TURN_KP 0
+#define TURN_KI 0
+#define TURN_KD 0
 #define TURN_ERROR_MAX 100
 #define TURN_ERROR_MIN -100
 
@@ -71,8 +76,8 @@
 // If it is too large, it might decrease sensitivity and increase lag.
 // this can also be used to change smoothness if smooth drive is enabled.
 // If it is too little, it might starve the proccessor from energy with too much load.
-#define OPCONTROL_LOOP_DELAY 5 // ms
-#define AUTON_LOOP_DELAY 5 // ms
+#define OPCONTROL_LOOP_DELAY 10 // ms
+#define AUTON_LOOP_DELAY 10 // ms
 #define PI 3.141592653589793
 #define ROBOT_WIDTH 3.54331 // in
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0

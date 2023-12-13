@@ -9,7 +9,7 @@ public:
     Items items;
     double x;
     double y;
-    int theta; // in degrees.
+    double theta; // in degrees.
 
     /// @brief Right absolute distance since start
     /// @return abs distance in inches
@@ -48,7 +48,8 @@ public:
     /// @brief Set the intake to in or out
     /// @param analog1 1 or 0
     /// @param analog2 1 or 0
-    void set_intake(int analog1, int analog2);
+    /// @param pist 1 or 0
+    void set_intake(int analog1, int analog2, int pist);
     /// @brief Set the flywheel in sticky format.
     /// @param stick input button
     void set_flywheel(int stick);

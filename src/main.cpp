@@ -48,7 +48,8 @@ void initialize()
 	robot.initialize(items);
 	map.initialize(robot);
 	// use array to initialize road
-	road.initialize(spawn1);
+	//road.initialize(spawn1);
+	road.initialize(0, 5);
 
 }
 
@@ -66,13 +67,13 @@ void autonomous()
 		Waypoint current_goal = road.get_latest();
 		current_goal.execute_command(robot);
 
-		while (!road.goal_reached(current_goal, robot.x, robot.y)) {
+		for (int i = 0; i < 1000; ++i) {
 			std::vector<double> vect = map.updatePID(current_goal);
-			robot.set_both_sides(vect[0] - vect[1], vect[0] + vect[1]);
+			robot.set_both_sides(vect[1], vect[0]);
 			
 			pros::lcd::print(0, "x: %f", robot.x);
 			pros::lcd::print(1, "y: %f", robot.y);
-			pros::lcd::print(2, "theta: %i", robot.theta);
+			pros::lcd::print(2, "theta: %f", robot.theta);
 			UPDATE_COORDS();
 			pros::delay(AUTON_LOOP_DELAY);
 		}
@@ -81,12 +82,16 @@ void autonomous()
 		robot.y = 0;
 		road.pop_latest();
 	}
+
+	items.master->print(0, 0, "F");
+	items.stop();
+	TERMINATE();
 }
 
 // Runs the operator control code.
 void opcontrol()
 {
-	//autonomous();
+	autonomous();
 	items.stop();
 	// end of auton:
 	items.master->clear();
@@ -110,12 +115,15 @@ void opcontrol()
 			speedl
 		);
 		// actions acording to buttons:
-		robot.set_intake(items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
+		robot.set_intake(
+			items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2),
+			items.master->get_digital_new_press(DIGITAL_A)
+		);
 		robot.set_flywheel(items.master->get_digital_new_press(DIGITAL_UP));
 		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1));
 		robot.set_pto(items.master->get_digital(DIGITAL_Y));
 
-		pros::lcd::print(0, "%i", robot.theta);
+		pros::lcd::print(0, "%f", robot.theta);
 		pros::lcd::print(1, "%f", robot.x);
 		pros::lcd::print(2, "%f", robot.y);
 

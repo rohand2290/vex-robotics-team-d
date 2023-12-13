@@ -3,14 +3,14 @@
 
 double Robot::right_abs_dist()
 { // in terms of inches
-    int normal = (int)items.encoder_right->get_position();
-    return (normal / 360000.0) * WHEEL_C;
+    double normal = items.right2->get_position();
+    return (normal / TICKS_PER_REVOLUTION) * WHEEL_C;
 }
 
 double Robot::left_abs_dist()
 { // in terms of inches
-    int normal = (int)items.encoder_left->get_position();
-    return (normal / 360000.0) * WHEEL_C;
+    double normal = items.left2->get_position();
+    return (normal / TICKS_PER_REVOLUTION) * WHEEL_C;
 }
 
 double Robot::center_abs_dist()
@@ -24,9 +24,9 @@ double Robot::get_abs_angle(bool rad) {
     //      : radius = perpendicular sensor - point of pivoting
     //      : theta / arc-length = 2 * pi / 2 * pi * radius
     //      => theta =  arc-length / radius RADIANS
-    double mag = (center_abs_dist());
-    double theta = mag / PIVOT_P_TO_PERP_ODOM;
-    return rad ? theta : radians_to_degrees(theta);
+    // double mag = (center_abs_dist());
+    // double theta = mag / PIVOT_P_TO_PERP_ODOM;
+    return rad ? degrees_to_radians(items.imu->get_heading()) : items.imu->get_heading();
 }
 
 void Robot::initialize(Items &i)
@@ -38,6 +38,7 @@ void Robot::initialize(Items &i)
     items.encoder_left->reset_position();
     items.encoder_right->reset_position();
     items.encoder_center->reset_position();
+    items.imu->reset(true);
 }
 
 Robot::~Robot() {}
@@ -90,7 +91,7 @@ void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &sp
 #endif
 }
 
-void Robot::set_intake(int analog1, int analog2)
+void Robot::set_intake(int analog1, int analog2, int pist)
 {
     if (analog1)
     {
@@ -105,6 +106,9 @@ void Robot::set_intake(int analog1, int analog2)
         items.intake_left->move(0);
         items.intake_right->move(0);
     }
+
+    if (pist) items.intake_pos = !items.intake_pos;
+    items.intake_piston->set_value(items.intake_pos);
 }
 
 void Robot::set_flywheel(int stick)

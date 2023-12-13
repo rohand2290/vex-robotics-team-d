@@ -10,6 +10,7 @@ public:
     int flywheel_pos;
     int wing_pos;
     int pto_pos;
+    int intake_pos;
     pros::Controller* master;
     pros::Motor* left1; // front
     pros::Motor* left2; // middle
@@ -22,9 +23,11 @@ public:
     pros::Motor* flywheel;
     pros::ADIDigitalOut* pto;
     pros::ADIDigitalOut* wings;
+    pros::ADIDigitalOut* intake_piston;
     pros::Rotation* encoder_left;
     pros::Rotation* encoder_right;
     pros::Rotation* encoder_center;
+    pros::IMU* imu;
 
     /// @brief Non-default constructor, connects all harware and ports.
     void initialize();

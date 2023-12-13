@@ -76,8 +76,8 @@ int VectorXD<N>::size() const { return N; }
 
 
 
-int Location::normalize(double deg) {
-    int ret = (int)deg;
+double Location::normalize(double deg) {
+    double ret = deg;
     while (ret < 0) ret += 360;
     while (ret >= 360) ret -= 360;
     return ret;
@@ -110,7 +110,7 @@ std::vector<double> Location::update() {
     rel_l = robot->left_abs_dist() - old_l;
 	rel_r = robot->right_abs_dist() - old_r;
     rel_th = robot->get_abs_angle() - old_th;
-    robot->theta = normalize(robot->get_abs_angle());
+    robot->theta = robot->get_abs_angle();
 
     // if (rel_th == 0) rel_th = 0.000000001;
 
@@ -121,8 +121,8 @@ std::vector<double> Location::update() {
     // };
 
     std::vector<double> arr = {
-        ((((rel_l + rel_r) / 2 * sin(robot->degrees_to_radians(robot->theta)))) / 0.08203342547), // conversion factor...
-        ((((rel_l + rel_r) / 2 * cos(robot->degrees_to_radians(robot->theta)))) / 0.08203342547),
+        ((rel_l + rel_r) / 2 * sin(robot->degrees_to_radians(robot->theta))) * 0.787402, // conversion factor...
+        ((rel_l + rel_r) / 2 * cos(robot->degrees_to_radians(robot->theta))) * 0.787402,
     };
 
     // robot->x += arr[0];
@@ -200,7 +200,7 @@ std::vector<double> Location::updatePID(Waypoint& goal) {
     double power = PID(error, integral, prev_error, goal, false);
     double turn = PID(error_turn, integral_turn, prev_error_turn, goal, true);
 
-    std::vector<double> v = {power - turn, power + turn};
+    std::vector<double> v = {(power - (turn * TURN_PERCENT)) * MOTOR_PERCENT, (power + (turn * TURN_PERCENT)) * MOTOR_PERCENT};
     /////////////
 
     prev_error = error;

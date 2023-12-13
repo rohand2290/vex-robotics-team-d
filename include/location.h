@@ -32,7 +32,7 @@ public:
     /// @brief Takes a raw angle and modifies it to bearing.
     /// @param deg degrees to format
     /// @return formates degrees in bearing from 0 - 359
-    int normalize(double deg);
+    double normalize(double deg);
     /// @brief Calculates the amount to update coordinates
     /// @return Vector of updated coordinates
     std::vector<double> update();

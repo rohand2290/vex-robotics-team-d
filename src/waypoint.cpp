@@ -33,7 +33,7 @@ int Path::size() {
 
 bool Path::goal_reached(Waypoint& goal, double x, double y) {
     double distance = sqrt(x*x + y*y);
-    return distance <= allowable_error;
+    return distance < allowable_error;
 }
 
 void Waypoint::execute_command(Robot& robot) {
