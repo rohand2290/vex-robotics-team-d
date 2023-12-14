@@ -1,5 +1,6 @@
 #include "depend.h"
 #include "vectorxd.h"
+#include "location.h"
 
 template <int N>
 VectorXD<N>::VectorXD(double x, double y) {
@@ -104,6 +105,10 @@ void Location::initialize(Robot& r) {
     robot = &r;
     x = &r.x;
     y = &r.y;
+    leftPID.set_constants(POWER_KP, POWER_KI, POWER_KD);
+    rightPID.set_constants(TURN_KP, TURN_KI, TURN_KD);
+    r.items.left2->tare_position();
+	r.items.right2->tare_position();
 }
 
 std::vector<double> Location::update() {
@@ -116,13 +121,13 @@ std::vector<double> Location::update() {
 
     // double mag = ((rel_l + rel_r) / (rel_th)) * sin(robot->degrees_to_radians(rel_th) / 2);
     // std::vector<double> arr = {
-    //     mag * sin(robot->degrees_to_radians(rel_th)) / 0.08203342547,
-    //     mag * cos(robot->degrees_to_radians(rel_th)) / 0.08203342547
+    //     dx * sin(robot->degrees_to_radians(robot->theta)), // / 0.08203342547,
+    //     dy * cos(robot->degrees_to_radians(robot->theta)) // / 0.08203342547
     // };
 
     std::vector<double> arr = {
-        ((rel_l + rel_r) / 2 * sin(robot->degrees_to_radians(robot->theta))) * 0.787402, // conversion factor...
-        ((rel_l + rel_r) / 2 * cos(robot->degrees_to_radians(robot->theta))) * 0.787402,
+        ((rel_l + rel_r) / 2 * sin(robot->degrees_to_radians(robot->theta)))* 0.787402, // conversion factor...
+        ((rel_l + rel_r) / 2 * cos(robot->degrees_to_radians(robot->theta)))* 0.787402,
     };
 
     // robot->x += arr[0];
@@ -155,7 +160,7 @@ double Location::D(double& prev_error, double error, bool isturn) {
 	return (error - prev_error) * (isturn ? TURN_KD : POWER_KD);
 }
 
-double Location::PID(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn) {
+double Location::pid(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn) {
 	return P(error, isturn) + I(error, integral, goal, isturn) + D(prev_error, error, isturn);
 }
 
@@ -184,27 +189,39 @@ static double angleDifference(double start, double end) {
 }
 
 std::vector<double> Location::updatePID(Waypoint& goal) {
-    double error_x = robot->x - goal.x;
-    double error_y = robot->y - goal.y;
+    /*
+    // double error_x = robot->x - goal.x;
+    // double error_y = robot->y - goal.y;
     
-    int c = 1;
-    if (robot->x > goal.x || robot->y > goal.y) c *= -1;
-    error = c * sqrt(error_x*error_x + error_y*error_y);
+    // int c = 1;
+    // if (robot->x > goal.x || robot->y > goal.y) c *= -1;
+    // error = c * sqrt(error_x*error_x + error_y*error_y);
 
-    error_turn = angleDifference(
-        robot->get_abs_angle(), 
-        standrad_to_bearing(toTheta(goal.x, goal.y, robot))
-    ) * PIVOT_P_TO_PERP_ODOM;
+    // error_turn = angleDifference(
+    //     robot->get_abs_angle(), 
+    //     standrad_to_bearing(toTheta(goal.x, goal.y, robot))
+    // ) * PIVOT_P_TO_PERP_ODOM;
 
-    // pid stuff:
-    double power = PID(error, integral, prev_error, goal, false);
-    double turn = PID(error_turn, integral_turn, prev_error_turn, goal, true);
+    // // pid stuff:
+    // double power = PID(error, integral, prev_error, goal, false);
+    // double turn = PID(error_turn, integral_turn, prev_error_turn, goal, true);
+    */
 
-    std::vector<double> v = {(power - (turn * TURN_PERCENT)) * MOTOR_PERCENT, (power + (turn * TURN_PERCENT)) * MOTOR_PERCENT};
-    /////////////
+    /////////// NOTE: temporarily, x is right odom goal and y is left goal.
+    double l = leftPID.compute(robot->items.left2->get_position());
+    double r = rightPID.compute(robot->items.right2->get_position());
 
-    prev_error = error;
-    prev_error_turn = error_turn;
+    std::vector<double> v = {l, r};
 
     return v;
+}
+
+void Location::reset_all()
+{
+    robot->items.left2->tare_position();
+	robot->items.right2->tare_position();
+}
+
+bool Location::is_running() {
+    return rightPID.exit_condition() == ez::RUNNING || leftPID.exit_condition() == ez::RUNNING;
 }

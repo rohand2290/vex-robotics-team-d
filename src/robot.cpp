@@ -39,6 +39,7 @@ void Robot::initialize(Items &i)
     items.encoder_right->reset_position();
     items.encoder_center->reset_position();
     items.imu->reset(true);
+    items.imu->tare();
 }
 
 Robot::~Robot() {}

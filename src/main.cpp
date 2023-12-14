@@ -2,7 +2,7 @@
 #include "depend.h"
 
 #define UPDATE_COORDS() {\
-			std::vector<double> vect = map.update();\
+			std::vector<double> vect = maping.update();\
 			robot.x += vect[0];\
 			robot.y += vect[1]; }
 
@@ -36,7 +36,7 @@ const std::vector<Waypoint> spawn2 = { // TODO
 
 Items items;
 Robot robot;
-Location map;
+Location maping;
 Path road;
 
 // Runs initialization code. This occurs as soon as the program is started.
@@ -46,10 +46,10 @@ void initialize()
 	// initialize objects...
 	items.initialize();
 	robot.initialize(items);
-	map.initialize(robot);
+	maping.initialize(robot);
 	// use array to initialize road
 	//road.initialize(spawn1);
-	road.initialize(0, 5);
+	road.initialize(0, 10);
 
 }
 
@@ -67,31 +67,26 @@ void autonomous()
 		Waypoint current_goal = road.get_latest();
 		current_goal.execute_command(robot);
 
-		for (int i = 0; i < 1000; ++i) {
-			std::vector<double> vect = map.updatePID(current_goal);
+		while (maping.is_running()) {
+			std::vector<double> vect = maping.updatePID(current_goal);
 			robot.set_both_sides(vect[1], vect[0]);
-			
-			pros::lcd::print(0, "x: %f", robot.x);
-			pros::lcd::print(1, "y: %f", robot.y);
-			pros::lcd::print(2, "theta: %f", robot.theta);
-			UPDATE_COORDS();
 			pros::delay(AUTON_LOOP_DELAY);
 		}
 
-		robot.x = 0;
-		robot.y = 0;
+		// robot.x = 0;
+		// robot.y = 0;
+		maping.reset_all();
 		road.pop_latest();
 	}
 
 	items.master->print(0, 0, "F");
 	items.stop();
-	TERMINATE();
 }
 
 // Runs the operator control code.
 void opcontrol()
 {
-	autonomous();
+	//autonomous();
 	items.stop();
 	// end of auton:
 	items.master->clear();

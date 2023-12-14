@@ -26,15 +26,15 @@ void Items::initialize()  {
 }
 
 void Items::stop() {
-    left1->brake();
-    right1->brake();
-    right2->brake();
-    left2->brake();
-    left3->brake();
-    right3->brake();
-    intake_left->brake();
-    intake_right->brake();
-    flywheel->brake();
+    left1->move(0);
+    right1->move(0);
+    right2->move(0);
+    left2->move(0);
+    left3->move(0);
+    right3->move(0);
+    intake_left->move(0);
+    intake_right->move(0);
+    flywheel->move(0);
 }
 
 Items::~Items() {

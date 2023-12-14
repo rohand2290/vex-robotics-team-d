@@ -1,7 +1,8 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 
-#include "robot.h"
+#include "depend.h"
+#include "EZ-Template/api.hpp"
 
 class Location {
 private:
@@ -25,6 +26,9 @@ private:
     double error_turn = 0;
     double prev_error_turn = 0;
     double integral_turn = 0;
+    // Odom specific:
+    PID leftPID;
+    PID rightPID;
 public:
     /// @brief Non-default constructor of Location
     /// @param r Robot instance
@@ -61,11 +65,16 @@ public:
     /// @param goal goal we want to reach
     /// @param isturn calculating turn or power PID?
     /// @return PID number
-    double PID(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn);
+    double pid(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn);
     /// @brief Returns motor values depending on PID value
     /// @param goal goal we want to reach
     /// @return Vector of motor values.
     std::vector<double> updatePID(Waypoint& goal);
+    /// @brief Resets all encoders to 0
+    void reset_all();
+    /// @brief Checks if PID is still running...
+    /// @return true (done) or false (not done)
+    bool is_running();
 };
 
 #endif // LOCATION_H
