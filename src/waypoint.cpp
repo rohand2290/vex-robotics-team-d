@@ -43,12 +43,15 @@ void Waypoint::execute_command(Robot& robot) {
     } else if (command == "INTAKE") {
         robot.items.intake_left->move(-255);
         robot.items.intake_right->move(-255);
+        robot.items.intake_piston->set_value(1);
     } else if (command == "OUTAKE") {
         robot.items.intake_left->move(255);
         robot.items.intake_right->move(255);
+        robot.items.intake_piston->set_value(0);
     } else if (command == "WINGS") {
         robot.set_wings(1);
     } else if (command == "EXTEND") {
-        // =================================== TODO ====================================
+        robot.items.pto_pos = !robot.items.pto_pos;
+        robot.items.pto->set_value(robot.items.pto_pos);
     }
 }

@@ -117,7 +117,7 @@ void autonomous()
 // Runs the operator control code.
 void opcontrol()
 {
-	//autonomous();
+	autonomous();
 	//sudo_value_retriever();
 	items.stop();
 	// end of auton:
