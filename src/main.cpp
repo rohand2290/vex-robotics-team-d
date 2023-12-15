@@ -95,14 +95,17 @@ void autonomous()
 		Waypoint current_goal = road.get_latest();
 		current_goal.execute_command(robot);
 
-		while (maping.is_running()) {
+		double error;
+		do {
 			std::vector<double> vect = maping.updatePID(current_goal);
 			robot.set_both_sides(vect[0], vect[1]);
-			pros::delay(AUTON_LOOP_DELAY);
-		}
-		double error = ((current_goal.x - robot.right_abs_dist()) 
+
+			error = ((current_goal.x - robot.right_abs_dist()) 
 					+ (current_goal.y - robot.left_abs_dist())) / 2;
-		if (items.master->get_digital(DIGITAL_A)) items.master->print(0, 0, "%f", error);
+			pros::delay(AUTON_LOOP_DELAY);
+		} while (error > MAX_ALLOWED_ERROR);
+		
+		items.master->print(0, 0, "%f", error);
 
 		// robot.x = 0;
 		// robot.y = 0;
