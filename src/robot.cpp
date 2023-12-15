@@ -73,23 +73,30 @@ void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &sp
     int left = (y - (x * TURN_PERCENT)) * MOTOR_PERCENT;
     int right = (y + (x * TURN_PERCENT)) * MOTOR_PERCENT;
     // set the wheels...
-#ifdef SMOOTH_CONSTANT
-    // left side:
-    if (speedl >= left)
-        speedl -= SMOOTH_CONSTANT;
-    else if (speedl < left)
-        speedl += SMOOTH_CONSTANT;
-    // right side:
-    if (speedr >= right)
-        speedr -= SMOOTH_CONSTANT;
-    else if (speedr < right)
-        speedr += SMOOTH_CONSTANT;
+    // #ifdef SMOOTH_CONSTANT
+    //     // left side:
+    //     if (speedl >= left)
+    //         speedl -= SMOOTH_CONSTANT;
+    //     else if (speedl < left)
+    //         speedl += SMOOTH_CONSTANT;
+    //     // right side:
+    //     if (speedr >= right)
+    //         speedr -= SMOOTH_CONSTANT;
+    //     else if (speedr < right)
+    //         speedr += SMOOTH_CONSTANT;
 
-    set_left_side(speedl);
-    set_right_side(speedr);
-#else
+    //     set_left_side(speedl);
+    //     set_right_side(speedr);
+    // #else
+    if (items.pto_pos) {
+        items.left2->set_reversed(0);
+        items.right2->set_reversed(1);
+    } else {
+        items.left2->set_reversed(1);
+        items.right2->set_reversed(0);
+    }
     set_both_sides(right, left);
-#endif
+    // #endif
 }
 
 static void set_in(int a, Items& items) {

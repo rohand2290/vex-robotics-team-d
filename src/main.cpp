@@ -95,17 +95,17 @@ void autonomous()
 		Waypoint current_goal = road.get_latest();
 		current_goal.execute_command(robot);
 
-		double error;
+		// double error;
 		do {
 			std::vector<double> vect = maping.updatePID(current_goal);
 			robot.set_both_sides(vect[0], vect[1]);
 
-			error = ((current_goal.x - robot.right_abs_dist()) 
-					+ (current_goal.y - robot.left_abs_dist())) / 2;
+			// error = ((current_goal.x - robot.right_abs_dist()) 
+					// + (current_goal.y - robot.left_abs_dist())) / 2;
 			pros::delay(AUTON_LOOP_DELAY);
-		} while (error > MAX_ALLOWED_ERROR);
+		} while (maping.is_running());
 		
-		items.master->print(0, 0, "%f", error);
+		// items.master->print(0, 0, "%f", error);
 
 		// robot.x = 0;
 		// robot.y = 0;
@@ -113,7 +113,7 @@ void autonomous()
 		road.pop_latest();
 	}
 
-	items.master->print(0, 0, "F");
+	// items.master->print(0, 0, "F");
 	items.stop();
 }
 
@@ -153,11 +153,11 @@ void opcontrol()
 		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1));
 		robot.set_pto(items.master->get_digital(DIGITAL_Y));
 
-		pros::lcd::print(0, "%f", robot.theta);
-		pros::lcd::print(1, "%f", robot.x);
-		pros::lcd::print(2, "%f", robot.y);
+		// pros::lcd::print(0, "%f", robot.theta);
+		// pros::lcd::print(1, "%f", robot.x);
+		// pros::lcd::print(2, "%f", robot.y);
 
-		UPDATE_COORDS();
+		// UPDATE_COORDS();
 
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
