@@ -3,14 +3,14 @@
 
 double Robot::right_abs_dist()
 { // in terms of inches
-    double normal = items.right2->get_position();
-    return (normal / TICKS_PER_REVOLUTION) * WHEEL_C;
+    double normal = items.right1->get_position() + items.right2->get_position() + items.right3->get_position();
+    return normal / 3;
 }
 
 double Robot::left_abs_dist()
 { // in terms of inches
-    double normal = items.left2->get_position();
-    return (normal / TICKS_PER_REVOLUTION) * WHEEL_C;
+    double normal = items.left1->get_position() + items.left2->get_position() + items.left3->get_position();
+    return normal / 3;
 }
 
 double Robot::center_abs_dist()
@@ -92,22 +92,23 @@ void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &sp
 #endif
 }
 
+static void set_in(int a, Items& items) {
+    items.intake_left->move(a);
+    items.intake_right->move(a);
+}
 void Robot::set_intake(int analog1, int analog2, int pist)
 {
-    if (analog1)
-    {
-        items.intake_left->move(255);
-        items.intake_right->move(255);
+    if (analog1) {
+        power = -255;
+        if (temp1) power = 0;
+        temp1 = !temp1;
     }
-    else if (analog2)
-    {
-        items.intake_left->move(-255);
-        items.intake_right->move(-255);
-    } else {
-        items.intake_left->move(0);
-        items.intake_right->move(0);
+    if (analog2) {
+        power = 255;
+        if (temp2) power = 0;
+        temp2 = !temp2;
     }
-
+    set_in(power, items);
     if (pist) items.intake_pos = !items.intake_pos;
     items.intake_piston->set_value(items.intake_pos);
 }

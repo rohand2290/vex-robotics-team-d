@@ -57,7 +57,7 @@
 // Start Angle:
 #define ANGLE_START 0 // bearing front
 // PID Constants:
-// power: // =========================== LEFT:
+// power: // =========================== ONLY ONE THAT MATTERS!!!!!!!!!!!!!
 #define POWER_KP 5
 #define POWER_KI 1
 #define POWER_KD 5
@@ -69,6 +69,10 @@
 #define TURN_KD 1
 #define TURN_ERROR_MAX 100
 #define TURN_ERROR_MIN -100
+
+// maximum allowed error:
+#define MAX_ALLOWED_ERROR 10
+#define MAX_ALLOWED_ERROR_TIME 50
 
 // ======= Miscelanious: =========
 

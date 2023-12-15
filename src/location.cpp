@@ -106,9 +106,11 @@ void Location::initialize(Robot& r) {
     x = &r.x;
     y = &r.y;
     leftPID.set_constants(POWER_KP, POWER_KI, POWER_KD);
-    rightPID.set_constants(TURN_KP, TURN_KI, TURN_KD);
+    rightPID.set_constants(POWER_KP, POWER_KI, POWER_KD);
     r.items.left2->tare_position();
 	r.items.right2->tare_position();
+    leftPID.set_exit_condition(MAX_ALLOWED_ERROR_TIME, MAX_ALLOWED_ERROR);
+    rightPID.set_exit_condition(MAX_ALLOWED_ERROR_TIME, MAX_ALLOWED_ERROR);
 }
 
 std::vector<double> Location::update() {
@@ -207,11 +209,13 @@ std::vector<double> Location::updatePID(Waypoint& goal) {
     // double turn = PID(error_turn, integral_turn, prev_error_turn, goal, true);
     */
 
+    if (rightPID.get_target() != goal.x) rightPID.set_target(goal.x);
+    if (leftPID.get_target() != goal.y) leftPID.set_target(goal.y);
     /////////// NOTE: temporarily, x is right odom goal and y is left goal.
-    double l = leftPID.compute(robot->items.left2->get_position());
-    double r = rightPID.compute(robot->items.right2->get_position());
+    double l = leftPID.compute(robot->left_abs_dist());
+    double r = rightPID.compute(robot->right_abs_dist());
 
-    std::vector<double> v = {l, r};
+    std::vector<double> v = {r, l};
 
     return v;
 }
@@ -220,6 +224,10 @@ void Location::reset_all()
 {
     robot->items.left2->tare_position();
 	robot->items.right2->tare_position();
+    robot->items.left1->tare_position();
+	robot->items.right1->tare_position();
+    robot->items.left3->tare_position();
+	robot->items.right3->tare_position();
 }
 
 bool Location::is_running() {

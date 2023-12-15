@@ -11,6 +11,10 @@ public:
     double y;
     double theta; // in degrees.
 
+    int power = 0;
+    bool temp1 = 0;
+    bool temp2 = 0;
+
     /// @brief Right absolute distance since start
     /// @return abs distance in inches
     double right_abs_dist();
