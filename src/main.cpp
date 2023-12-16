@@ -35,10 +35,9 @@
 // };
 
 const std::vector<Waypoint> spawn1 = {
-	{-989.66, -1646.0},
-	{167.33, 222},
-	{715.6, 1341.6},
-	{1519.6, 1521.6},
+	{4434.333, 3444},
+	{2091.6, -1383.3},
+	{1932, 974},
 };
 
 Items items;
@@ -79,6 +78,14 @@ static void sudo_value_retriever() {
 	pros::lcd::clear();
 	items.master->clear();
 
+	bool temp = false;
+	bool auton = false;
+	// Variables for Smooth Drive:
+	int speedr = 0; // speed for right
+	int speedl = 0; // speed for left
+	// Driver Code:
+	auto beg = std::chrono::high_resolution_clock::now();
+
 	double right;
 	double left;
 	while (true) {
@@ -95,14 +102,35 @@ static void sudo_value_retriever() {
 			maping.reset_all();
 		}
 
+		// DRIVE TRAIN ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		// set speed chassis
+		robot.set_speed_chassis(
+			items.master->get_analog(ANALOG_LEFT_Y),
+			items.master->get_analog(ANALOG_RIGHT_X),
+			__LINE__,
+			speedr,
+			speedl
+		);
+		// actions acording to buttons:
+		robot.set_intake(
+			items.master->get_digital_new_press(DIGITAL_L1), items.master->get_digital_new_press(DIGITAL_L2),
+			items.master->get_digital_new_press(DIGITAL_A)
+		);
+		robot.set_flywheel(
+			items.master->get_digital(DIGITAL_DOWN),
+			items.master->get_digital(DIGITAL_UP)
+		);
+		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1), beg);
+		robot.set_pto(items.master->get_digital_new_press(DIGITAL_Y));
+
 		pros::delay(AUTON_LOOP_DELAY);
 	}
 }
 static void test_motors() {
 	pros::lcd::clear();
-	items.master->clear();
 
-	items.master->print(0, 0, "Testing flywheel...\nPress B to continue...");
+	pros::lcd::print(0, 0, "Testing flywheel...");
+	pros::lcd::print(1, 0, "Press B to continue...");
 	while (!items.master->get_digital(DIGITAL_B));
 	items.master->clear();
 
@@ -112,12 +140,13 @@ static void test_motors() {
 	for (int i = 0; i < 1000; ++i) {
 		if (items.flywheel->get_actual_velocity() == 600) { pass = true; break; }
 	}
-	items.master->clear();
-	items.master->print(0, 0, pass ? "test passed..." : "test failed...");
+	items.stop();
+	pros::lcd::clear();
+	pros::lcd::print(0, 0, pass ? "test passed..." : "test failed...");
 
-	items.master->print(1, 0, "Press B to continue... (Lift robot up for this one)");
+	pros::lcd::print(1, 0, "Press B to continue... (Lift robot up for this one)");
 	while (!items.master->get_digital(DIGITAL_B));
-	items.master->clear();
+	pros::lcd::clear();
 
 	robot.set_both_sides(255, 255);
 	pros::delay(1000);
@@ -135,14 +164,15 @@ static void test_motors() {
 			items.left3->get_actual_velocity() == 600
 		) { pass2 = true; }
 	}
-	items.master->clear();
-	items.master->print(0, 0, pass ? "right test passed..." : "right test failed...");
-	items.master->print(1, 0, pass2 ? "left test passed..." : "left test failed...");
-	items.master->print(2, 0, "Press B to continue...");
+	items.stop();
+	pros::lcd::clear();
+	pros::lcd::print(0, 0, pass ? "right test passed..." : "right test failed...");
+	pros::lcd::print(1, 0, pass2 ? "left test passed..." : "left test failed...");
+	pros::lcd::print(2, 0, "Press B to continue...");
 
 	while (!items.master->get_digital(DIGITAL_B));
-	items.master->clear();
-	items.master->print(0, 0, "TEST FINISHED");
+	pros::lcd::clear();
+	pros::lcd::print(0, 0, "TEST FINISHED");
 
 	TERMINATE();
 }
@@ -152,24 +182,36 @@ void autonomous()
 {
 	pros::lcd::clear();
 
+	// items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    // items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    // items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
+    // items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    // items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    // items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
 	while (road.size() != 0) {
 		Waypoint current_goal = road.get_latest();
 		current_goal.execute_command(robot);
 
-		double error;
-		do {
+		double error = (ABS(current_goal.right - robot.right_abs_dist()) 
+					+ ABS(current_goal.left - robot.left_abs_dist())) / 2;
+		for (int i = 0; i < 10 * error; ++i) {
+
 			std::vector<double> vect = maping.updatePID(current_goal);
 			robot.set_both_sides(vect[0], vect[1]);
 
-			error = ((current_goal.right - robot.right_abs_dist()) 
-					+ (current_goal.left - robot.left_abs_dist())) / 2;
+			error = (ABS(current_goal.right - robot.right_abs_dist()) 
+					+ ABS(current_goal.left - robot.left_abs_dist())) / 2;
 
 			pros::delay(AUTON_LOOP_DELAY);
-		} while (ABS(error) > MIN_ALLOWED_ERROR);
-		
+		}
 		items.stop();
+
 		maping.reset_all();
 		road.pop_latest();
+
+		pros::delay(250);
 	}
 
 	// items.master->print(0, 0, "F");
@@ -184,7 +226,7 @@ void autonomous()
 void opcontrol()
 {
 	//autonomous();
-	//sudo_value_retriever();
+	sudo_value_retriever();
 	items.stop();
 	// end of auton:
 	items.master->clear();
@@ -228,5 +270,6 @@ void opcontrol()
 		// UPDATE_COORDS();
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
+	// test_motors();
 }
 

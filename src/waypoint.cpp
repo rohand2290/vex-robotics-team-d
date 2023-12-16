@@ -13,7 +13,7 @@ Waypoint Path::get_latest() {
 }
 
 void Path::pop_latest() {
-    if (cpp_vect.size() >= 0) {
+    if (cpp_vect.size() > 0) {
         cpp_vect.erase(cpp_vect.begin());
     } 
 }
