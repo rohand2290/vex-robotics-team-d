@@ -13,6 +13,7 @@
 #include "api.h"
 #include <math.h>
 #include <vector>
+#include <chrono>
 
 #include "vectorxd.h"
 #include "items.h"

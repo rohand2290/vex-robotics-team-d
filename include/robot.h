@@ -56,10 +56,10 @@ public:
     void set_intake(int analog1, int analog2, int pist);
     /// @brief Set the flywheel in sticky format.
     /// @param stick input button
-    void set_flywheel(int stick);
+    void set_flywheel(int stick, int stick2);
     /// @brief Set the wings in sticky format.
     /// @param stick input button
-    void set_wings(int stick);
+    void set_wings(int stick, std::chrono::_V2::system_clock::time_point time);
     /// @brief Set the PTO [format not decided]
     /// @param input digital input
     void set_pto(int input);

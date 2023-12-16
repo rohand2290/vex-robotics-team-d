@@ -23,12 +23,12 @@
 #define INTAKE_PORT_RIGHT 4 // Defines the 2nd port of the right side of intake.
 
 // Flywheel:
-#define FLYWHEEL_PORT 69 // Defines the port of the turret motor.
+#define FLYWHEEL_PORT 14 // Defines the port of the turret motor.
 
 // Pistons:
 #define INTAKE_PISTON_PORT 'A'
-#define PTO_PORT 'B'
-#define WINGS_PORT 'C'
+#define PTO_PORT 'F'
+#define WINGS_PORT 'H'
 
 // IMU:
 #define IMU_PORT 15
@@ -58,9 +58,9 @@
 #define ANGLE_START 0 // bearing front
 // PID Constants:
 // power: // =========================== ONLY ONE THAT MATTERS!!!!!!!!!!!!!
-#define POWER_KP 5
+#define POWER_KP 7
 #define POWER_KI 1
-#define POWER_KD 5
+#define POWER_KD 1
 #define POWER_ERROR_MAX 100
 #define POWER_ERROR_MIN -100
 // turn: // ============================ RIGHT:
@@ -71,7 +71,7 @@
 #define TURN_ERROR_MIN -100
 
 // maximum allowed error:
-#define MAX_ALLOWED_ERROR 10
+#define MAX_ALLOWED_ERROR 1
 #define MAX_ALLOWED_ERROR_TIME 50
 
 // ======= Miscelanious: =========

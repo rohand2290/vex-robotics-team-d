@@ -35,7 +35,10 @@
 // };
 
 const std::vector<Waypoint> spawn1 = {
-	{500, 500}, // retro style.
+	{-989.66, -1646.0},
+	{167.33, 222},
+	{715.6, 1341.6},
+	{1519.6, 1521.6},
 };
 
 Items items;
@@ -64,6 +67,15 @@ void competition_initialize() {}
 
 // Tester that will give values of encoders by our needs...
 static void sudo_value_retriever() {
+
+	items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
+    items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
 	pros::lcd::clear();
 	items.master->clear();
 
@@ -89,38 +101,41 @@ static void sudo_value_retriever() {
 // Runs the user autonomous code.
 void autonomous()
 {
-	pros::lcd::clear();
+	// pros::lcd::clear();
 
-	for (int i = 0; i < road.size(); ++i) {
-		Waypoint current_goal = road.get_latest();
-		current_goal.execute_command(robot);
+	// for (int i = 0; i < road.size(); ++i) {
+	// 	Waypoint current_goal = road.get_latest();
+	// 	current_goal.execute_command(robot);
 
-		// double error;
-		do {
-			std::vector<double> vect = maping.updatePID(current_goal);
-			robot.set_both_sides(vect[0], vect[1]);
+	// 	double error;
+	// 	do {
+	// 		std::vector<double> vect = maping.updatePID(current_goal);
+	// 		robot.set_both_sides(vect[0], vect[1]);
 
-			// error = ((current_goal.x - robot.right_abs_dist()) 
-					// + (current_goal.y - robot.left_abs_dist())) / 2;
-			pros::delay(AUTON_LOOP_DELAY);
-		} while (maping.is_running());
-		
-		// items.master->print(0, 0, "%f", error);
+	// 		error = ((current_goal.x - robot.right_abs_dist()) 
+	// 				+ (current_goal.y - robot.left_abs_dist())) / 2;
+	// 		pros::delay(AUTON_LOOP_DELAY);
+	// 	} while (ABS(error) > MAX_ALLOWED_ERROR);
+	// 	items.stop();
 
-		// robot.x = 0;
-		// robot.y = 0;
-		maping.reset_all();
-		road.pop_latest();
-	}
+	// 	// robot.x = 0;
+	// 	// robot.y = 0;
+	// 	maping.reset_all();
+	// 	road.pop_latest();
+	// }
 
-	// items.master->print(0, 0, "F");
+	items.master->print(0, 0, "F");
+	items.stop();
+
+	robot.set_both_sides(255, 255);
+	pros::delay(3000);
 	items.stop();
 }
 
 // Runs the operator control code.
 void opcontrol()
 {
-	autonomous();
+	//autonomous();
 	//sudo_value_retriever();
 	items.stop();
 	// end of auton:
@@ -133,6 +148,7 @@ void opcontrol()
 	int speedr = 0; // speed for right
 	int speedl = 0; // speed for left
 	// Driver Code:
+	auto beg = std::chrono::high_resolution_clock::now();
 	while (true)
 	{
 		// DRIVE TRAIN ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -149,16 +165,19 @@ void opcontrol()
 			items.master->get_digital_new_press(DIGITAL_L1), items.master->get_digital_new_press(DIGITAL_L2),
 			items.master->get_digital_new_press(DIGITAL_A)
 		);
-		robot.set_flywheel(items.master->get_digital_new_press(DIGITAL_UP));
-		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1));
-		robot.set_pto(items.master->get_digital(DIGITAL_Y));
+		robot.set_flywheel(
+			items.master->get_digital(DIGITAL_DOWN),
+			items.master->get_digital(DIGITAL_UP)
+		);
+		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1), beg);
+		robot.set_pto(items.master->get_digital_new_press(DIGITAL_Y));
+		
 
 		// pros::lcd::print(0, "%f", robot.theta);
 		// pros::lcd::print(1, "%f", robot.x);
 		// pros::lcd::print(2, "%f", robot.y);
 
 		// UPDATE_COORDS();
-
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
 }

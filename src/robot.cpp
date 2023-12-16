@@ -1,4 +1,5 @@
 #include "depend.h"
+#include "api.h"
 #include "robot.h"
 
 double Robot::right_abs_dist()
@@ -38,8 +39,17 @@ void Robot::initialize(Items &i)
     items.encoder_left->reset_position();
     items.encoder_right->reset_position();
     items.encoder_center->reset_position();
-    items.imu->reset(true);
-    items.imu->tare();
+    // items.imu->reset(true);
+    // items.imu->tare();
+    items.flywheel->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
+    items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
+    items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 Robot::~Robot() {}
@@ -60,18 +70,23 @@ void Robot::set_left_side(int analog)
 
 void Robot::set_both_sides(int right, int left)
 {
-    items.right1->move(right);
-    items.left1->move(left);
-    items.left2->move(left);
-    items.right2->move(right);
-    items.right3->move(right);
-    items.left3->move(left);
+    int right_voltage = right;
+    int left_voltage = left;
+
+    items.right1->move(right_voltage);
+    items.left1->move(left_voltage);
+    items.left2->move(left_voltage);
+    items.right2->move(right_voltage);
+    items.right3->move(right_voltage);
+    items.left3->move(left_voltage);
 }
 
 void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &speedl)
 {
     int left = (y - (x * TURN_PERCENT)) * MOTOR_PERCENT;
     int right = (y + (x * TURN_PERCENT)) * MOTOR_PERCENT;
+    // pros::lcd::print(0, "left: %i", left);
+    // pros::lcd::print(1, "right: %i", right);
     // set the wheels...
     // #ifdef SMOOTH_CONSTANT
     //     // left side:
@@ -88,13 +103,6 @@ void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &sp
     //     set_left_side(speedl);
     //     set_right_side(speedr);
     // #else
-    if (items.pto_pos) {
-        items.left2->set_reversed(0);
-        items.right2->set_reversed(1);
-    } else {
-        items.left2->set_reversed(1);
-        items.right2->set_reversed(0);
-    }
     set_both_sides(right, left);
     // #endif
 }
@@ -105,36 +113,57 @@ static void set_in(int a, Items& items) {
 }
 void Robot::set_intake(int analog1, int analog2, int pist)
 {
-    if (analog1) {
-        power = -255;
-        if (temp1) power = 0;
-        temp1 = !temp1;
-    }
-    if (analog2) {
-        power = 255;
-        if (temp2) power = 0;
-        temp2 = !temp2;
-    }
-    set_in(power, items);
-    if (pist) items.intake_pos = !items.intake_pos;
-    items.intake_piston->set_value(items.intake_pos);
+    if (analog1) items.intake_pos = 1;
+    else if (analog2) items.intake_pos = -1;
+    else items.intake_pos = 0;
+
+    if (items.intake_pos == 1) set_in(255, items);
+    else if (items.intake_pos == 0) set_in(0, items);
+    else if (items.intake_pos == -1) set_in(-255, items);
+
+    // if (analog1) {
+    //     power = -255;
+    //     if (temp1) power = 0;
+    //     temp1 = !temp1;
+    // }
+    // if (analog2) {
+    //     power = 255;
+    //     if (temp2) power = 0;
+    //     temp2 = !temp2;
+    // }
+    // set_in(power, items);
+
+    // if (pist) items.intake_pos = !items.intake_pos;
+    // items.intake_piston->set_value(items.intake_pos);
 }
 
-void Robot::set_flywheel(int stick)
+void Robot::set_flywheel(int stick, int stick2)
 {
-    if (stick) items.flywheel_pos = !items.flywheel_pos;
-    items.flywheel->move(items.flywheel_pos ? 255 : 0);
+    if (stick) items.flywheel->move_voltage(12000);
+    else if (stick2) items.flywheel->move_voltage(-12000);
+    else items.flywheel->move_voltage(0);
 }
 
-void Robot::set_wings(int stick)
+void Robot::set_wings(int stick, std::chrono::_V2::system_clock::time_point time)
 {
+    // auto now = std::chrono::high_resolution_clock::now();
+    // if (items.intake_pos && stick) {
+    //     items.intake_piston->set_value(0);
+    //     int dur = (int)std::chrono::duration_cast<std::chrono::milliseconds>(now - time).count();
+    //     if (dur > 500) {
+    //         items.wing_pos = 1;
+    //         items.wings->set_value(items.wing_pos);
+    //     };
+    // }
     if (stick) items.wing_pos = !items.wing_pos;
     items.wings->set_value(items.wing_pos);
 }
 
 void Robot::set_pto(int input)
 {
-    items.pto->set_value(input);
+    if (input) items.pto_pos = !items.pto_pos;
+    items.pto->set_value(items.pto_pos);
+    items.intake_piston->set_value(!items.pto_pos);
 }
 
 double Robot::radians_to_degrees(double radians)
