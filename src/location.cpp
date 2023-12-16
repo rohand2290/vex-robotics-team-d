@@ -148,7 +148,7 @@ double Location::P(double error, bool isturn) {
 }
 double Location::I(double error, double& integral, Waypoint& goal, bool isturn) {
 	integral += error;
-	if (ARE_SAME(goal.x, *x) && ARE_SAME(goal.y, *y) || ARE_SAME(error, 0)) {
+	if (ARE_SAME(goal.right, robot->right_abs_dist()) && ARE_SAME(goal.left, robot->left_abs_dist()) || ARE_SAME(error, 0)) {
 		integral = 0;
 	}
 	double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
@@ -191,31 +191,22 @@ static double angleDifference(double start, double end) {
 }
 
 std::vector<double> Location::updatePID(Waypoint& goal) {
-    /*
-    // double error_x = robot->x - goal.x;
-    // double error_y = robot->y - goal.y;
+    error = goal.right - robot->right_abs_dist();
+    error_l = goal.left - robot->left_abs_dist();
+
+    // pid stuff:
+    double right = pid(error, integral, prev_error, goal, false);
+    double left = pid(error_l, integral_l, prev_error_l, goal, false);
     
-    // int c = 1;
-    // if (robot->x > goal.x || robot->y > goal.y) c *= -1;
-    // error = c * sqrt(error_x*error_x + error_y*error_y);
+    std::vector<double> v = {right, left};
 
-    // error_turn = angleDifference(
-    //     robot->get_abs_angle(), 
-    //     standrad_to_bearing(toTheta(goal.x, goal.y, robot))
-    // ) * PIVOT_P_TO_PERP_ODOM;
+    // if (rightPID.get_target() != goal.right) rightPID.set_target(goal.right);
+    // if (leftPID.get_target() != goal.left) leftPID.set_target(goal.left);
+    // /////////// NOTE: temporarily, x is right odom goal and y is left goal.
+    // double l = leftPID.compute(robot->left_abs_dist());
+    // double r = rightPID.compute(robot->right_abs_dist());
 
-    // // pid stuff:
-    // double power = PID(error, integral, prev_error, goal, false);
-    // double turn = PID(error_turn, integral_turn, prev_error_turn, goal, true);
-    */
-
-    if (rightPID.get_target() != goal.x) rightPID.set_target(goal.x);
-    if (leftPID.get_target() != goal.y) leftPID.set_target(goal.y);
-    /////////// NOTE: temporarily, x is right odom goal and y is left goal.
-    double l = leftPID.compute(robot->left_abs_dist());
-    double r = rightPID.compute(robot->right_abs_dist());
-
-    std::vector<double> v = {r, l};
+    // std::vector<double> v = {r, l};
 
     return v;
 }

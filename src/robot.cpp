@@ -70,15 +70,12 @@ void Robot::set_left_side(int analog)
 
 void Robot::set_both_sides(int right, int left)
 {
-    int right_voltage = right;
-    int left_voltage = left;
-
-    items.right1->move(right_voltage);
-    items.left1->move(left_voltage);
-    items.left2->move(left_voltage);
-    items.right2->move(right_voltage);
-    items.right3->move(right_voltage);
-    items.left3->move(left_voltage);
+    items.right1->move(right);
+    items.left1->move(left);
+    items.left2->move(left);
+    items.right2->move(right);
+    items.right3->move(right);
+    items.left3->move(left);
 }
 
 void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &speedl)

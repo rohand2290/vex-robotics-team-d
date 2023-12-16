@@ -23,9 +23,9 @@ private:
     double error = 0;
     double prev_error = 0;
     double integral = 0;
-    double error_turn = 0;
-    double prev_error_turn = 0;
-    double integral_turn = 0;
+    double error_l = 0;
+    double prev_error_l = 0;
+    double integral_l = 0;
     // Odom specific:
     PID leftPID;
     PID rightPID;

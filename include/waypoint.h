@@ -4,8 +4,8 @@
 // TODO:
 
 struct Waypoint {
-    double x; // temporarily right!
-    double y; // temporarilt left!
+    double right; // temporarily right!
+    double left; // temporarilt left!
     std::string command = "";
 
     /// @brief Executes a command for the bot to follow during the waypoint

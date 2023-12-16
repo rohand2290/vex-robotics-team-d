@@ -65,7 +65,7 @@ void disabled() { items.stop(); }
 // Runs after initialize(), and before autonomous when connected to the Field Management System or the VEX Competition Switch.
 void competition_initialize() {}
 
-// Tester that will give values of encoders by our needs...
+// Testers...
 static void sudo_value_retriever() {
 
 	items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -91,45 +91,93 @@ static void sudo_value_retriever() {
 				items.master->print(1, 0, "Press B to continue");
 				pros::delay(AUTON_LOOP_DELAY);
 			}
+			pros::lcd::clear();
 			maping.reset_all();
 		}
 
 		pros::delay(AUTON_LOOP_DELAY);
 	}
 }
+static void test_motors() {
+	pros::lcd::clear();
+	items.master->clear();
+
+	items.master->print(0, 0, "Testing flywheel...\nPress B to continue...");
+	while (!items.master->get_digital(DIGITAL_B));
+	items.master->clear();
+
+	items.flywheel->move_voltage(12000);
+	pros::delay(3500);
+	bool pass = false;
+	for (int i = 0; i < 1000; ++i) {
+		if (items.flywheel->get_actual_velocity() == 600) { pass = true; break; }
+	}
+	items.master->clear();
+	items.master->print(0, 0, pass ? "test passed..." : "test failed...");
+
+	items.master->print(1, 0, "Press B to continue... (Lift robot up for this one)");
+	while (!items.master->get_digital(DIGITAL_B));
+	items.master->clear();
+
+	robot.set_both_sides(255, 255);
+	pros::delay(1000);
+	pass = false;
+	bool pass2 = false;
+	for (int i = 0; i < 1000; ++i) {
+		if (
+			items.right1->get_actual_velocity() == 600 &&
+			items.right2->get_actual_velocity() == 600 &&
+			items.right2->get_actual_velocity() == 600
+		) { pass = true; }
+		if (
+			items.left1->get_actual_velocity() == 600 &&
+			items.left2->get_actual_velocity() == 600 &&
+			items.left3->get_actual_velocity() == 600
+		) { pass2 = true; }
+	}
+	items.master->clear();
+	items.master->print(0, 0, pass ? "right test passed..." : "right test failed...");
+	items.master->print(1, 0, pass2 ? "left test passed..." : "left test failed...");
+	items.master->print(2, 0, "Press B to continue...");
+
+	while (!items.master->get_digital(DIGITAL_B));
+	items.master->clear();
+	items.master->print(0, 0, "TEST FINISHED");
+
+	TERMINATE();
+}
 
 // Runs the user autonomous code.
 void autonomous()
 {
-	// pros::lcd::clear();
+	pros::lcd::clear();
 
-	// for (int i = 0; i < road.size(); ++i) {
-	// 	Waypoint current_goal = road.get_latest();
-	// 	current_goal.execute_command(robot);
+	while (road.size() != 0) {
+		Waypoint current_goal = road.get_latest();
+		current_goal.execute_command(robot);
 
-	// 	double error;
-	// 	do {
-	// 		std::vector<double> vect = maping.updatePID(current_goal);
-	// 		robot.set_both_sides(vect[0], vect[1]);
+		double error;
+		do {
+			std::vector<double> vect = maping.updatePID(current_goal);
+			robot.set_both_sides(vect[0], vect[1]);
 
-	// 		error = ((current_goal.x - robot.right_abs_dist()) 
-	// 				+ (current_goal.y - robot.left_abs_dist())) / 2;
-	// 		pros::delay(AUTON_LOOP_DELAY);
-	// 	} while (ABS(error) > MAX_ALLOWED_ERROR);
-	// 	items.stop();
+			error = ((current_goal.right - robot.right_abs_dist()) 
+					+ (current_goal.left - robot.left_abs_dist())) / 2;
 
-	// 	// robot.x = 0;
-	// 	// robot.y = 0;
-	// 	maping.reset_all();
-	// 	road.pop_latest();
-	// }
+			pros::delay(AUTON_LOOP_DELAY);
+		} while (ABS(error) > MIN_ALLOWED_ERROR);
+		
+		items.stop();
+		maping.reset_all();
+		road.pop_latest();
+	}
 
-	items.master->print(0, 0, "F");
-	items.stop();
+	// items.master->print(0, 0, "F");
+	// items.stop();
 
-	robot.set_both_sides(255, 255);
-	pros::delay(3000);
-	items.stop();
+	// robot.set_both_sides(255, 255);
+	// pros::delay(3000);
+	// items.stop();
 }
 
 // Runs the operator control code.
