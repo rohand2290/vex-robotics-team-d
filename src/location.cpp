@@ -107,8 +107,7 @@ void Location::initialize(Robot& r) {
     y = &r.y;
     leftPID.set_constants(POWER_KP, POWER_KI, POWER_KD);
     rightPID.set_constants(POWER_KP, POWER_KI, POWER_KD);
-    r.items.left2->tare_position();
-	r.items.right2->tare_position();
+    reset_all();
     // leftPID.set_exit_condition(MAX_ALLOWED_ERROR_TIME, MAX_ALLOWED_ERROR);
     // rightPID.set_exit_condition(MAX_ALLOWED_ERROR_TIME, MAX_ALLOWED_ERROR);
 }

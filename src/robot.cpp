@@ -110,13 +110,17 @@ static void set_in(int a, Items& items) {
 }
 void Robot::set_intake(int analog1, int analog2, int pist)
 {
-    if (analog1) items.intake_pos = 1;
-    else if (analog2) items.intake_pos = -1;
-    else items.intake_pos = 0;
+    // if (analog1) items.intake_pos = 1;
+    // else if (analog2) items.intake_pos = -1;
+    // else items.intake_pos = 0;
 
-    if (items.intake_pos == 1) set_in(255, items);
-    else if (items.intake_pos == 0) set_in(0, items);
-    else if (items.intake_pos == -1) set_in(-255, items);
+    // if (items.intake_pos == 1) set_in(255, items);
+    // else if (items.intake_pos == 0) set_in(0, items);
+    // else if (items.intake_pos == -1) set_in(-255, items);
+
+    if (analog1) set_in(255, items);
+    else if (analog2) set_in(-255, items); 
+    else set_in(0, items);
 
     // if (analog1) {
     //     power = -255;

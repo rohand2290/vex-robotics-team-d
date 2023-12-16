@@ -71,7 +71,7 @@
 #define TURN_ERROR_MIN -100
 
 // maximum allowed error:
-#define MIN_ALLOWED_ERROR 50
+#define MIN_ALLOWED_ERROR 10
 #define MAX_ALLOWED_ERROR_TIME 50
 
 // ======= Miscelanious: =========
