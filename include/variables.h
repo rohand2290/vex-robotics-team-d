@@ -64,11 +64,11 @@
 #define POWER_ERROR_MAX 100
 #define POWER_ERROR_MIN -100
 // turn: // ============================ RIGHT:
-#define TURN_KP 1
-#define TURN_KI 1
-#define TURN_KD 1
-#define TURN_ERROR_MAX 100
-#define TURN_ERROR_MIN -100
+// #define TURN_KP 1
+// #define TURN_KI 1
+// #define TURN_KD 1
+// #define TURN_ERROR_MAX 100
+// #define TURN_ERROR_MIN -100
 
 // maximum allowed error:
 #define MIN_ALLOWED_ERROR 1
