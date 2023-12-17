@@ -2,6 +2,11 @@
 #include "api.h"
 #include "robot.h"
 
+static void set_in(int a, Items& items) {
+    items.intake_left->move(a);
+    items.intake_right->move(a);
+}
+
 double Robot::right_abs_dist()
 { // in terms of inches
     double normal = items.right1->get_position() + items.right2->get_position() + items.right3->get_position();
@@ -39,14 +44,12 @@ void Robot::initialize(Items &i)
     items.encoder_left->reset_position();
     items.encoder_right->reset_position();
     items.encoder_center->reset_position();
-    // items.imu->reset(true);
-    // items.imu->tare();
+    items.imu->reset();
+    items.imu->tare();
     items.flywheel->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-
     items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-
     items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
@@ -82,32 +85,9 @@ void Robot::set_speed_chassis(int y, int x)
 {
     int left = (y - (x * TURN_PERCENT)) * MOTOR_PERCENT;
     int right = (y + (x * TURN_PERCENT)) * MOTOR_PERCENT;
-    // pros::lcd::print(0, "left: %i", left);
-    // pros::lcd::print(1, "right: %i", right);
-    // set the wheels...
-    // #ifdef SMOOTH_CONSTANT
-    //     // left side:
-    //     if (speedl >= left)
-    //         speedl -= SMOOTH_CONSTANT;
-    //     else if (speedl < left)
-    //         speedl += SMOOTH_CONSTANT;
-    //     // right side:
-    //     if (speedr >= right)
-    //         speedr -= SMOOTH_CONSTANT;
-    //     else if (speedr < right)
-    //         speedr += SMOOTH_CONSTANT;
-
-    //     set_left_side(speedl);
-    //     set_right_side(speedr);
-    // #else
     set_both_sides(right, left);
-    // #endif
 }
 
-static void set_in(int a, Items& items) {
-    items.intake_left->move(a);
-    items.intake_right->move(a);
-}
 void Robot::set_intake(int analog1, int analog2, int pist)
 {
     // if (analog1) items.intake_pos = 1;
