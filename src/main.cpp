@@ -6,6 +6,7 @@
 			robot.x += vect[0];\
 			robot.y += vect[1]; }
 
+/*
 // const std::vector<Waypoint> spawn1 = {
 // 	{27, 32.17},
 // 	{42, 0},
@@ -33,6 +34,7 @@
 // 	{28.99, 28.99},
 // 	{24, 0},
 // };
+*/
 
 const std::vector<Waypoint> spawn1 = {
 	// {4434.333, 3444},
@@ -46,7 +48,6 @@ const std::vector<Waypoint> spawn1 = {
 Items items;
 Robot robot;
 Location maping;
-Path road;
 
 // Runs initialization code. This occurs as soon as the program is started.
 void initialize()
@@ -56,9 +57,6 @@ void initialize()
 	items.initialize();
 	robot.initialize(items);
 	maping.initialize(robot);
-	// use array to initialize road
-	road.initialize(spawn1);
-	//road.initialize(0, 10);
 
 }
 
@@ -109,10 +107,7 @@ inline static void sudo_value_retriever() {
 		// set speed chassis
 		robot.set_speed_chassis(
 			items.master->get_analog(ANALOG_LEFT_Y),
-			items.master->get_analog(ANALOG_RIGHT_X),
-			__LINE__,
-			speedr,
-			speedl
+			items.master->get_analog(ANALOG_RIGHT_X)
 		);
 		// actions acording to buttons:
 		robot.set_intake(
@@ -125,8 +120,14 @@ inline static void sudo_value_retriever() {
 		);
 		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1), beg);
 		robot.set_pto(items.master->get_digital_new_press(DIGITAL_Y));
+		
 
-		pros::delay(AUTON_LOOP_DELAY);
+		// pros::lcd::print(0, "%f", robot.theta);
+		// pros::lcd::print(1, "%f", robot.x);
+		// pros::lcd::print(2, "%f", robot.y);
+
+		// UPDATE_COORDS();
+		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
 }
 inline static void test_motors() {
@@ -205,52 +206,26 @@ void autonomous()
 	for (Waypoint current_goal : spawn1) {
 		// Waypoint current_goal = road.get_latest();
 		current_goal.execute_command(robot);
-
-		double errorR = ABS(current_goal.right - robot.right_abs_dist());
-		double errorL = ABS(current_goal.left - robot.left_abs_dist());
 		do {
+
 			std::vector<double> vect = maping.updatePID(current_goal);
 			robot.set_both_sides(vect[0], vect[1]);
-
-			errorR = ABS(current_goal.right - robot.right_abs_dist());
-			errorL = ABS(current_goal.left - robot.left_abs_dist());
-
 			pros::delay(AUTON_LOOP_DELAY);
-		} while (errorR > MIN_ALLOWED_ERROR || errorL > MIN_ALLOWED_ERROR);
+
+		} while (maping.is_running());
 
 
 		items.stop();
 
 		maping.reset_all();
-		// road.pop_latest();
-
-		pros::delay(250);
 	}
-
-	// items.master->print(0, 0, "F");
-	// items.stop();
-
-	// robot.set_both_sides(255, 255);
-	// pros::delay(2000);
-	// items.stop();
 }
 
 // Runs the operator control code.
 void opcontrol()
 {
 	//autonomous();
-	//sudo_value_retriever();
-	//test_motors();
 	items.stop();
-	// end of auton:
-	items.master->clear(); 
-	items.master->print(0, 0, "GO!"); 
-
-	bool temp = false;
-	bool auton = false;
-	// Variables for Smooth Drive:
-	int speedr = 0; // speed for right
-	int speedl = 0; // speed for left
 	// Driver Code:
 	auto beg = std::chrono::high_resolution_clock::now();
 	while (true)
@@ -259,10 +234,7 @@ void opcontrol()
 		// set speed chassis
 		robot.set_speed_chassis(
 			items.master->get_analog(ANALOG_LEFT_Y),
-			items.master->get_analog(ANALOG_RIGHT_X),
-			__LINE__,
-			speedr,
-			speedl
+			items.master->get_analog(ANALOG_RIGHT_X)
 		);
 		// actions acording to buttons:
 		robot.set_intake(
@@ -284,6 +256,5 @@ void opcontrol()
 		// UPDATE_COORDS();
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
-	// test_motors();
 }
 

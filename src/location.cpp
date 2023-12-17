@@ -105,8 +105,6 @@ void Location::initialize(Robot& r) {
     robot = &r;
     x = &r.x;
     y = &r.y;
-    leftPID.set_constants(POWER_KP, POWER_KI, POWER_KD);
-    rightPID.set_constants(POWER_KP, POWER_KI, POWER_KD);
     reset_all();
     // leftPID.set_exit_condition(MAX_ALLOWED_ERROR_TIME, MAX_ALLOWED_ERROR);
     // rightPID.set_exit_condition(MAX_ALLOWED_ERROR_TIME, MAX_ALLOWED_ERROR);
@@ -199,6 +197,8 @@ std::vector<double> Location::updatePID(Waypoint& goal) {
     
     std::vector<double> v = {right, left};
 
+    if (ARE_SAME(error, 0) && ARE_SAME(error_l, 0)) timer++;
+
     // if (rightPID.get_target() != goal.right) rightPID.set_target(goal.right);
     // if (leftPID.get_target() != goal.left) leftPID.set_target(goal.left);
     // /////////// NOTE: temporarily, x is right odom goal and y is left goal.
@@ -221,5 +221,5 @@ void Location::reset_all()
 }
 
 bool Location::is_running() {
-    return rightPID.exit_condition() == ez::RUNNING || leftPID.exit_condition() == ez::RUNNING;
+    return timer < MIN_ALLOWED_ERROR_TIME;
 }

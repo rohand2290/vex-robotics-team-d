@@ -72,7 +72,7 @@
 
 // maximum allowed error:
 #define MIN_ALLOWED_ERROR 10
-#define MAX_ALLOWED_ERROR_TIME 50
+#define MIN_ALLOWED_ERROR_TIME 50
 
 // ======= Miscelanious: =========
 
@@ -85,7 +85,7 @@
 #define PI 3.141592653589793
 #define ROBOT_WIDTH 3.54331 // in
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0
-#define ACCURACY 0.00000001
+#define ACCURACY 0.000000001
 // where we start:
 // #define START_RED_ALLY
 

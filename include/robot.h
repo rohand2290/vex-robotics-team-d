@@ -48,7 +48,7 @@ public:
     /// @param x the x axis info.
     /// @param speedr helper var
     /// @param speedl helper var
-    void set_speed_chassis(int y, int x, long long line, int& speedr, int& speedl);
+    void set_speed_chassis(int y, int x);
     /// @brief Set the intake to in or out
     /// @param analog1 1 or 0
     /// @param analog2 1 or 0

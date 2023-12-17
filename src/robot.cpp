@@ -78,7 +78,7 @@ void Robot::set_both_sides(int right, int left)
     items.left3->move(left);
 }
 
-void Robot::set_speed_chassis(int y, int x, long long line, int &speedr, int &speedl)
+void Robot::set_speed_chassis(int y, int x)
 {
     int left = (y - (x * TURN_PERCENT)) * MOTOR_PERCENT;
     int right = (y + (x * TURN_PERCENT)) * MOTOR_PERCENT;

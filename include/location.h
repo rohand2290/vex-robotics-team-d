@@ -2,7 +2,6 @@
 #define LOCATION_H
 
 #include "depend.h"
-#include "EZ-Template/api.hpp"
 
 class Location {
 private:
@@ -26,9 +25,8 @@ private:
     double error_l = 0;
     double prev_error_l = 0;
     double integral_l = 0;
-    // Odom specific:
-    PID leftPID;
-    PID rightPID;
+    // PID timer:
+    int timer = 0;
 public:
     /// @brief Non-default constructor of Location
     /// @param r Robot instance
