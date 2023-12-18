@@ -7,24 +7,6 @@ static void set_in(int a, Items& items) {
     items.intake_right->move(a);
 }
 
-double Robot::right_abs_dist()
-{ // in terms of inches
-    double normal = items.right1->get_position() + items.right2->get_position() + items.right3->get_position();
-    return normal / 3;
-}
-
-double Robot::left_abs_dist()
-{ // in terms of inches
-    double normal = items.left1->get_position() + items.left2->get_position() + items.left3->get_position();
-    return normal / 3;
-}
-
-double Robot::center_abs_dist()
-{ // in terms of inches
-    int normal = (int)items.encoder_center->get_position();
-    return (normal / 360000.0) * WHEEL_C;
-}
-
 double Robot::get_abs_angle(bool rad) {
     // logic: arc-length = WHEEL_C
     //      : radius = perpendicular sensor - point of pivoting

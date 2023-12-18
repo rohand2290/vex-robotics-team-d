@@ -1,6 +1,20 @@
 #include "depend.h"
 #include "location.h"
 
+double Location::right_abs_dist()
+{ // in terms of inches
+    Items& items = robot->items;
+    double normal = items.right1->get_position() + items.right2->get_position() + items.right3->get_position();
+    return normal / 3;
+}
+
+double Location::left_abs_dist()
+{ // in terms of inches
+    Items& items = robot->items;
+    double normal = items.left1->get_position() + items.left2->get_position() + items.left3->get_position();
+    return normal / 3;
+}
+
 double Location::normalize(double deg) {
     double ret = deg;
     while (ret < 0) ret += 360;
@@ -35,8 +49,8 @@ void Location::initialize(Robot& r) {
 }
 
 std::vector<double> Location::update() {
-    rel_l = robot->left_abs_dist() - old_l;
-	rel_r = robot->right_abs_dist() - old_r;
+    rel_l = left_abs_dist() - old_l;
+	rel_r = right_abs_dist() - old_r;
     rel_th = robot->get_abs_angle() - old_th;
     robot->theta = robot->get_abs_angle();
 
@@ -57,8 +71,8 @@ std::vector<double> Location::update() {
     // robot->y += arr[1];
 
     // save new vars to cache:
-    old_l = robot->left_abs_dist();
-	old_r = robot->right_abs_dist();
+    old_l = left_abs_dist();
+	old_r = right_abs_dist();
     old_th = robot->get_abs_angle();
 
     return arr;
@@ -69,7 +83,7 @@ double Location::P(double error, bool isturn) {
 }
 double Location::I(double error, double& integral, Waypoint& goal, bool isturn) {
 	integral += error;
-	if (ARE_SAME(goal.right, robot->right_abs_dist()) && ARE_SAME(goal.left, robot->left_abs_dist()) || ARE_SAME(error, 0)) {
+	if (ARE_SAME(goal.right, right_abs_dist()) && ARE_SAME(goal.left, left_abs_dist()) || ARE_SAME(error, 0)) {
 		integral = 0;
 	}
 	double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
@@ -112,8 +126,8 @@ static double angleDifference(double start, double end) {
 }
 
 std::vector<double> Location::updatePID(Waypoint& goal) {
-    error = goal.right - robot->right_abs_dist();
-    error_l = goal.left - robot->left_abs_dist();
+    error = goal.right - right_abs_dist();
+    error_l = goal.left - left_abs_dist();
 
     // pid stuff:
     double right = pid(error, integral, prev_error, goal, false);

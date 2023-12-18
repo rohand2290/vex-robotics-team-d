@@ -15,15 +15,6 @@ public:
     bool temp1 = 0;
     bool temp2 = 0;
 
-    /// @brief Right absolute distance since start
-    /// @return abs distance in inches
-    double right_abs_dist();
-    /// @brief Left absolute distance since start
-    /// @return abs distance in inches
-    double left_abs_dist();
-    /// @brief Center absolute distance since start
-    /// @return abs distance in inches
-    double center_abs_dist();
     /// @brief Gets where the robot in pointing in degrees or radians.
     /// @param rad radians or not (degrees)
     /// @return bearing angle

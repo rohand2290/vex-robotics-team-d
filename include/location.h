@@ -31,6 +31,12 @@ public:
     /// @brief Non-default constructor of Location
     /// @param r Robot instance
     void initialize(Robot& r);
+    /// @brief Right absolute distance since start
+    /// @return abs distance in inches
+    double right_abs_dist();
+    /// @brief Left absolute distance since start
+    /// @return abs distance in inches
+    double left_abs_dist();
     /// @brief Takes a raw angle and modifies it to bearing.
     /// @param deg degrees to format
     /// @return formates degrees in bearing from 0 - 359

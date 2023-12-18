@@ -1,5 +1,6 @@
 #include "main.h"
 #include "depend.h"
+#include "tests.h"
 
 #define UPDATE_COORDS() {\
 			std::vector<double> vect = maping.update();\
@@ -90,8 +91,8 @@ inline static void sudo_value_retriever() {
 	double right;
 	double left;
 	while (true) {
-		right = robot.right_abs_dist();
-		left = robot.left_abs_dist();
+		right = maping.right_abs_dist();
+		left = maping.left_abs_dist();
 
 		if (items.master->get_digital(DIGITAL_A)) {
 			items.master->print(0, 0, "%f,%f", right, left);
@@ -129,65 +130,6 @@ inline static void sudo_value_retriever() {
 		// UPDATE_COORDS();
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
-}
-inline static void test_motors() {
-	pros::lcd::clear();
-
-	items.master->print(0, 0, "Testing flywheel...");
-	items.master->print(1, 0, "Press B to continue...");
-	while (!items.master->get_digital(DIGITAL_B));
-	items.master->clear();
-
-	items.flywheel->move_voltage(12000);
-	pros::delay(4000);
-	bool pass = false;
-	for (int i = 0; i < 1000; ++i) {
-		if (items.flywheel->get_actual_velocity() == 600) { pass = true; break; }
-	}
-	items.stop();
-	items.master->clear();
-	if (pass) {
-		items.master->print(0, 0, "test passed..");
-	}
-
-	items.master->print(1, 0, "Press B to continue... (Lift robot up for this one)");
-	while (!items.master->get_digital(DIGITAL_B));
-	pros::lcd::clear();
-
-	items.right1->move_voltage(12000);
-	items.right2->move_voltage(12000);
-	items.right3->move_voltage(12000);
-
-	items.left1->move_voltage(12000);
-	items.left2->move_voltage(12000);
-	items.left3->move_voltage(12000);
-
-	pros::delay(1000);
-	pass = false;
-	bool pass2 = false;
-	for (int i = 0; i < 1000; ++i) {
-		if (
-			items.right1->get_actual_velocity() == 600 &&
-			items.right2->get_actual_velocity() == 600 &&
-			items.right2->get_actual_velocity() == 600
-		) { pass = true; }
-		if (
-			items.left1->get_actual_velocity() == 600 &&
-			items.left2->get_actual_velocity() == 600 &&
-			items.left3->get_actual_velocity() == 600
-		) { pass2 = true; }
-	}
-	items.stop();
-	items.master->clear();
-	items.master->print(0, 0, pass ? "right test passed..." : "right test failed...");
-	items.master->print(1, 0, pass2 ? "left test passed..." : "left test failed...");
-	items.master->print(2, 0, "Press B to continue...");
-
-	while (!items.master->get_digital(DIGITAL_B));
-	items.master->clear();
-	items.master->print(0, 0, "TEST FINISHED");
-
-	TERMINATE();
 }
 
 // Runs the user autonomous code.
