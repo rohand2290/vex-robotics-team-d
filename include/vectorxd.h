@@ -16,6 +16,7 @@ public:
     VectorXD<N> div(double X); // Divide by a constant
     VectorXD<N> add_by_vect(VectorXD<N> Vect); // Add by vector of same size
     VectorXD<N> sub_by_vect(VectorXD<N> Vect); // Minus by vector of same size
+    VectorXD<N> rotate(double rad); // rotates counterclockwise by some angle in radians.
 };
 
 #endif // VECTOR_H

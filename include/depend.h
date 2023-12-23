@@ -20,5 +20,6 @@
 #include "robot.h"
 #include "waypoint.h"
 #include "location.h"
+#include "filters.h"
 
 #endif // DEPEND_H

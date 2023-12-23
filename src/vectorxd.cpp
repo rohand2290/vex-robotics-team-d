@@ -57,3 +57,14 @@ VectorXD<N> VectorXD<N>::sub_by_vect(VectorXD<N> Vect) {
 }
 template <int N>
 int VectorXD<N>::size() const { return N; }
+template<int N>
+VectorXD<N> VectorXD<N>::rotate(double rad) {
+    VectorXD<N> ret(c_arr[0], c_arr[1]);
+    double arr2[] = {
+        c_arr[0] * cos(rad) - c_arr[1] * sin(rad),
+        c_arr[0] * sin(rad) + c_arr[1] * cos(rad)
+    };
+    ret.setIndex(0, arr2[0]);
+    ret.setIndex(1, arr2[1]);
+    return ret;
+}
