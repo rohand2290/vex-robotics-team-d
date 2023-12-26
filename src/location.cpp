@@ -79,22 +79,22 @@ std::vector<double> Location::update() {
 }
 
 double Location::P(double error, bool isturn) { 
-	return error * (isturn ? TURN_KP : POWER_KP); 
+	return error * (POWER_KP); 
 }
 double Location::I(double error, double& integral, Waypoint& goal, bool isturn) {
 	integral += error;
 	if (ARE_SAME(goal.right, right_abs_dist()) && ARE_SAME(goal.left, left_abs_dist()) || ARE_SAME(error, 0)) {
 		integral = 0;
 	}
-	double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
-	double min = (isturn ? TURN_ERROR_MIN : POWER_ERROR_MIN);
+	double max = (POWER_ERROR_MAX);
+	double min = (POWER_ERROR_MIN);
 	if (max < error || min > error) {
 		integral = 0;
 	}
-	return integral * (isturn ? TURN_KI : POWER_KI);
+	return integral * (POWER_KI);
 }
 double Location::D(double& prev_error, double error, bool isturn) {
-	return (error - prev_error) * (isturn ? TURN_KD : POWER_KD);
+	return (error - prev_error) * (POWER_KD);
 }
 
 double Location::pid(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn) {

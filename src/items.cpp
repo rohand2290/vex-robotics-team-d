@@ -2,9 +2,7 @@
 #include "api.h"
 
 void Items::initialize()  {
-    flywheel_pos = false;
     wing_pos = false;
-    pto_pos = false;
     intake_pos = false;
     master = new pros::Controller(pros::E_CONTROLLER_MASTER);
     left1  = new pros::Motor (LEFT_WHEELS_PORT_1, true);
@@ -15,13 +13,13 @@ void Items::initialize()  {
     right3 = new pros::Motor (RIGHT_WHEELS_PORT_3);
     intake_left = new pros::Motor (INTAKE_PORT_LEFT);
     intake_right = new pros::Motor (INTAKE_PORT_RIGHT, true);
-    flywheel = new pros::Motor(FLYWHEEL_PORT);
+    cata = new pros::Motor(CATA_PORT);
     wings = new pros::ADIDigitalOut (WINGS_PORT);
-    pto = new pros::ADIDigitalOut (PTO_PORT);
     intake_piston = new pros::ADIDigitalOut (INTAKE_PISTON_PORT);
     encoder_left = new pros::Rotation (ENCODER_PORT_1, true);
     encoder_right = new pros::Rotation (ENCODER_PORT_2);
     encoder_center = new pros::Rotation (ENCODER_PORT_3);
+    encoder_cata = new pros::Rotation (CATA_ENCODER, true);
     imu = new pros::IMU (IMU_PORT);
 }
 
@@ -34,7 +32,7 @@ void Items::stop() {
     right3->move(0);
     intake_left->move(0);
     intake_right->move(0);
-    flywheel->move(0);
+    cata->move(0);
 }
 
 Items::~Items() {
@@ -47,12 +45,12 @@ Items::~Items() {
     delete right3;
     delete intake_left;
     delete intake_right;
-    delete flywheel;
-    delete pto;
+    delete cata;
     delete wings;
     delete encoder_left;
     delete encoder_right;
     delete encoder_center;
+    delete encoder_cata;
     delete intake_piston;
     delete imu;
 }

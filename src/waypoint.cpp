@@ -47,8 +47,5 @@ void Waypoint::execute_command(Robot& robot) {
     } else if (command == "WINGS") {
         robot.items.wing_pos = !robot.items.wing_pos;
         robot.items.wings->set_value(robot.items.wing_pos);
-    } else if (command == "EXTEND") {
-        robot.items.pto_pos = !robot.items.pto_pos;
-        robot.items.pto->set_value(robot.items.pto_pos);
     }
 }

@@ -15,6 +15,9 @@ public:
     bool temp1 = 0;
     bool temp2 = 0;
 
+    /// @brief Gets the cata position in degrees...
+    /// @return current position...
+    double get_cata_position();
     /// @brief Gets where the robot in pointing in degrees or radians.
     /// @param rad radians or not (degrees)
     /// @return bearing angle
@@ -45,15 +48,12 @@ public:
     /// @param analog2 1 or 0
     /// @param pist 1 or 0
     void set_intake(int analog1, int analog2, int pist);
-    /// @brief Set the flywheel in sticky format.
-    /// @param stick input button
-    void set_flywheel(int stick, int stick2);
     /// @brief Set the wings in sticky format.
     /// @param stick input button
     void set_wings(int stick, std::chrono::_V2::system_clock::time_point time);
-    /// @brief Set the PTO [format not decided]
-    /// @param input digital input
-    void set_pto(int input);
+    /// @brief Set the catapult...
+    /// @param analog input button
+    void set_cata(int analog);
     /// @brief Converts radians to degrees
     /// @param radians radians as double
     /// @return coresponding degrees as double

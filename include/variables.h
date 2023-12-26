@@ -19,15 +19,16 @@
 #define RIGHT_WHEELS_PORT_3 11 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
-#define INTAKE_PORT_LEFT 8 // Defines the 1st port of the left side of intake.
-#define INTAKE_PORT_RIGHT 4 // Defines the 2nd port of the right side of intake.
+#define INTAKE_PORT_LEFT 11 // Defines the 1st port of the left side of intake.
+#define INTAKE_PORT_RIGHT 12 // Defines the 2nd port of the right side of intake.
 
-// Flywheel:
-#define FLYWHEEL_PORT 14 // Defines the port of the turret motor.
+// Catapult:
+#define CATA_PORT 2 // Defines the port of the cata.
+#define CATA_ENCODER 1 // Define the encoder port for cata
+#define CATA_REST 124 // Defines the resting position of the cata...
 
 // Pistons:
 #define INTAKE_PISTON_PORT 'A'
-#define PTO_PORT 'F'
 #define WINGS_PORT 'H'
 
 // IMU:
@@ -63,12 +64,8 @@
 #define POWER_KD 0.3
 #define POWER_ERROR_MAX 100
 #define POWER_ERROR_MIN -100
-// turn: // ============================ RIGHT:
-#define TURN_KP 1
-#define TURN_KI 1
-#define TURN_KD 1
-#define TURN_ERROR_MAX 100
-#define TURN_ERROR_MIN -100
+// cata:
+#define CATA_KP 1
 
 // maximum allowed error:
 #define MIN_ALLOWED_ERROR 10

@@ -7,6 +7,10 @@ static void set_in(int a, Items& items) {
     items.intake_right->move(a);
 }
 
+double Robot::get_cata_position() {
+    return items.encoder_cata->get_position() / 100;
+}
+
 double Robot::get_abs_angle(bool rad) {
     // logic: arc-length = WHEEL_C
     //      : radius = perpendicular sensor - point of pivoting
@@ -26,9 +30,10 @@ void Robot::initialize(Items &i)
     items.encoder_left->reset_position();
     items.encoder_right->reset_position();
     items.encoder_center->reset_position();
-    items.imu->reset(true);
-    items.imu->tare();
-    items.flywheel->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.encoder_cata->reset_position();
+    // items.imu->reset(true);
+    // items.imu->tare();
+    items.cata->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
@@ -72,39 +77,25 @@ void Robot::set_speed_chassis(int y, int x)
 
 void Robot::set_intake(int analog1, int analog2, int pist)
 {
-    // if (analog1) items.intake_pos = 1;
-    // else if (analog2) items.intake_pos = -1;
-    // else items.intake_pos = 0;
+    if (analog1) {
+        set_in(-255, items);
+    }
+    else if (analog2) {
+        set_in(255, items);
+    }
 
-    // if (items.intake_pos == 1) set_in(255, items);
-    // else if (items.intake_pos == 0) set_in(0, items);
-    // else if (items.intake_pos == -1) set_in(-255, items);
-
-    if (analog1) set_in(255, items);
-    else if (analog2) set_in(-255, items); 
-    else set_in(0, items);
-
-    // if (analog1) {
-    //     power = -255;
-    //     if (temp1) power = 0;
-    //     temp1 = !temp1;
-    // }
-    // if (analog2) {
-    //     power = 255;
-    //     if (temp2) power = 0;
-    //     temp2 = !temp2;
-    // }
-    // set_in(power, items);
-
-    // if (pist) items.intake_pos = !items.intake_pos;
-    // items.intake_piston->set_value(items.intake_pos);
+    if (pist) items.intake_pos = !items.intake_pos;
+    items.intake_piston->set_value(items.intake_pos);
 }
 
-void Robot::set_flywheel(int stick, int stick2)
-{
-    if (stick) items.flywheel->move_voltage(12000);
-    else if (stick2) items.flywheel->move_voltage(-12000);
-    else items.flywheel->move_voltage(0);
+void Robot::set_cata(int analog) {
+    if (!analog) {
+        // P Stuff:
+        double power = CATA_KP * (CATA_REST - get_cata_position());
+        items.cata->move(-power);
+    } else {
+        items.cata->move(-255);
+    }
 }
 
 void Robot::set_wings(int stick, std::chrono::_V2::system_clock::time_point time)
@@ -120,13 +111,6 @@ void Robot::set_wings(int stick, std::chrono::_V2::system_clock::time_point time
     // }
     if (stick) items.wing_pos = !items.wing_pos;
     items.wings->set_value(items.wing_pos);
-}
-
-void Robot::set_pto(int input)
-{
-    if (input) items.pto_pos = !items.pto_pos;
-    items.pto->set_value(items.pto_pos);
-    items.intake_piston->set_value(!items.pto_pos);
 }
 
 double Robot::radians_to_degrees(double radians)
