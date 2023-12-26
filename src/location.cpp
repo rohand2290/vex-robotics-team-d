@@ -44,57 +44,47 @@ void Location::initialize(Robot& r) {
     x = &r.x;
     y = &r.y;
     reset_all();
-    // leftPID.set_exit_condition(MAX_ALLOWED_ERROR_TIME, MAX_ALLOWED_ERROR);
-    // rightPID.set_exit_condition(MAX_ALLOWED_ERROR_TIME, MAX_ALLOWED_ERROR);
 }
 
 std::vector<double> Location::update() {
     rel_l = left_abs_dist() - old_l;
 	rel_r = right_abs_dist() - old_r;
-    rel_th = robot->get_abs_angle() - old_th;
+    // rel_th = robot->get_abs_angle() - old_th;
     robot->theta = robot->get_abs_angle();
 
-    // if (rel_th == 0) rel_th = 0.000000001;
-
-    // double mag = ((rel_l + rel_r) / (rel_th)) * sin(robot->degrees_to_radians(rel_th) / 2);
-    // std::vector<double> arr = {
-    //     dx * sin(robot->degrees_to_radians(robot->theta)), // / 0.08203342547,
-    //     dy * cos(robot->degrees_to_radians(robot->theta)) // / 0.08203342547
-    // };
-
     std::vector<double> arr = {
-        ((rel_l + rel_r) / 2 * sin(robot->degrees_to_radians(robot->theta)))* 0.787402, // conversion factor...
-        ((rel_l + rel_r) / 2 * cos(robot->degrees_to_radians(robot->theta)))* 0.787402,
+        ((rel_l + rel_r) / 2 * sin(robot->degrees_to_radians(robot->theta))) / 48, // conversion factor...
+        ((rel_l + rel_r) / 2 * cos(robot->degrees_to_radians(robot->theta))) / 48,
     };
 
-    // robot->x += arr[0];
-    // robot->y += arr[1];
+    robot->x += arr[0];
+    robot->y += arr[1];
 
     // save new vars to cache:
     old_l = left_abs_dist();
 	old_r = right_abs_dist();
-    old_th = robot->get_abs_angle();
+    // old_th = robot->get_abs_angle();
 
     return arr;
 }
 
 double Location::P(double error, bool isturn) { 
-	return error * (POWER_KP); 
+	return error * (isturn ? TURN_KP : POWER_KP); 
 }
 double Location::I(double error, double& integral, Waypoint& goal, bool isturn) {
 	integral += error;
 	if (ARE_SAME(goal.right, right_abs_dist()) && ARE_SAME(goal.left, left_abs_dist()) || ARE_SAME(error, 0)) {
 		integral = 0;
 	}
-	double max = (POWER_ERROR_MAX);
-	double min = (POWER_ERROR_MIN);
+	double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
+	double min = (isturn ? TURN_ERROR_MIN :POWER_ERROR_MIN);
 	if (max < error || min > error) {
 		integral = 0;
 	}
-	return integral * (POWER_KI);
+	return integral * (isturn ? TURN_KI : POWER_KI);
 }
 double Location::D(double& prev_error, double error, bool isturn) {
-	return (error - prev_error) * (POWER_KD);
+	return (error - prev_error) * (isturn ? TURN_KD : POWER_KD);
 }
 
 double Location::pid(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn) {
@@ -103,7 +93,8 @@ double Location::pid(double error, double& integral, double& prev_error, Waypoin
 
 
 static double toTheta(double x, double y, Robot* robot) {
-    double ret = atan(y/x);
+    if (x == robot->x) x += 0.000001;
+    double ret = atan((y - robot->y)/(x - robot->x));
     ret = robot->radians_to_degrees(ret);
     if (x>=0 && y>=0) {
         return ret;
@@ -126,24 +117,22 @@ static double angleDifference(double start, double end) {
 }
 
 std::vector<double> Location::updatePID(Waypoint& goal) {
-    error = goal.right - right_abs_dist();
-    error_l = goal.left - left_abs_dist();
+    double error_x = goal.right - robot->x;
+    double error_y = goal.left - robot->y;
+
+    int c = 1;
+    if (error_x < 0 || error_y < 0) c = -1;
+    error = c * sqrt(error_x*error_x + error_y*error_y);
+
+    error_l = toTheta(goal.right, goal.left, robot) - robot->theta;
 
     // pid stuff:
-    double right = pid(error, integral, prev_error, goal, false);
-    double left = pid(error_l, integral_l, prev_error_l, goal, false);
+    double power = pid(error, integral, prev_error, goal, false);
+    double turn = pid(error_l, integral_l, prev_error_l, goal, true);
     
-    std::vector<double> v = {right, left};
+    std::vector<double> v = {power + turn, power - turn};
 
     if (ARE_SAME(error, 0) && ARE_SAME(error_l, 0)) timer++;
-
-    // if (rightPID.get_target() != goal.right) rightPID.set_target(goal.right);
-    // if (leftPID.get_target() != goal.left) leftPID.set_target(goal.left);
-    // /////////// NOTE: temporarily, x is right odom goal and y is left goal.
-    // double l = leftPID.compute(robot->left_abs_dist());
-    // double r = rightPID.compute(robot->right_abs_dist());
-
-    // std::vector<double> v = {r, l};
 
     return v;
 }

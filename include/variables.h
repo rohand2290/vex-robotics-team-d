@@ -10,29 +10,29 @@
 // ======== PORTS: ===========
 
 // Left drive:
-#define LEFT_WHEELS_PORT_1 18 // Defines the 1st port of the left wheels.
-#define LEFT_WHEELS_PORT_2 19 // Defines the 2nd port of the left wheels.
-#define LEFT_WHEELS_PORT_3 20 // Defines the 3rd port of the left wheels.
+#define LEFT_WHEELS_PORT_1 9 // Defines the 1st port of the left wheels.
+#define LEFT_WHEELS_PORT_2 8 // Defines the 2nd port of the left wheels.
+#define LEFT_WHEELS_PORT_3 7 // Defines the 3rd port of the left wheels.
 // Right drive:
-#define RIGHT_WHEELS_PORT_1 13 // Defines the 1st port of the right wheels.
-#define RIGHT_WHEELS_PORT_2 12 // Defines the 2nd port of the right wheels.
-#define RIGHT_WHEELS_PORT_3 11 // Defines the 3rd port of the right wheels.
+#define RIGHT_WHEELS_PORT_1 19 // Defines the 1st port of the right wheels.
+#define RIGHT_WHEELS_PORT_2 18 // Defines the 2nd port of the right wheels.
+#define RIGHT_WHEELS_PORT_3 17 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
-#define INTAKE_PORT_LEFT 11 // Defines the 1st port of the left side of intake.
-#define INTAKE_PORT_RIGHT 12 // Defines the 2nd port of the right side of intake.
+#define INTAKE_PORT_LEFT 16 // Defines the 1st port of the left side of intake.
+#define INTAKE_PORT_RIGHT 6 // Defines the 2nd port of the right side of intake.
 
 // Catapult:
-#define CATA_PORT 2 // Defines the port of the cata.
-#define CATA_ENCODER 1 // Define the encoder port for cata
-#define CATA_REST 124 // Defines the resting position of the cata...
+#define CATA_PORT 20 // Defines the port of the cata.
+#define CATA_ENCODER 15 // Define the encoder port for cata
+#define CATA_REST 90 // Defines the resting position of the cata...
 
 // Pistons:
 #define INTAKE_PISTON_PORT 'A'
 #define WINGS_PORT 'H'
 
 // IMU:
-#define IMU_PORT 15
+#define IMU_PORT 10
 
 // ======== PREFERENCES: =========
 
@@ -58,14 +58,20 @@
 // Start Angle:
 #define ANGLE_START 0 // bearing front
 // PID Constants:
-// power: // =========================== ONLY ONE THAT MATTERS!!!!!!!!!!!!!
-#define POWER_KP 0.6
-#define POWER_KI 0.4
-#define POWER_KD 0.3
+// power:
+#define POWER_KP 10
+#define POWER_KI 0
+#define POWER_KD 0
 #define POWER_ERROR_MAX 100
 #define POWER_ERROR_MIN -100
+// turn:
+#define TURN_KP 0
+#define TURN_KI 0
+#define TURN_KD 0
+#define TURN_ERROR_MAX 100
+#define TURN_ERROR_MIN -100
 // cata:
-#define CATA_KP 1
+#define CATA_KP 1.9
 
 // maximum allowed error:
 #define MIN_ALLOWED_ERROR 10
@@ -82,7 +88,7 @@
 #define PI 3.141592653589793
 #define ROBOT_WIDTH 3.54331 // in
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0
-#define ACCURACY 0.000000001
+#define ACCURACY 0.01
 // where we start:
 // #define START_RED_ALLY
 

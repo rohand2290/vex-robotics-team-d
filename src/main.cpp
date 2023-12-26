@@ -3,9 +3,7 @@
 #include "tests.h"
 
 #define UPDATE_COORDS() {\
-			std::vector<double> vect = maping.update();\
-			robot.x += vect[0];\
-			robot.y += vect[1]; }
+			std::vector<double> vect = maping.update(); }
 
 /*
 // const std::vector<Waypoint> spawn1 = {
@@ -41,9 +39,10 @@ const std::vector<Waypoint> spawn1 = {
 	// {4434.333, 3444},
 	// {2091.6, -1383.3},
 	// {1932, 974},
-	{1337, 1213.333},
-	{1420.333, -1073.0},
-	{1483, 1166.0},
+	// {1337, 1213.333},
+	// {1420.333, -1073.0},
+	// {1483, 1166.0},
+	{0, 57.5}
 };
 
 Items items;
@@ -145,16 +144,18 @@ void autonomous()
     // items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     // items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
+	items.master->print(0, 0, "GO!");
 	for (Waypoint current_goal : spawn1) {
 		// Waypoint current_goal = road.get_latest();
 		current_goal.execute_command(robot);
 		do {
 
 			std::vector<double> vect = maping.updatePID(current_goal);
-			robot.set_both_sides(vect[0], vect[1]);
+			robot.set_both_sides(vect[1], vect[0]);
+			UPDATE_COORDS();
 			pros::delay(AUTON_LOOP_DELAY);
 
-		} while (maping.is_running());
+		} while (true);
 
 
 		items.stop();
@@ -166,7 +167,7 @@ void autonomous()
 // Runs the operator control code.
 void opcontrol()
 {
-	//autonomous();
+	autonomous();
 	items.stop();
 	// Driver Code:
 	auto beg = std::chrono::high_resolution_clock::now();
@@ -190,11 +191,11 @@ void opcontrol()
 		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1), beg);
 		robot.set_cata(items.master->get_digital(DIGITAL_Y));
 
-		// pros::lcd::print(0, "%f", robot.theta);
-		// pros::lcd::print(1, "%f", robot.x);
-		// pros::lcd::print(2, "%f", robot.y);
+		pros::lcd::print(0, "%f", robot.theta);
+		pros::lcd::print(1, "%f", robot.x);
+		pros::lcd::print(2, "%f", robot.y);
 
-		// UPDATE_COORDS();
+		UPDATE_COORDS();
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
 }
