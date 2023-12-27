@@ -91,7 +91,6 @@ double Location::pid(double error, double& integral, double& prev_error, Waypoin
 	return P(error, isturn) + I(error, integral, goal, isturn) + D(prev_error, error, isturn);
 }
 
-
 static double toTheta(double x, double y, Robot* robot) {
     if (x == robot->x) x += 0.000001;
     double ret = atan((y - robot->y)/(x - robot->x));
@@ -149,4 +148,17 @@ void Location::reset_all()
 
 bool Location::is_running() {
     return timer < MIN_ALLOWED_ERROR_TIME;
+}
+
+
+
+IMULocation::IMULocation(Robot& r): robot(r), items(r.items) {
+    x = r.x;
+    y = r.y;
+}
+
+void IMULocation::compute() {
+    items.imu->get_accel();
+    VectorXD<2> acc();
+
 }

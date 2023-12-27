@@ -3,6 +3,30 @@
 
 #include "depend.h"
 
+class IMULocation {
+private:
+    Robot& robot;
+    Items& items;
+    double x;
+    double y;
+
+    // helper vectors:
+    VectorXD<2> prev_vel;
+    VectorXD<2> prev_dis;
+public:
+    /// @brief Default constructor... Uses purely IMU based navigation.
+    /// @param r Robot instance.
+    IMULocation(Robot& r);
+    /// @brief Computes the current coordinates...
+    void compute();
+    // /// @brief Returns current Dispacement in X-axis
+    // /// @return Displacement in meters...
+    // double getX();
+    // /// @brief Returns current Dispacement in Y-axis
+    // /// @return Displacement in meters...
+    // double getY();
+};
+
 class Location {
 private:
     // robot coordinates

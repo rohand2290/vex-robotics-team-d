@@ -89,7 +89,6 @@
 #define ROBOT_WIDTH 3.54331 // in
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0
 #define ACCURACY 0.01
-// where we start:
-// #define START_RED_ALLY
+#define G 9.80665
 
 #endif // VARIABLES_H
