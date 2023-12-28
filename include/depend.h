@@ -15,6 +15,7 @@
 #include <vector>
 #include <chrono>
 
+#include "cartline.h"
 #include "vectorxd.h"
 #include "items.h"
 #include "robot.h"

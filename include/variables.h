@@ -61,15 +61,15 @@
 // power:
 #define POWER_KP 10
 #define POWER_KI 0
-#define POWER_KD 0
-#define POWER_ERROR_MAX 100
-#define POWER_ERROR_MIN -100
+#define POWER_KD 2
+#define POWER_ERROR_MAX 99999999
+#define POWER_ERROR_MIN -99999999
 // turn:
 #define TURN_KP 0
 #define TURN_KI 0
 #define TURN_KD 0
-#define TURN_ERROR_MAX 100
-#define TURN_ERROR_MIN -100
+#define TURN_ERROR_MAX 99999999
+#define TURN_ERROR_MIN -99999999
 // cata:
 #define CATA_KP 1.9
 

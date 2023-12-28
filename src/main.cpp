@@ -184,10 +184,6 @@ void opcontrol()
 			items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2),
 			items.master->get_digital_new_press(DIGITAL_A)
 		);
-		// robot.set_flywheel(
-		// 	items.master->get_digital(DIGITAL_DOWN),
-		// 	items.master->get_digital(DIGITAL_UP)
-		// );
 		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1), beg);
 		robot.set_cata(items.master->get_digital(DIGITAL_Y));
 

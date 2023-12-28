@@ -76,7 +76,7 @@ double Location::I(double error, double& integral, Waypoint& goal, bool isturn) 
 	if (ARE_SAME(goal.right, right_abs_dist()) && ARE_SAME(goal.left, left_abs_dist()) || ARE_SAME(error, 0)) {
 		integral = 0;
 	}
-	double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
+    double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
 	double min = (isturn ? TURN_ERROR_MIN :POWER_ERROR_MIN);
 	if (max < error || min > error) {
 		integral = 0;
@@ -120,7 +120,7 @@ std::vector<double> Location::updatePID(Waypoint& goal) {
     double error_y = goal.left - robot->y;
 
     int c = 1;
-    if (error_x < 0 || error_y < 0) c = -1;
+    if (error_x < 0 || error_y < 0) c = -1; // REVIEW THIS AGAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     error = c * sqrt(error_x*error_x + error_y*error_y);
 
     error_l = toTheta(goal.right, goal.left, robot) - robot->theta;
