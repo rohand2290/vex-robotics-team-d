@@ -119,8 +119,21 @@ std::vector<double> Location::updatePID(Waypoint& goal) {
     double error_x = goal.right - robot->x;
     double error_y = goal.left - robot->y;
 
+    CartesianLine robot_line(
+        tan(robot->degrees_to_radians(90 - robot->theta)), robot->x, robot->y
+    );
+    CartesianLine goal_line(
+        robot_line.get_perp(robot_line.get_slope()),
+        goal.right,
+        goal.left
+    );
+
+    pros::lcd::print(0, "%f", robot_line.get_slope());
+    pros::lcd::print(1, "%f", goal_line.get_slope());
+
     int c = 1;
-    if (error_x < 0 || error_y < 0) c = -1; // REVIEW THIS AGAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if (goal_line.is_above(robot->x, robot->y)) c = -1;
+
     error = c * sqrt(error_x*error_x + error_y*error_y);
 
     error_l = toTheta(goal.right, goal.left, robot) - robot->theta;
