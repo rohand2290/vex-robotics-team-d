@@ -127,11 +127,10 @@ std::vector<double> Location::updatePID(Waypoint& goal) {
         goal.right,
         goal.left
     );
-
-    pros::lcd::print(0, "%f", robot_line.get_slope());
-    pros::lcd::print(1, "%f", goal_line.get_slope());
-
     int c = 1;
+    if (
+        goal_line.is_above(robot->x, robot->y) == goal_line.is_bellow(robot->x, robot->y)
+    ) c = 0;
     if (goal_line.is_above(robot->x, robot->y)) c = -1;
 
     error = c * sqrt(error_x*error_x + error_y*error_y);
