@@ -45,7 +45,7 @@
 #define MOTOR_PERCENT 1 // percentage (0-1) for max power to be used (0.75 means the maximum ever reached will be 75%)
 #define TURN_PERCENT 1 // percentage (0-1) for max turn sensibility.
 
-// ======= Auton: ================
+// ============== Auton: ================
 // trackion wheels:
 #define WHEEL_C 2.75 * PI // wheel circumference
 #define TICKS_PER_REVOLUTION 300
@@ -57,21 +57,23 @@
 #define ENCODER_PORT_3 69 // center perpendicular
 // Start Angle:
 #define ANGLE_START 0 // bearing front
-// PID Constants:
+// ============================ PID Constants: ======================
 // power:
-#define POWER_KP 10
-#define POWER_KI 0
-#define POWER_KD 2
+#define POWER_KP 5
+#define POWER_KI 1
+#define POWER_KD 3
 #define POWER_ERROR_MAX 99999999
 #define POWER_ERROR_MIN -99999999
 // turn:
-#define TURN_KP 0
+#define TURN_KP 1.28
 #define TURN_KI 0
 #define TURN_KD 0
 #define TURN_ERROR_MAX 99999999
 #define TURN_ERROR_MIN -99999999
 // cata:
 #define CATA_KP 1.9
+// ======================= ODOM: ========================
+#define ERROR_MEASUREMENT 0.6
 
 // maximum allowed error:
 #define MIN_ALLOWED_ERROR 10

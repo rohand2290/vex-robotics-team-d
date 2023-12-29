@@ -92,8 +92,8 @@ double Location::pid(double error, double& integral, double& prev_error, Waypoin
 }
 
 static double toTheta(double x, double y, Robot* robot) {
-    if (x == robot->x) x += 0.000001;
-    double ret = atan((y - robot->y)/(x - robot->x));
+    if (x == 0) x = 0.000001;
+    double ret = atan(y/x);
     ret = robot->radians_to_degrees(ret);
     if (x>=0 && y>=0) {
         return ret;
@@ -115,6 +115,11 @@ static double angleDifference(double start, double end) {
     return red;
 }
 
+// look at its code to figure out what it does...
+static double modifier(double X) {
+    if (X > 180) return (180 - X);
+    return X;
+}
 std::vector<double> Location::updatePID(Waypoint& goal) {
     double error_x = goal.right - robot->x;
     double error_y = goal.left - robot->y;
@@ -135,13 +140,13 @@ std::vector<double> Location::updatePID(Waypoint& goal) {
 
     error = c * sqrt(error_x*error_x + error_y*error_y);
 
-    error_l = toTheta(goal.right, goal.left, robot) - robot->theta;
+    error_l = normalize(90 - toTheta(goal.right, goal.left, robot)) - modifier(robot->theta);
 
     // pid stuff:
     double power = pid(error, integral, prev_error, goal, false);
     double turn = pid(error_l, integral_l, prev_error_l, goal, true);
     
-    std::vector<double> v = {power + turn, power - turn};
+    std::vector<double> v = {power - turn, power + turn};
 
     if (ARE_SAME(error, 0) && ARE_SAME(error_l, 0)) timer++;
 
@@ -164,13 +169,38 @@ bool Location::is_running() {
 
 
 
+
+
+
 IMULocation::IMULocation(Robot& r): robot(r), items(r.items) {
+    filtx = new Kalman1VFilter(ERROR_MEASUREMENT, 0);
+    filty = new Kalman1VFilter(ERROR_MEASUREMENT, 0);
     x = r.x;
     y = r.y;
 }
 
 void IMULocation::compute() {
-    items.imu->get_accel();
-    VectorXD<2> acc();
+    pros::c::imu_accel_s_t raw_val = items.imu->get_accel();
+    // accelerometer vals...
+    VectorXD<2> acc(raw_val.y, raw_val.x);
+    acc.rotate(-robot.theta);
+    // double integration...
+    prev_vel = prev_vel.add_by_vect(acc);
+    prev_dis = prev_dis.add_by_vect(prev_vel).mult(G / 100000);
+    // filtering...
+    prev_dis.setIndex(0, filtx->compute(prev_dis.getIndex(0)));
+    prev_dis.setIndex(1, filty->compute(prev_dis.getIndex(1)));
+}
 
+double IMULocation::getX() {
+    return prev_dis.getIndex(0);
+}
+
+double IMULocation::getY() {
+    return prev_dis.getIndex(1);
+}
+
+IMULocation::~IMULocation() {
+    delete filtx;
+    delete filty;
 }

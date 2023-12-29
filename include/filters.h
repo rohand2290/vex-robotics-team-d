@@ -35,6 +35,12 @@ public:
     /// @param EM Error measurement
     /// @param INIT Initial value
     Kalman1VFilter(double EM, double INIT);
+    /// @brief Sets the error measurement...
+    /// @param val new value to set
+    void set_error_mea(double val);
+    /// @brief Sets the initial value...
+    /// @param val new value to set
+    void set_init_val(double val);
     /// @brief Returns the Kalman filtered value of the estimate.
     /// @param sensor Sensor value to be filtered
     /// @return the new estimate.

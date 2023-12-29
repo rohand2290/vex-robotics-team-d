@@ -13,18 +13,24 @@ private:
     // helper vectors:
     VectorXD<2> prev_vel;
     VectorXD<2> prev_dis;
+
+    // filter:
+    Kalman1VFilter* filtx;
+    Kalman1VFilter* filty;
 public:
     /// @brief Default constructor... Uses purely IMU based navigation.
     /// @param r Robot instance.
     IMULocation(Robot& r);
     /// @brief Computes the current coordinates...
     void compute();
-    // /// @brief Returns current Dispacement in X-axis
-    // /// @return Displacement in meters...
-    // double getX();
-    // /// @brief Returns current Dispacement in Y-axis
-    // /// @return Displacement in meters...
-    // double getY();
+    /// @brief Returns current Dispacement in X-axis
+    /// @return Displacement in meters...
+    double getX();
+    /// @brief Returns current Dispacement in Y-axis
+    /// @return Displacement in meters...
+    double getY();
+    /// @brief default deconstructor...
+    ~IMULocation();
 };
 
 class Location {
