@@ -4,13 +4,13 @@
 // TODO:
 
 struct Waypoint {
-    double right; // temporarily x!
-    double left; // temporarily y!
     std::string command = "";
+    double param1;
+    double param2;
 
     /// @brief Executes a command for the bot to follow during the waypoint
     /// @param robot Robot instance
-    void execute_command(Robot& robot);
+    void execute_aux_command(Robot& robot);
 };
 
 class Path {

@@ -2,6 +2,7 @@
 #define LOCATION_H
 
 #include "depend.h"
+#include "filters.h"
 
 class IMULocation {
 private:
@@ -103,7 +104,7 @@ public:
     /// @brief Returns motor values depending on PID value
     /// @param goal goal we want to reach
     /// @return Vector of motor values. (0 is left, 1 is right)
-    std::vector<double> updatePID(Waypoint& goal);
+    std::vector<double> updatePID(Waypoint& goal, CartesianLine& robot_line, CartesianLine& goal_line, bool turn = false);
     /// @brief Resets all encoders to 0
     void reset_all();
     /// @brief Checks if PID is still running...

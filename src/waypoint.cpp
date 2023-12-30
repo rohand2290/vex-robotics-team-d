@@ -23,7 +23,7 @@ void Path::add_queue(Waypoint goal) {
 }
 
 void Path::add_queue(double x, double y) {
-    Waypoint goal = {x, y};
+    Waypoint goal = {"", y};
     cpp_vect.push_back(goal);
 }
 
@@ -36,7 +36,7 @@ bool Path::goal_reached(Waypoint& goal, double x, double y) {
     return distance < allowable_error;
 }
 
-void Waypoint::execute_command(Robot& robot) {
+void Waypoint::execute_aux_command(Robot& robot) {
     if (command == "") {
         robot.items.intake_left->brake();
         robot.items.intake_right->brake();

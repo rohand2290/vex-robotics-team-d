@@ -42,7 +42,8 @@ const std::vector<Waypoint> spawn1 = {
 	// {1337, 1213.333},
 	// {1420.333, -1073.0},
 	// {1483, 1166.0},
-	{0, 57.5}
+	// {0, 57.5}
+	{"F", 10}
 };
 
 Items items;
@@ -132,10 +133,24 @@ inline static void sudo_value_retriever() {
 }
 
 // Runs the user autonomous code.
+static double toTheta(double x, double y, Robot* robot) {
+    if (x == 0) x = 0.000001;
+    double ret = atan(y/x);
+    ret = robot->radians_to_degrees(ret);
+    if (x>=0 && y>=0) {
+        return ret;
+    }
+    if (x>=0 && y<0) {
+        return 360 + ret;
+    }
+    if (x < 0 && y >= 0) {
+        return 180 + ret;
+    }
+    return 180 + ret;
+}
 void autonomous()
 {
 	pros::lcd::clear();
-
 	// items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     // items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     // items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -146,20 +161,23 @@ void autonomous()
 
 	items.master->print(0, 0, "GO!");
 	for (Waypoint current_goal : spawn1) {
-		// Waypoint current_goal = road.get_latest();
-		current_goal.execute_command(robot);
-		do {
 
-			std::vector<double> vect = maping.updatePID(current_goal);
+		current_goal.execute_aux_command(robot);
+		CartesianLine robot_line(0, robot.x, robot.y);
+		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
+
+		do {
+			std::vector<double> vect = maping.updatePID(current_goal, robot_line, goal_line);
 			robot.set_both_sides(vect[1], vect[0]);
 			UPDATE_COORDS();
 			pros::delay(AUTON_LOOP_DELAY);
-
 		} while (true);
 
 
 		items.stop();
 
+		robot.x = 0;
+		robot.y = 0;
 		maping.reset_all();
 	}
 }

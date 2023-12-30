@@ -23,13 +23,13 @@ public:
 
 class Kalman1VFilter {
 private:
-    double init = 0;    
-    double errorEst = 0;
-    double errorMea = 0;
-    double oldErrorEst = 0;
-    double est = 0;
-    double oldEst = 0;
-    double KG = 0;
+    double init = 0.001;    
+    double errorEst = 0.001;
+    double errorMea = 0.001;
+    double oldErrorEst = 0.001;
+    double est = 0.001;
+    double oldEst = 0.001;
+    double KG = 0.001;
 public:
     /// @brief Constructor for a 1 Variable Kalman Filter
     /// @param EM Error measurement
@@ -47,4 +47,4 @@ public:
     double compute(double sensor);
 };
 
-#endif FILTER_H
+#endif // FILTER_H

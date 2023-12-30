@@ -33,6 +33,7 @@ void Robot::initialize(Items &i)
     items.encoder_cata->reset_position();
     items.imu->reset(true);
     items.imu->tare();
+    items.imu->set_heading(0);
     items.cata->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
@@ -91,9 +92,9 @@ void Robot::set_intake(int analog1, int analog2, int pist)
 void Robot::set_cata(int analog) {
     if (!analog) {
         // P Stuff:
-        // double power = CATA_KP * (CATA_REST - get_cata_position());
-        // items.cata->move(ABS(power));
-        items.cata->move(0);
+        double power = CATA_KP * (CATA_REST - get_cata_position());
+        items.cata->move(ABS(power));
+        // items.cata->move(0);
     } else {
         items.cata->move(255);
     }

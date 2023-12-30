@@ -52,10 +52,17 @@ std::vector<double> Location::update() {
     // rel_th = robot->get_abs_angle() - old_th;
     robot->theta = robot->get_abs_angle();
 
+    double mag = rel_l > rel_r ? rel_r : rel_l;
+
     std::vector<double> arr = {
         ((rel_l + rel_r) / 2 * sin(robot->degrees_to_radians(robot->theta))) / 48, // conversion factor...
         ((rel_l + rel_r) / 2 * cos(robot->degrees_to_radians(robot->theta))) / 48,
     };
+
+    // std::vector<double> arr = {
+    //     (mag * sin(robot->degrees_to_radians(robot->theta))) / 48, // conversion factor...
+    //     (mag * cos(robot->degrees_to_radians(robot->theta))) / 48,
+    // };
 
     robot->x += arr[0];
     robot->y += arr[1];
@@ -73,9 +80,6 @@ double Location::P(double error, bool isturn) {
 }
 double Location::I(double error, double& integral, Waypoint& goal, bool isturn) {
 	integral += error;
-	if (ARE_SAME(goal.right, right_abs_dist()) && ARE_SAME(goal.left, left_abs_dist()) || ARE_SAME(error, 0)) {
-		integral = 0;
-	}
     double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
 	double min = (isturn ? TURN_ERROR_MIN :POWER_ERROR_MIN);
 	if (max < error || min > error) {
@@ -84,7 +88,9 @@ double Location::I(double error, double& integral, Waypoint& goal, bool isturn) 
 	return integral * (isturn ? TURN_KI : POWER_KI);
 }
 double Location::D(double& prev_error, double error, bool isturn) {
-	return (error - prev_error) * (isturn ? TURN_KD : POWER_KD);
+	double tor = (error - prev_error) * (isturn ? TURN_KD : POWER_KD);
+    prev_error = error;
+    return tor;
 }
 
 double Location::pid(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn) {
@@ -117,40 +123,71 @@ static double angleDifference(double start, double end) {
 
 // look at its code to figure out what it does...
 static double modifier(double X) {
-    if (X > 180) return (180 - X);
+    if (X > 180) return X - 360;
     return X;
 }
-std::vector<double> Location::updatePID(Waypoint& goal) {
-    double error_x = goal.right - robot->x;
-    double error_y = goal.left - robot->y;
-
-    CartesianLine robot_line(
-        tan(robot->degrees_to_radians(90 - robot->theta)), robot->x, robot->y
-    );
-    CartesianLine goal_line(
-        robot_line.get_perp(robot_line.get_slope()),
-        goal.right,
-        goal.left
-    );
-    int c = 1;
-    if (
-        goal_line.is_above(robot->x, robot->y) == goal_line.is_bellow(robot->x, robot->y)
-    ) c = 0;
-    if (goal_line.is_above(robot->x, robot->y)) c = -1;
-
-    error = c * sqrt(error_x*error_x + error_y*error_y);
-
-    error_l = normalize(90 - toTheta(goal.right, goal.left, robot)) - modifier(robot->theta);
-
-    // pid stuff:
-    double power = pid(error, integral, prev_error, goal, false);
-    double turn = pid(error_l, integral_l, prev_error_l, goal, true);
+std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_line, CartesianLine& goal_line, bool turn) {
     
-    std::vector<double> v = {power - turn, power + turn};
+    if (!turn) {
+        // distance PID:
+        double error_x = goal_line.x - robot->x;
+        double error_y = goal_line.y - robot->y;
 
-    if (ARE_SAME(error, 0) && ARE_SAME(error_l, 0)) timer++;
+        robot_line.slope = tan(robot->degrees_to_radians(robot->theta));
+        goal_line.slope = robot_line.get_perp(robot_line.get_slope());
 
-    return v;
+        int c = 1;
+        if (
+            goal_line.is_above(robot->x, robot->y) == goal_line.is_bellow(robot->x, robot->y)
+        ) c = 0;
+        if (goal_line.is_above(robot->x, robot->y)) c = -1;
+        error = c * sqrt(error_x*error_x + error_y*error_y);
+
+        double power = pid(error, integral, prev_error, goal, false);
+
+        std::vector<double> v = {power, power};
+        if (ARE_SAME(error, 0)) timer++;
+        return v;
+
+    } else {
+        // turn PID:
+        error_l = standrad_to_bearing(goal.param1) - modifier(robot->theta);
+        double turn = pid(error_l, integral_l, prev_error_l, goal, true);
+    
+        std::vector<double> v = {-turn, turn};
+
+        if (ARE_SAME(error_l, 0)) timer++;
+
+        return v;
+    }
+    
+    /*
+    // // TODO:
+    // double error_x = goal.right - robot->x;
+    // double error_y = goal.left - robot->y;
+
+    // robot_line.slope = tan(robot->degrees_to_radians(robot->theta));
+
+    // int c = 1;
+    // if (
+    //     goal_line.is_above(robot->x, robot->y) == goal_line.is_bellow(robot->x, robot->y)
+    // ) c = 0;
+    // if (goal_line.is_above(robot->x, robot->y)) c = -1;
+
+    // error = c * sqrt(error_x*error_x + error_y*error_y);
+
+    // error_l = standrad_to_bearing(toTheta(goal.right, goal.left, robot)) - modifier(robot->theta);
+
+    // // pid stuff:
+    // double power = pid(error, integral, prev_error, goal, false);
+    // double turn = pid(error_l, integral_l, prev_error_l, goal, true);
+    
+    // std::vector<double> v = {power - turn, power + turn};
+
+    // if (ARE_SAME(error, 0) && ARE_SAME(error_l, 0)) timer++;
+
+    // return v;
+    */
 }
 
 void Location::reset_all()
@@ -161,6 +198,8 @@ void Location::reset_all()
 	robot->items.right1->tare_position();
     robot->items.left3->tare_position();
 	robot->items.right3->tare_position();
+    robot->items.imu->tare_heading();
+    timer = 0;
 }
 
 bool Location::is_running() {
@@ -168,13 +207,12 @@ bool Location::is_running() {
 }
 
 
-
-
+#include "vectorxd.cpp"
 
 
 IMULocation::IMULocation(Robot& r): robot(r), items(r.items) {
-    filtx = new Kalman1VFilter(ERROR_MEASUREMENT, 0);
-    filty = new Kalman1VFilter(ERROR_MEASUREMENT, 0);
+    filtx = new Kalman1VFilter(ERROR_MEASUREMENT, 0.001);
+    filty = new Kalman1VFilter(ERROR_MEASUREMENT, 0.001);
     x = r.x;
     y = r.y;
 }
@@ -186,10 +224,10 @@ void IMULocation::compute() {
     acc.rotate(-robot.theta);
     // double integration...
     prev_vel = prev_vel.add_by_vect(acc);
-    prev_dis = prev_dis.add_by_vect(prev_vel).mult(G / 100000);
+    prev_dis = prev_dis.add_by_vect(prev_vel).mult(G);
     // filtering...
-    prev_dis.setIndex(0, filtx->compute(prev_dis.getIndex(0)));
-    prev_dis.setIndex(1, filty->compute(prev_dis.getIndex(1)));
+    // prev_dis.setIndex(0, filtx->compute(prev_dis.getIndex(0)));
+    // prev_dis.setIndex(1, filty->compute(prev_dis.getIndex(1)));
 }
 
 double IMULocation::getX() {

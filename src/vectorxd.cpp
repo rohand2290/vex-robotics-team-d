@@ -34,7 +34,7 @@ void VectorXD<N>::setIndex(int i, double val) {
 template <int N>
 VectorXD<N> VectorXD<N>::mult(double X) {
     VectorXD<N> v;
-    for (int i = 0; i < N; ++i) c_arr[i] *= X;
+    for (int i = 0; i < N; ++i) v.setIndex(i, c_arr[i] * X);
     return v;
 }
 template <int N>
@@ -45,14 +45,14 @@ VectorXD<N> VectorXD<N>::div(double X) {
 }
 template <int N>
 VectorXD<N> VectorXD<N>::add_by_vect(VectorXD<N> Vect) {
-    VectorXD<N> v();
-    for (int i = 0; i < N; ++i) v[i] = c_arr[i] + Vect[i];
+    VectorXD<N> v;
+    for (int i = 0; i < N; ++i) v.setIndex(i, c_arr[i] + Vect.getIndex(i));
     return v;
 }
 template <int N>
 VectorXD<N> VectorXD<N>::sub_by_vect(VectorXD<N> Vect) {
-    VectorXD<N> v();
-    for (int i = 0; i < N; ++i) v[i] = c_arr[i] - Vect[i];
+    VectorXD<N> v;
+    for (int i = 0; i < N; ++i) v.setIndex(i, c_arr[i] - Vect.getIndex(i));
     return v;
 }
 template <int N>

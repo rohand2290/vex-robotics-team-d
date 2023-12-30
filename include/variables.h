@@ -73,7 +73,7 @@
 // cata:
 #define CATA_KP 1.9
 // ======================= ODOM: ========================
-#define ERROR_MEASUREMENT 0.6
+#define ERROR_MEASUREMENT 0.05
 
 // maximum allowed error:
 #define MIN_ALLOWED_ERROR 10
@@ -86,7 +86,7 @@
 // this can also be used to change smoothness if smooth drive is enabled.
 // If it is too little, it might starve the proccessor from energy with too much load.
 #define OPCONTROL_LOOP_DELAY 20 // ms
-#define AUTON_LOOP_DELAY 20 // ms
+#define AUTON_LOOP_DELAY 5 // ms
 #define PI 3.141592653589793
 #define ROBOT_WIDTH 3.54331 // in
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0

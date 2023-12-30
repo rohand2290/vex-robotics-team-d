@@ -3,11 +3,11 @@
 
 class CartesianLine {
 private:
-    double slope;
-    double x;
-    double y;
     int y_cof = 1;
 public:
+    double x;
+    double y;
+    double slope;
     /// @brief Gets the perpendicular slope of another slope
     /// @param s a slope
     /// @return the perpendicular counterpart
