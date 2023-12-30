@@ -115,6 +115,15 @@ void Robot::set_wings(int stick, std::chrono::_V2::system_clock::time_point time
     items.wings->set_value(items.wing_pos);
 }
 
+void Robot::set_blocker(int analog) {
+    if (analog) {
+        items.lift1->set_value(1);
+        items.lift2->set_value(1);
+    }
+    items.lift1->set_value(0);
+    items.lift2->set_value(0);
+}
+
 double Robot::radians_to_degrees(double radians)
 {
     return (radians * 180) / PI;

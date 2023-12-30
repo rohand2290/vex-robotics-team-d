@@ -15,6 +15,8 @@ void Items::initialize()  {
     intake_right = new pros::Motor (INTAKE_PORT_RIGHT, true);
     cata = new pros::Motor(CATA_PORT, true);
     wings = new pros::ADIDigitalOut (WINGS_PORT);
+    lift1 = new pros::ADIDigitalOut (LIFT_1_PORT);
+    lift2 = new pros::ADIDigitalOut (LIFT_2_PORT);
     intake_piston = new pros::ADIDigitalOut (INTAKE_PISTON_PORT);
     encoder_left = new pros::Rotation (ENCODER_PORT_1, true);
     encoder_right = new pros::Rotation (ENCODER_PORT_2);
@@ -47,6 +49,8 @@ Items::~Items() {
     delete intake_right;
     delete cata;
     delete wings;
+    delete lift1;
+    delete lift2;
     delete encoder_left;
     delete encoder_right;
     delete encoder_center;

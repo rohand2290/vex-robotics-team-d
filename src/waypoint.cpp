@@ -37,15 +37,25 @@ bool Path::goal_reached(Waypoint& goal, double x, double y) {
 }
 
 void Waypoint::execute_aux_command(Robot& robot) {
-    if (command == "") {
+    if (command == "stop") {
         robot.items.intake_left->brake();
         robot.items.intake_right->brake();
-    } else if (command == "INTAKE") {
-        robot.items.intake_piston->set_value(1);
-    } else if (command == "OUTAKE") {
-        robot.items.intake_piston->set_value(0);
-    } else if (command == "WINGS") {
+    } else if (command == "in") {
+        robot.items.intake_left->move(255);
+        robot.items.intake_right->move(255);
+    } else if (command == "out") {
+        robot.items.intake_left->move(-255);
+        robot.items.intake_right->move(-255);
+    } else if (command == "wings") {
         robot.items.wing_pos = !robot.items.wing_pos;
         robot.items.wings->set_value(robot.items.wing_pos);
+    } else if (command == "rise") {
+        robot.items.lift1->set_value(1);
+        robot.items.lift2->set_value(1);
+    } else if (command == "fall") {
+        robot.items.lift1->set_value(0);
+        robot.items.lift2->set_value(0);
+    } else if (command == "wait") {
+        pros::delay(param1);
     }
 }

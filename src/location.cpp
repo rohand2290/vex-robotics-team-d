@@ -203,7 +203,7 @@ void Location::reset_all()
 }
 
 bool Location::is_running() {
-    return timer < MIN_ALLOWED_ERROR_TIME;
+    return timer <= MIN_ALLOWED_ERROR_TIME;
 }
 
 

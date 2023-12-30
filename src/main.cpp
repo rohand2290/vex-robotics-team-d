@@ -167,11 +167,15 @@ void autonomous()
 		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
 
 		do {
-			std::vector<double> vect = maping.updatePID(current_goal, robot_line, goal_line);
+			std::vector<double> vect;
+			if (current_goal.command == "move") vect = maping.updatePID(current_goal, robot_line, goal_line);
+			else if (current_goal.command == "turn") vect = maping.updatePID(current_goal, robot_line, goal_line, true);
+			else break;
+			
 			robot.set_both_sides(vect[1], vect[0]);
 			UPDATE_COORDS();
 			pros::delay(AUTON_LOOP_DELAY);
-		} while (true);
+		} while (maping.is_running());
 
 
 		items.stop();
@@ -204,12 +208,13 @@ void opcontrol()
 		);
 		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1), beg);
 		robot.set_cata(items.master->get_digital(DIGITAL_Y));
+		robot.set_blocker(items.master->get_digital(DIGITAL_X));
 
-		pros::lcd::print(0, "%f", robot.theta);
-		pros::lcd::print(1, "%f", robot.x);
-		pros::lcd::print(2, "%f", robot.y);
+		// pros::lcd::print(0, "%f", robot.theta);
+		// pros::lcd::print(1, "%f", robot.x);
+		// pros::lcd::print(2, "%f", robot.y);
 
-		UPDATE_COORDS();
+		// UPDATE_COORDS();
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
 }

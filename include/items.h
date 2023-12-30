@@ -21,6 +21,8 @@ public:
     pros::Motor* cata;
     pros::ADIDigitalOut* wings;
     pros::ADIDigitalOut* intake_piston;
+    pros::ADIDigitalOut* lift1;
+    pros::ADIDigitalOut* lift2;
     pros::Rotation* encoder_left;
     pros::Rotation* encoder_right;
     pros::Rotation* encoder_center;

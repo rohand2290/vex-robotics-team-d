@@ -54,6 +54,9 @@ public:
     /// @brief Set the catapult...
     /// @param analog input button
     void set_cata(int analog);
+    /// @brief Set the blocker...
+    /// @param analog imput button
+    void set_blocker(int analog);
     /// @brief Converts radians to degrees
     /// @param radians radians as double
     /// @return coresponding degrees as double
