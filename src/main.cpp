@@ -171,7 +171,7 @@ void autonomous()
 			if (current_goal.command == "move") vect = maping.updatePID(current_goal, robot_line, goal_line);
 			else if (current_goal.command == "turn") vect = maping.updatePID(current_goal, robot_line, goal_line, true);
 			else break;
-			
+
 			robot.set_both_sides(vect[1], vect[0]);
 			UPDATE_COORDS();
 			pros::delay(AUTON_LOOP_DELAY);
@@ -189,7 +189,7 @@ void autonomous()
 // Runs the operator control code.
 void opcontrol()
 {
-	autonomous();
+	autonomous(); // disable this during comp...
 	items.stop();
 	// Driver Code:
 	auto beg = std::chrono::high_resolution_clock::now();
