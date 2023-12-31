@@ -45,11 +45,11 @@ public:
         for (int i = 0; i < 10000; ++i) {
             double _r = get_avg(right.get_actual_velocities());
             double _l = get_avg(left.get_actual_velocities());
-            if (ARE_SAME(_r, 600)) {
+            if (ARE_SAME(ABS(_r), 600)) {
                 speedr = true;
                 if (_r > max_r) max_r = _r;
             }
-            if (ARE_SAME(_l, 600)) {
+            if (ARE_SAME(ABS(_l), 600)) {
                 speedl = true;
                 if (_l > max_l) max_l = _l;
             }
@@ -57,11 +57,15 @@ public:
                 equal = true;
             }
             pros::delay(1);
+
+            if (items.master->get_digital(DIGITAL_A)) break;
         }
+        items.stop();
+
         items.master->clear();
-        items.master->print(0, 0, "Right RPM: %i %s", (int)max_r, speedr ? "pass" : "fail");
-        items.master->print(1, 0, "Left RPM: %i %s", (int)max_l, speedl ? "pass" : "fail");
-        items.master->print(2, 0, "Speed Equality: %s", equal ? "pass" : "fail");
+        pros::lcd::print(0, "R RPM: %i %s", (int)max_r, speedr ? "pass" : "fail");
+        pros::lcd::print(1, "L RPM: %i %s", (int)max_l, speedl ? "pass" : "fail");
+        pros::lcd::print(2, "Speed E: %s", equal ? "pass" : "fail");
         TERMINATE();
     }
 };

@@ -114,7 +114,7 @@ static double toTheta(double x, double y, Robot* robot) {
 }
 
 static double angleDifference(double start, double end) {
-    double red = ABS(end-start);
+    double red = (end-start);
     if (red >= 180) {
         return red - 360;
     }
@@ -137,26 +137,27 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         goal_line.slope = robot_line.get_perp(robot_line.get_slope());
 
         int c = 1;
-        if (
-            goal_line.is_above(robot->x, robot->y) == goal_line.is_bellow(robot->x, robot->y)
-        ) c = 0;
-        if (goal_line.is_above(robot->x, robot->y)) c = -1;
+        if (error_y < 0) c = -1;
         error = c * sqrt(error_x*error_x + error_y*error_y);
 
         double power = pid(error, integral, prev_error, goal, false);
+        if (ARE_SAME(error, 0)) integral = 0;
 
         std::vector<double> v = {power, power};
-        if (ARE_SAME(error, 0)) timer++;
+        if (error < MIN_ALLOWED_ERROR) timer++;
         return v;
 
     } else {
         // turn PID:
-        error_l = standrad_to_bearing(goal.param1) - modifier(robot->theta);
+        error_l = angleDifference(robot->theta, goal.param1);
+        pros::lcd::print(1, "%f", error_l);
+
         double turn = pid(error_l, integral_l, prev_error_l, goal, true);
+        if (ARE_SAME(error_l, 0)) integral_l = 0;
     
         std::vector<double> v = {-turn, turn};
 
-        if (ARE_SAME(error_l, 0)) timer++;
+        if (ABS(error_l) < MIN_ALLOWED_ERROR_DEG) timer++;
 
         return v;
     }

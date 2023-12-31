@@ -67,9 +67,9 @@
 #define POWER_ERROR_MAX 99999999
 #define POWER_ERROR_MIN -99999999
 // turn:
-#define TURN_KP 1.28
+#define TURN_KP 1.2
 #define TURN_KI 0
-#define TURN_KD 0
+#define TURN_KD 1
 #define TURN_ERROR_MAX 99999999
 #define TURN_ERROR_MIN -99999999
 // cata:
@@ -78,7 +78,8 @@
 #define ERROR_MEASUREMENT 0.05
 
 // maximum allowed error:
-#define MIN_ALLOWED_ERROR 10
+#define MIN_ALLOWED_ERROR 1
+#define MIN_ALLOWED_ERROR_DEG 5
 #define MIN_ALLOWED_ERROR_TIME 50
 
 // ======= Miscelanious: =========

@@ -55,6 +55,20 @@ void Waypoint::execute_aux_command(Robot& robot) {
     } else if (command == "fall") {
         robot.items.lift1->set_value(0);
         robot.items.lift2->set_value(0);
+    } else if (command == "coast") {
+        robot.items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        robot.items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        robot.items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        robot.items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        robot.items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        robot.items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    } else if (command == "hold") {
+        robot.items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        robot.items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        robot.items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        robot.items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        robot.items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        robot.items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     } else if (command == "wait") {
         pros::delay(param1);
     }

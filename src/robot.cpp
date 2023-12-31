@@ -61,12 +61,14 @@ void Robot::set_left_side(int analog)
 
 void Robot::set_both_sides(int right, int left)
 {
-    items.right1->move(right);
-    items.left1->move(left);
-    items.left2->move(left);
-    items.right2->move(right);
-    items.right3->move(right);
-    items.left3->move(left);
+    right *= 120000 / 127;
+    left *= 120000 / 127;
+    items.right1->move_voltage(right);
+    items.left1->move_voltage(left);
+    items.left2->move_voltage(left);
+    items.right2->move_voltage(right);
+    items.right3->move_voltage(right);
+    items.left3->move_voltage(left);
 }
 
 void Robot::set_speed_chassis(int y, int x)
@@ -80,13 +82,11 @@ void Robot::set_intake(int analog1, int analog2, int pist)
 {
     if (analog1) {
         set_in(-255, items);
-    }
-    else if (analog2) {
+    } else if (analog2) {
         set_in(255, items);
+    } else {
+        set_in(0, items);
     }
-
-    if (pist) items.intake_pos = !items.intake_pos;
-    items.intake_piston->set_value(items.intake_pos);
 }
 
 void Robot::set_cata(int analog) {
@@ -116,12 +116,15 @@ void Robot::set_wings(int stick, std::chrono::_V2::system_clock::time_point time
 }
 
 void Robot::set_blocker(int analog) {
-    if (analog) {
+    if (analog) items.intake_pos = !items.intake_pos;
+    
+    if (items.intake_pos) {
         items.lift1->set_value(1);
         items.lift2->set_value(1);
+    } else {
+        items.lift1->set_value(0);
+        items.lift2->set_value(0);
     }
-    items.lift1->set_value(0);
-    items.lift2->set_value(0);
 }
 
 double Robot::radians_to_degrees(double radians)

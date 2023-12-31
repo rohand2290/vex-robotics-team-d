@@ -35,7 +35,7 @@
 // };
 */
 
-const std::vector<Waypoint> spawn1 = {
+std::vector<Waypoint> spawn1 = {
 	// {4434.333, 3444},
 	// {2091.6, -1383.3},
 	// {1932, 974},
@@ -43,7 +43,9 @@ const std::vector<Waypoint> spawn1 = {
 	// {1420.333, -1073.0},
 	// {1483, 1166.0},
 	// {0, 57.5}
-	{"F", 10}
+	{"move", 48},
+	{"turn", 180},
+	{"move", 48},
 };
 
 Items items;
@@ -148,6 +150,15 @@ static double toTheta(double x, double y, Robot* robot) {
     }
     return 180 + ret;
 }
+// experimental...
+static std::vector<Waypoint> gen_plan(double turn, double dis, int sm) {
+	std::vector<Waypoint> tor;
+	tor.push_back({""});
+	if (sm < 1) sm = 1;
+	for (int i = 0; i < sm - 1; ++i) {
+		
+	}
+}
 void autonomous()
 {
 	pros::lcd::clear();
@@ -174,6 +185,8 @@ void autonomous()
 
 			robot.set_both_sides(vect[1], vect[0]);
 			UPDATE_COORDS();
+
+			pros::lcd::print(0, "%f,%f", vect[1], vect[0]);
 			pros::delay(AUTON_LOOP_DELAY);
 		} while (maping.is_running());
 
@@ -182,6 +195,7 @@ void autonomous()
 
 		robot.x = 0;
 		robot.y = 0;
+		robot.theta = 0;
 		maping.reset_all();
 	}
 }
@@ -189,7 +203,7 @@ void autonomous()
 // Runs the operator control code.
 void opcontrol()
 {
-	autonomous(); // disable this during comp...
+	//autonomous(); // disable this during comp...
 	items.stop();
 	// Driver Code:
 	auto beg = std::chrono::high_resolution_clock::now();
@@ -208,13 +222,13 @@ void opcontrol()
 		);
 		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1), beg);
 		robot.set_cata(items.master->get_digital(DIGITAL_Y));
-		robot.set_blocker(items.master->get_digital(DIGITAL_X));
+		robot.set_blocker(items.master->get_digital_new_press(DIGITAL_B));
 
-		// pros::lcd::print(0, "%f", robot.theta);
-		// pros::lcd::print(1, "%f", robot.x);
-		// pros::lcd::print(2, "%f", robot.y);
+		pros::lcd::print(0, "%f", robot.theta);
+		pros::lcd::print(1, "%f", robot.x);
+		pros::lcd::print(2, "%f", robot.y);
 
-		// UPDATE_COORDS();
+		UPDATE_COORDS();
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
 }
