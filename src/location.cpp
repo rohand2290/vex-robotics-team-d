@@ -82,6 +82,7 @@ double Location::I(double error, double& integral, Waypoint& goal, bool isturn) 
 	integral += error;
     double max = (isturn ? TURN_ERROR_MAX : POWER_ERROR_MAX);
 	double min = (isturn ? TURN_ERROR_MIN :POWER_ERROR_MIN);
+    if (ARE_SAME(error, 0)) integral = 0;
 	if (max < error || min > error) {
 		integral = 0;
 	}
@@ -128,7 +129,7 @@ static double modifier(double X) {
 }
 std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_line, CartesianLine& goal_line, bool turn) {
     
-    if (!turn) {
+    if (goal.command == "move") {
         // distance PID:
         double error_x = goal_line.x - robot->x;
         double error_y = goal_line.y - robot->y;
@@ -141,25 +142,26 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         error = c * sqrt(error_x*error_x + error_y*error_y);
 
         double power = pid(error, integral, prev_error, goal, false);
-        if (ARE_SAME(error, 0)) integral = 0;
 
         std::vector<double> v = {power, power};
         if (error < MIN_ALLOWED_ERROR) timer++;
         return v;
 
-    } else {
+    } else if (goal.command == "turn") {
         // turn PID:
         error_l = angleDifference(robot->theta, goal.param1);
         pros::lcd::print(1, "%f", error_l);
 
         double turn = pid(error_l, integral_l, prev_error_l, goal, true);
-        if (ARE_SAME(error_l, 0)) integral_l = 0;
     
         std::vector<double> v = {-turn, turn};
 
         if (ABS(error_l) < MIN_ALLOWED_ERROR_DEG) timer++;
 
         return v;
+    } else if (goal.command == "curve") { //// @TODO
+        // curve PID: (first val is mag, second is ending theta)
+        
     }
     
     /*
@@ -222,13 +224,13 @@ void IMULocation::compute() {
     pros::c::imu_accel_s_t raw_val = items.imu->get_accel();
     // accelerometer vals...
     VectorXD<2> acc(raw_val.y, raw_val.x);
+    acc.setIndex(0, filtx->compute(acc.getIndex(0)));
+    acc.setIndex(1, filty->compute(acc.getIndex(1)));
+
     acc.rotate(-robot.theta);
     // double integration...
     prev_vel = prev_vel.add_by_vect(acc);
     prev_dis = prev_dis.add_by_vect(prev_vel).mult(G);
-    // filtering...
-    // prev_dis.setIndex(0, filtx->compute(prev_dis.getIndex(0)));
-    // prev_dis.setIndex(1, filty->compute(prev_dis.getIndex(1)));
 }
 
 double IMULocation::getX() {

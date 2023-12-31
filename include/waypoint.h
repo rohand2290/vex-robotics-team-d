@@ -7,6 +7,7 @@ struct Waypoint {
     std::string command = "";
     double param1 = 0;
     double param2 = 0;
+    double param3 = 0;
 
     /// @brief Executes a command for the bot to follow during the waypoint
     /// @param robot Robot instance

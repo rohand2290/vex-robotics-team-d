@@ -11,6 +11,26 @@ double Robot::get_cata_position() {
     return ((int)items.encoder_cata->get_position()) / 100.0;
 }
 
+void Robot::set_coast() {
+    items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
+    items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+}
+
+void Robot::set_hold() {
+    items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
+    items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+}
+
 double Robot::get_abs_angle(bool rad) {
     // logic: arc-length = WHEEL_C
     //      : radius = perpendicular sensor - point of pivoting

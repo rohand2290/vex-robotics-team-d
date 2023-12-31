@@ -5,44 +5,7 @@
 #define UPDATE_COORDS() {\
 			std::vector<double> vect = maping.update(); }
 
-/*
-// const std::vector<Waypoint> spawn1 = {
-// 	{27, 32.17},
-// 	{42, 0},
-// 	{0, 26.2, "WINGS"},
-// 	{35, 0},
-// 	{0, 27},
-// 	{16.97, 16.97},
-// 	{24, 0, "INTAKE"},
-// 	{52, 0, "MATCH_LOAD"},
-// 	{0, 30},
-// 	{28.99, 28.99},
-// 	{24, 0},
-// };
-
-// const std::vector<Waypoint> spawn2 = { // TODO
-// 	{27, 32.17},
-// 	{42, 0},
-// 	{0, 26.2, "WINGS"},
-// 	{35, 0},
-// 	{0, 27},
-// 	{16.97, 16.97},
-// 	{24, 0, "INTAKE"},
-// 	{52, 0, "MATCH_LOAD"},
-// 	{0, 30},
-// 	{28.99, 28.99},
-// 	{24, 0},
-// };
-*/
-
 std::vector<Waypoint> spawn1 = {
-	// {4434.333, 3444},
-	// {2091.6, -1383.3},
-	// {1932, 974},
-	// {1337, 1213.333},
-	// {1420.333, -1073.0},
-	// {1483, 1166.0},
-	// {0, 57.5}
 	{"move", 48},
 	{"turn", 180},
 	{"move", 48},
@@ -71,13 +34,7 @@ void competition_initialize() {}
 // Testers...
 inline static void sudo_value_retriever() {
 
-	items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-    items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-    items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-
-    items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-    items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-    items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+	robot.set_coast();
 
 	pros::lcd::clear();
 	items.master->clear();
@@ -135,30 +92,6 @@ inline static void sudo_value_retriever() {
 }
 
 // Runs the user autonomous code.
-static double toTheta(double x, double y, Robot* robot) {
-    if (x == 0) x = 0.000001;
-    double ret = atan(y/x);
-    ret = robot->radians_to_degrees(ret);
-    if (x>=0 && y>=0) {
-        return ret;
-    }
-    if (x>=0 && y<0) {
-        return 360 + ret;
-    }
-    if (x < 0 && y >= 0) {
-        return 180 + ret;
-    }
-    return 180 + ret;
-}
-// experimental...
-static std::vector<Waypoint> gen_plan(double turn, double dis, int sm) {
-	std::vector<Waypoint> tor;
-	tor.push_back({""});
-	if (sm < 1) sm = 1;
-	for (int i = 0; i < sm - 1; ++i) {
-		
-	}
-}
 void autonomous()
 {
 	pros::lcd::clear();
@@ -179,14 +112,15 @@ void autonomous()
 
 		do {
 			std::vector<double> vect;
-			if (current_goal.command == "move") vect = maping.updatePID(current_goal, robot_line, goal_line);
-			else if (current_goal.command == "turn") vect = maping.updatePID(current_goal, robot_line, goal_line, true);
+			if (
+				current_goal.command == "move" ||
+				current_goal.command == "turn" ||
+				current_goal.command == "curve"
+			) vect = maping.updatePID(current_goal, robot_line, goal_line);
 			else break;
 
 			robot.set_both_sides(vect[1], vect[0]);
 			UPDATE_COORDS();
-
-			pros::lcd::print(0, "%f,%f", vect[1], vect[0]);
 			pros::delay(AUTON_LOOP_DELAY);
 		} while (maping.is_running());
 
