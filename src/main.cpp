@@ -224,11 +224,12 @@ void opcontrol()
 		robot.set_cata(items.master->get_digital(DIGITAL_Y));
 		robot.set_blocker(items.master->get_digital_new_press(DIGITAL_B));
 
-		pros::lcd::print(0, "%f", robot.theta);
-		pros::lcd::print(1, "%f", robot.x);
-		pros::lcd::print(2, "%f", robot.y);
+		// pros::lcd::print(0, "%f", robot.theta);
+		// pros::lcd::print(1, "%f", robot.x);
+		// pros::lcd::print(2, "%f", robot.y);
 
-		UPDATE_COORDS();
+		// UPDATE_COORDS();
+
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
 }

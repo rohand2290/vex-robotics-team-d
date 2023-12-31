@@ -5,6 +5,7 @@
 
 class Robot {
 private:
+    int intake_state = 0;
 public:
     Items items;
     double x;
