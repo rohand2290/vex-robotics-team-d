@@ -55,12 +55,12 @@ void Robot::initialize(Items &i)
     items.imu->tare();
     items.imu->set_heading(0);
     items.cata->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-    items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.right3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 }
 
 Robot::~Robot() {}
@@ -93,8 +93,8 @@ void Robot::set_both_sides(int right, int left)
 
 void Robot::set_speed_chassis(int y, int x)
 {
-    int left = (y - (x * TURN_PERCENT)) * MOTOR_PERCENT;
-    int right = (y + (x * TURN_PERCENT)) * MOTOR_PERCENT;
+    int left = y - x;
+    int right = y + x;
     set_both_sides(right, left);
 }
 

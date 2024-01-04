@@ -6,9 +6,7 @@
 			std::vector<double> vect = maping.update(); }
 
 std::vector<Waypoint> spawn1 = {
-	{"move", 48},
-	{"turn", 180},
-	{"move", 48},
+	{"curve", 20, 45},
 };
 
 Items items;
@@ -33,7 +31,6 @@ void competition_initialize() {}
 
 // Testers...
 inline static void sudo_value_retriever() {
-
 	robot.set_coast();
 
 	pros::lcd::clear();
@@ -158,11 +155,8 @@ void opcontrol()
 		robot.set_cata(items.master->get_digital(DIGITAL_Y));
 		robot.set_blocker(items.master->get_digital_new_press(DIGITAL_B));
 
-		// pros::lcd::print(0, "%f", robot.theta);
-		// pros::lcd::print(1, "%f", robot.x);
-		// pros::lcd::print(2, "%f", robot.y);
-
-		// UPDATE_COORDS();
+		pros::lcd::print(0, "p:%i t:%i", items.master->get_analog(ANALOG_LEFT_Y), items.master->get_analog(ANALOG_RIGHT_X));
+		pros::lcd::print(1, "i-f:%i i-o:%i", items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
 
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}

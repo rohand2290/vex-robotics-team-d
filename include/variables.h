@@ -61,13 +61,13 @@
 #define ANGLE_START 0 // bearing front
 // ============================ PID Constants: ======================
 // power:
-#define POWER_KP 5
-#define POWER_KI 1
-#define POWER_KD 3
+#define POWER_KP 0.75
+#define POWER_KI 0
+#define POWER_KD 1
 #define POWER_ERROR_MAX 99999999
 #define POWER_ERROR_MIN -99999999
 // turn:
-#define TURN_KP 1.2
+#define TURN_KP 0.18
 #define TURN_KI 0
 #define TURN_KD 1
 #define TURN_ERROR_MAX 99999999

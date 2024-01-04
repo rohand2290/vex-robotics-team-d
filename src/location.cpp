@@ -150,7 +150,6 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
     } else if (goal.command == "turn") {
         // turn PID:
         error_l = angleDifference(robot->theta, goal.param1);
-        pros::lcd::print(1, "%f", error_l);
 
         double turn = pid(error_l, integral_l, prev_error_l, goal, true);
     
@@ -161,11 +160,65 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         return v;
     } else if (goal.command == "curve") { //// @TODO
         // curve PID: (first val is mag, second is ending theta)
+        double x = sin(robot->degrees_to_radians(goal.param2)) * goal.param1;
+        double y = cos(robot->degrees_to_radians(goal.param2)) * goal.param1;
+        double t = robot->theta - robot->radians_to_degrees(atan(x / y));
         
+        CartesianCircle temp(0, 0, 0);
+        double arclen = (goal.param2 * PI * goal.param1) / (360.0 * sin(t / 2));
+        double radius = temp.compute_radius(x, y, t);
+        std::vector<Point2D> points = temp.find_intersections(x, y, radius);
+
+        // construct circles to follow:
+        CartesianCircle c(0, 0, 0);
+        {
+            // FIX:
+            CartesianCircle c1(points[0].x, points[0].y, radius);
+            CartesianCircle c2(points[1].x, points[1].y, radius);
+            TERMINATE();
+            if (
+                ABS(standrad_to_bearing(normalize(c1.derivative_at(0))) - robot->theta) >
+                ABS(standrad_to_bearing(normalize(c2.derivative_at(0))) - robot->theta)
+            ) c = c2;
+            else c = c1;
+        }        
+    
+        // align bot at init:
+        double init_angle = c.derivative_at(0);
+        long ti = 0;
+        while (ti < MIN_ALLOWED_ERROR_TIME) {
+            // turn PID:
+            error_l = angleDifference(robot->theta, init_angle);
+            double turn = pid(error_l, integral_l, prev_error_l, goal, true);
+            pros::lcd::print(1, "%f", turn);
+            std::vector<double> v = {-turn, turn};
+            if (ABS(error_l) < MIN_ALLOWED_ERROR_DEG) ti++;
+        }
+        // start follwing path:
+        ti = 0;
+        pros::lcd::print(1, "DONE!");
+        TERMINATE();
+        while (ti < MIN_ALLOWED_ERROR_TIME) {
+            double error_x = goal_line.x - robot->x;
+            double error_y = goal_line.y - robot->y;
+            robot_line.slope = tan(robot->degrees_to_radians(robot->theta));
+            goal_line.slope = robot_line.get_perp(robot_line.get_slope());
+            int ci = 1;
+            if (error_y < 0) ci = -1;
+            error = ci * sqrt(error_x*error_x + error_y*error_y);
+            double power = pid(error, integral, prev_error, goal, false);
+
+            error_l = angleDifference(robot->theta, c.derivative_at(robot->x));
+            double turn = pid(error_l, integral_l, prev_error_l, goal, true);
+
+            std::vector<double> v = {power - turn, power + turn};
+            robot->set_both_sides(v[1], v[0]);
+
+            if (error < MIN_ALLOWED_ERROR) ti++;
+        }
     }
     
     /*
-    // // TODO:
     // double error_x = goal.right - robot->x;
     // double error_y = goal.left - robot->y;
 
