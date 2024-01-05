@@ -81,6 +81,7 @@ void Robot::set_left_side(int analog)
 
 void Robot::set_both_sides(int right, int left)
 {
+#ifdef DRIVE_VOLTAGE
     right *= 120000 / 127;
     left *= 120000 / 127;
     items.right1->move_voltage(right);
@@ -89,6 +90,14 @@ void Robot::set_both_sides(int right, int left)
     items.right2->move_voltage(right);
     items.right3->move_voltage(right);
     items.left3->move_voltage(left);
+#else
+    items.right1->move(right);
+    items.left1->move(left);
+    items.left2->move(left);
+    items.right2->move(right);
+    items.right3->move(right);
+    items.left3->move(left);
+#endif
 }
 
 void Robot::set_speed_chassis(int y, int x)
@@ -137,9 +146,9 @@ void Robot::set_intake(int analog1, int analog2, int pist)
 void Robot::set_cata(int analog) {
     if (!analog) {
         // P Stuff:
-        double power = CATA_KP * (CATA_REST - get_cata_position());
-        items.cata->move(ABS(power));
-        // items.cata->move(0);
+        // double power = CATA_KP * (CATA_REST - get_cata_position());
+        // items.cata->move(ABS(power));
+        items.cata->move(0);
     } else {
         items.cata->move(255);
     }

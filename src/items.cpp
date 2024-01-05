@@ -13,7 +13,7 @@ void Items::initialize()  {
     right3 = new pros::Motor (RIGHT_WHEELS_PORT_3, pros::E_MOTOR_GEAR_600);
     intake_left = new pros::Motor (INTAKE_PORT_LEFT);
     intake_right = new pros::Motor (INTAKE_PORT_RIGHT, true);
-    cata = new pros::Motor(CATA_PORT, true);
+    cata = new pros::Motor(CATA_PORT, pros::E_MOTOR_GEAR_100, true);
     wings = new pros::ADIDigitalOut (WINGS_PORT);
     lift1 = new pros::ADIDigitalOut (LIFT_1_PORT);
     lift2 = new pros::ADIDigitalOut (LIFT_2_PORT);

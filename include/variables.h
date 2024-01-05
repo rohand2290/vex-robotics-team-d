@@ -44,8 +44,7 @@
 
 // Motor speeds:
 #define FLYWHEEL_SPEED 255 // the turret speed
-#define MOTOR_PERCENT 1 // percentage (0-1) for max power to be used (0.75 means the maximum ever reached will be 75%)
-#define TURN_PERCENT 1 // percentage (0-1) for max turn sensibility.
+//#define DRIVE_VOLTAGE // enables driving by voltage (analog if uncommented)
 
 // ============== Auton: ================
 // trackion wheels:
@@ -73,7 +72,7 @@
 #define TURN_ERROR_MAX 99999999
 #define TURN_ERROR_MIN -99999999
 // cata:
-#define CATA_KP 1.9
+#define CATA_KP 6
 // ======================= ODOM: ========================
 #define ERROR_MEASUREMENT 0.05
 
@@ -88,7 +87,7 @@
 // If it is too large, it might decrease sensitivity and increase lag.
 // this can also be used to change smoothness if smooth drive is enabled.
 // If it is too little, it might starve the proccessor from energy with too much load.
-#define OPCONTROL_LOOP_DELAY 20 // ms
+#define OPCONTROL_LOOP_DELAY 5 // ms
 #define AUTON_LOOP_DELAY 5 // ms
 #define PI 3.141592653589793
 #define ROBOT_WIDTH 3.54331 // in
