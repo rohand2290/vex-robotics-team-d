@@ -134,8 +134,8 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         double error_x = goal_line.x - robot->x;
         double error_y = goal_line.y - robot->y;
 
-        robot_line.slope = tan(robot->degrees_to_radians(robot->theta));
-        goal_line.slope = robot_line.get_perp(robot_line.get_slope());
+        // robot_line.slope = tan(robot->degrees_to_radians(robot->theta));
+        // goal_line.slope = robot_line.get_perp(robot_line.get_slope());
 
         int c = 1;
         if (error_y < 0) c = -1;

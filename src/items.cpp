@@ -4,6 +4,7 @@
 void Items::initialize()  {
     wing_pos = false;
     intake_pos = false;
+    autonmous = true;
     master = new pros::Controller(pros::E_CONTROLLER_MASTER);
     left1  = new pros::Motor (LEFT_WHEELS_PORT_1, pros::E_MOTOR_GEAR_600, true);
     left2  = new pros::Motor (LEFT_WHEELS_PORT_2, pros::E_MOTOR_GEAR_600, true);

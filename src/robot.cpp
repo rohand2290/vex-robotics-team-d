@@ -81,23 +81,25 @@ void Robot::set_left_side(int analog)
 
 void Robot::set_both_sides(int right, int left)
 {
-#ifdef DRIVE_VOLTAGE
-    right *= 120000 / 127;
-    left *= 120000 / 127;
-    items.right1->move_voltage(right);
-    items.left1->move_voltage(left);
-    items.left2->move_voltage(left);
-    items.right2->move_voltage(right);
-    items.right3->move_voltage(right);
-    items.left3->move_voltage(left);
-#else
-    items.right1->move(right);
-    items.left1->move(left);
-    items.left2->move(left);
-    items.right2->move(right);
-    items.right3->move(right);
-    items.left3->move(left);
-#endif
+    if (items.autonmous) {
+        // sensitive for auton:
+        right *= 120000 / 127;
+        left *= 120000 / 127;
+        items.right1->move_voltage(right);
+        items.left1->move_voltage(left);
+        items.left2->move_voltage(left);
+        items.right2->move_voltage(right);
+        items.right3->move_voltage(right);
+        items.left3->move_voltage(left);
+    } else {
+        // smooth for drive:
+        items.right1->move(right);
+        items.left1->move(left);
+        items.left2->move(left);
+        items.right2->move(right);
+        items.right3->move(right);
+        items.left3->move(left);
+    }
 }
 
 void Robot::set_speed_chassis(int y, int x)
@@ -134,13 +136,6 @@ void Robot::set_intake(int analog1, int analog2, int pist)
             intake_state = 0;
         }
     }
-    // if (analog1) {
-    //     set_in(-255, items);
-    // } else if (analog2) {
-    //     set_in(255, items);
-    // } else {
-    //     set_in(0, items);
-    // }
 }
 
 void Robot::set_cata(int analog) {
@@ -154,7 +149,7 @@ void Robot::set_cata(int analog) {
     }
 }
 
-void Robot::set_wings(int stick, std::chrono::_V2::system_clock::time_point time)
+void Robot::set_wings(int stick)
 {
     // auto now = std::chrono::high_resolution_clock::now();
     // if (items.intake_pos && stick) {

@@ -55,7 +55,7 @@ public:
     void set_intake(int analog1, int analog2, int pist);
     /// @brief Set the wings in sticky format.
     /// @param stick input button
-    void set_wings(int stick, std::chrono::_V2::system_clock::time_point time);
+    void set_wings(int stick);
     /// @brief Set the catapult...
     /// @param analog input button
     void set_cata(int analog);

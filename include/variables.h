@@ -38,13 +38,8 @@
 
 // ======== PREFERENCES: =========
 
-// Driving style:
-// uncomment the following line if smooth drive is not desired...
-// #define SMOOTH_CONSTANT 20 // This constant effects the smoothness of the transition, the larger the less smooth.
-
 // Motor speeds:
 #define FLYWHEEL_SPEED 255 // the turret speed
-//#define DRIVE_VOLTAGE // enables driving by voltage (analog if uncommented)
 
 // ============== Auton: ================
 // trackion wheels:

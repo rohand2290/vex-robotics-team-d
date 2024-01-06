@@ -9,6 +9,7 @@ struct Items {
 public:
     int wing_pos;
     int intake_pos;
+    int autonmous;
     pros::Controller* master;
     pros::Motor* left1; // front
     pros::Motor* left2; // middle

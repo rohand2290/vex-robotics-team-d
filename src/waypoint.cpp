@@ -37,6 +37,7 @@ bool Path::goal_reached(Waypoint& goal, double x, double y) {
 }
 
 void Waypoint::execute_aux_command(Robot& robot) {
+    if (command == "move" || command == "turn" || command == "curve") return;
     if (command == "stop") {
         robot.items.intake_left->brake();
         robot.items.intake_right->brake();
