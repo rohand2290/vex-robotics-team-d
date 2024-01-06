@@ -72,7 +72,7 @@
 #define TURN_ERROR_MAX 99999999
 #define TURN_ERROR_MIN -99999999
 // cata:
-#define CATA_KP 6
+#define CATA_KP 0.5
 // ======================= ODOM: ========================
 #define ERROR_MEASUREMENT 0.05
 
