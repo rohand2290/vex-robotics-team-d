@@ -83,6 +83,9 @@ public:
     /// @param r radius of circle...
     /// @return vector of Point2D that intersect both circles.
     std::vector<Point2D> find_intersections(double x, double y, double r);
+    /// @brief equal operator
+    /// @param c one to set equal to
+    void operator=(CartesianCircle& c);
 };
 
 #endif // CARTLINE_H

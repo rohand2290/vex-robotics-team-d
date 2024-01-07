@@ -58,6 +58,7 @@ private:
     double integral_l = 0;
     // PID timer:
     int timer = 0;
+    int abs_timer = 0;
 public:
     /// @brief Non-default constructor of Location
     /// @param r Robot instance

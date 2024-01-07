@@ -43,8 +43,9 @@
 
 // ============== Auton: ================
 // trackion wheels:
-#define WHEEL_C 2.75 * PI // wheel circumference
+#define WHEEL_C 8.63937979737 // wheel circumference
 #define TICKS_PER_REVOLUTION 300
+#define APPROACH_SPEED 550
 // find difference from pivot point (point that doesnt move during rotation) and center odom.
 #define PIVOT_P_TO_PERP_ODOM 0.56 // in
 // encoder ports:
@@ -56,8 +57,8 @@
 // ============================ PID Constants: ======================
 // power:
 #define POWER_KP 0.75
-#define POWER_KI 0
-#define POWER_KD 1
+#define POWER_KI 1
+#define POWER_KD 1.2
 #define POWER_ERROR_MAX 99999999
 #define POWER_ERROR_MIN -99999999
 // turn:
@@ -72,9 +73,10 @@
 #define ERROR_MEASUREMENT 0.05
 
 // maximum allowed error:
-#define MIN_ALLOWED_ERROR 1
-#define MIN_ALLOWED_ERROR_DEG 5
-#define MIN_ALLOWED_ERROR_TIME 50
+#define MIN_ALLOWED_ERROR 1.7
+#define MIN_ALLOWED_ERROR_DEG 10
+#define MIN_ALLOWED_ERROR_TIME 70
+#define MIN_ALLOWED_ERROR_TIMEOUT 500
 
 // ======= Miscelanious: =========
 

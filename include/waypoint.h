@@ -11,7 +11,7 @@ struct Waypoint {
 
     /// @brief Executes a command for the bot to follow during the waypoint
     /// @param robot Robot instance
-    void execute_aux_command(Robot& robot);
+    void execute_aux_command(Robot* robot);
 };
 
 class Path {

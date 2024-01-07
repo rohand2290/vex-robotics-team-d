@@ -3,8 +3,21 @@
 #include "tests.h"
 
 std::vector<Waypoint> spawn1 = {
-	{"move", 48},
-	{"move", -48},
+	{"move", 7},
+	{"wings"},
+	{"turn", 315},
+	{"wings"},
+	{"turn", 60},
+	{"move", 26},
+	{"move", -26.5},
+	{"turn", 300},
+	{"move", -47},
+};
+
+std::vector<Waypoint> skills = {
+	{"turn", 315},
+	{"move", 7},
+	{"spamcata"},
 };
 
 Items items;
@@ -24,20 +37,22 @@ void initialize()
 // Runs while the robot is in the disabled state
 void disabled() { items.stop(); }
 // Runs after initialize(), and before autonomous when connected to the Field Management System or the VEX Competition Switch.
-void competition_initialize() {}
+void competition_initialize() {
+	robot.initialize(items);
+}
 
 // Runs the user autonomous code.
 void autonomous()
 {
 	items.autonmous = true;
 	pros::lcd::clear();
-
-	items.master->print(0, 0, "GO!");
+	int count = 0;
 	for (Waypoint current_goal : spawn1) {
 
-		current_goal.execute_aux_command(robot);
-		CartesianLine robot_line(0, 0, 0);
-		CartesianLine goal_line(0, 0, 0);
+		current_goal.execute_aux_command(&robot);
+
+		CartesianLine robot_line(0, robot.x, robot.y);
+		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
 
 		do {
 			std::vector<double> vect;
@@ -49,11 +64,15 @@ void autonomous()
 			else break;
 
 			robot.set_both_sides(vect[1], vect[0]);
+			pros::lcd::print(0, "%f,%f", goal_line.x, goal_line.y);
+			pros::lcd::print(1, "%i, %i", vect[1], vect[0]);
 			maping.update();
 			pros::delay(AUTON_LOOP_DELAY);
 		} while (maping.is_running());
 
-		items.stop();
+		robot.set_both_sides(0, 0);
+
+		items.master->print(0, 0, "%i", count++);
 
 		robot.x = 0;
 		robot.y = 0;
@@ -68,6 +87,7 @@ void opcontrol()
 	//autonomous(); // disable this during comp...
 	items.autonmous = false;
 	items.stop();
+	items.master->print(0, 0, "LOL");
 	// Driver Code:
 	while (true)
 	{

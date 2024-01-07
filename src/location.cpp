@@ -5,14 +5,14 @@ double Location::right_abs_dist()
 { // in terms of inches
     Items& items = robot->items;
     double normal = items.right1->get_position() + items.right2->get_position() + items.right3->get_position();
-    return normal / 3;
+    return (normal / 3); // * WHEEL_C;
 }
 
 double Location::left_abs_dist()
 { // in terms of inches
     Items& items = robot->items;
     double normal = items.left1->get_position() + items.left2->get_position() + items.left3->get_position();
-    return normal / 3;
+    return (normal / 3); // * WHEEL_C;
 }
 
 double Location::normalize(double deg) {
@@ -114,7 +114,7 @@ static double toTheta(double x, double y, Robot* robot) {
     return 180 + ret;
 }
 
-static double angleDifference(double start, double end) {
+static double angleDifference(double start, double end, double goal) {
     double red = (end-start);
     if (red >= 180) {
         return red - 360;
@@ -123,16 +123,39 @@ static double angleDifference(double start, double end) {
 }
 
 // look at its code to figure out what it does...
-static double modifier(double X) {
-    if (X > 180) return X - 360;
-    return X;
+static double absolute(double X) {
+    if (X < 0) return -X;
+    else return X;
 }
+// static void move_rel(double r, double l, Items& items) {
+//     double left = l / WHEEL_C, right = r / WHEEL_C;
+//     items.left1->move_relative(l, APPROACH_SPEED);
+//     items.left2->move_relative(l, APPROACH_SPEED);
+//     items.left3->move_relative(l, APPROACH_SPEED);
+//     items.right1->move_relative(l, APPROACH_SPEED);
+//     items.right2->move_relative(l, APPROACH_SPEED);
+//     items.right3->move_relative(l, APPROACH_SPEED);
+//     while (
+//         !((items.left1->get_position() < l + MIN_ALLOWED_ERROR) && (items.left1->get_position() > l - MIN_ALLOWED_ERROR)) &&
+//         !((items.left2->get_position() < l + MIN_ALLOWED_ERROR) && (items.left2->get_position() > l - MIN_ALLOWED_ERROR)) &&
+//         !((items.left3->get_position() < l + MIN_ALLOWED_ERROR) && (items.left3->get_position() > l - MIN_ALLOWED_ERROR)) &&
+//         !((items.right1->get_position() < l + MIN_ALLOWED_ERROR) && (items.right1->get_position() > l - MIN_ALLOWED_ERROR)) &&
+//         !((items.right2->get_position() < l + MIN_ALLOWED_ERROR) && (items.right2->get_position() > l - MIN_ALLOWED_ERROR)) &&
+//         !((items.right3->get_position() < l + MIN_ALLOWED_ERROR) && (items.right3->get_position() > l - MIN_ALLOWED_ERROR)) 
+//     ) {
+//         pros::delay(2);
+//     }
+// }
 std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_line, CartesianLine& goal_line, bool turn) {
     
     if (goal.command == "move") {
         // distance PID:
+
+        int dir = 1;
+        if (goal.param1 < 0) dir = -1;
+
         double error_x = goal_line.x - robot->x;
-        double error_y = goal_line.y - robot->y;
+        double error_y = dir * (goal_line.y - robot->y);
 
         // robot_line.slope = tan(robot->degrees_to_radians(robot->theta));
         // goal_line.slope = robot_line.get_perp(robot_line.get_slope());
@@ -143,19 +166,17 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
 
         double power = pid(error, integral, prev_error, goal, false);
 
-        std::vector<double> v = {power, power};
-        if (error < MIN_ALLOWED_ERROR) timer++;
+        std::vector<double> v = {dir * power, dir * power};
+        if (absolute(error) < MIN_ALLOWED_ERROR) timer++;
         return v;
 
     } else if (goal.command == "turn") {
         // turn PID:
-        error_l = angleDifference(robot->theta, goal.param1);
+        error_l = goal.param1 - robot->items.imu->get_rotation();
 
         double turn = pid(error_l, integral_l, prev_error_l, goal, true);
-    
         std::vector<double> v = {-turn, turn};
-
-        if (ABS(error_l) < MIN_ALLOWED_ERROR_DEG) timer++;
+        if (abs(error_l) < MIN_ALLOWED_ERROR_DEG) timer++;
 
         return v;
     } else if (goal.command == "curve") { //// @TODO
@@ -188,7 +209,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         long ti = 0;
         while (ti < MIN_ALLOWED_ERROR_TIME) {
             // turn PID:
-            error_l = angleDifference(robot->theta, init_angle);
+            error_l = angleDifference(robot->theta, init_angle, goal.param1);
             double turn = pid(error_l, integral_l, prev_error_l, goal, true);
             pros::lcd::print(1, "%f", turn);
             std::vector<double> v = {-turn, turn};
@@ -208,7 +229,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
             error = ci * sqrt(error_x*error_x + error_y*error_y);
             double power = pid(error, integral, prev_error, goal, false);
 
-            error_l = angleDifference(robot->theta, c.derivative_at(robot->x));
+            error_l = angleDifference(robot->theta, c.derivative_at(robot->x), goal.param2);
             double turn = pid(error_l, integral_l, prev_error_l, goal, true);
 
             std::vector<double> v = {power - turn, power + turn};
@@ -218,6 +239,8 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         }
     }
     
+    abs_timer++;
+
     /*
     // double error_x = goal.right - robot->x;
     // double error_y = goal.left - robot->y;
@@ -254,11 +277,19 @@ void Location::reset_all()
 	robot->items.right1->tare_position();
     robot->items.left3->tare_position();
 	robot->items.right3->tare_position();
+    robot->items.imu->tare_rotation();
     robot->items.imu->tare_heading();
     timer = 0;
+    error = 0;
+    prev_error = 0;
+    integral = 0;
+    error_l = 0;
+    prev_error_l = 0;
+    integral_l = 0;
 }
 
 bool Location::is_running() {
+    if (abs_timer >= MIN_ALLOWED_ERROR_TIMEOUT) return false;
     return timer <= MIN_ALLOWED_ERROR_TIME;
 }
 

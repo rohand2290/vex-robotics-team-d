@@ -89,3 +89,9 @@ std::vector<Point2D> CartesianCircle::find_intersections(double x, double y, dou
     }
     return res;
 }
+
+void CartesianCircle::operator=(CartesianCircle& c) {
+    h = c.h;
+    k = c.k;
+    r = c.r;
+}

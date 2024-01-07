@@ -51,9 +51,6 @@ void Robot::initialize(Items &i)
     items.encoder_right->reset_position();
     items.encoder_center->reset_position();
     items.encoder_cata->reset_position();
-    items.imu->reset(true);
-    items.imu->tare();
-    items.imu->set_heading(0);
     items.cata->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     items.right1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     items.right2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -61,6 +58,15 @@ void Robot::initialize(Items &i)
     items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    items.left1->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+    items.left2->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+    items.left3->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+    items.right1->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+    items.right2->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+    items.right3->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+    items.imu->reset(true);
+    items.imu->tare();
+    items.imu->set_heading(0);
 }
 
 Robot::~Robot() {}
