@@ -42,6 +42,9 @@
 #define FLYWHEEL_SPEED 255 // the turret speed
 
 // ============== Auton: ================
+// gamemode:
+//#define SKILLS // uncomment if not using skills
+#define RIGHT_SIDE
 // trackion wheels:
 #define WHEEL_C 8.63937979737 // wheel circumference
 #define TICKS_PER_REVOLUTION 300
@@ -63,7 +66,7 @@
 #define POWER_ERROR_MIN -99999999
 // turn:
 #define TURN_KP 0.18
-#define TURN_KI 0
+#define TURN_KI 0.5
 #define TURN_KD 1
 #define TURN_ERROR_MAX 99999999
 #define TURN_ERROR_MIN -99999999
@@ -73,10 +76,10 @@
 #define ERROR_MEASUREMENT 0.05
 
 // maximum allowed error:
-#define MIN_ALLOWED_ERROR 1.7
+#define MIN_ALLOWED_ERROR 0.7
 #define MIN_ALLOWED_ERROR_DEG 10
-#define MIN_ALLOWED_ERROR_TIME 70
-#define MIN_ALLOWED_ERROR_TIMEOUT 500
+#define MIN_ALLOWED_ERROR_TIME 35
+#define MIN_ALLOWED_ERROR_TIMEOUT 200
 
 // ======= Miscelanious: =========
 

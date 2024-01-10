@@ -32,13 +32,10 @@ void Robot::set_hold() {
 }
 
 double Robot::get_abs_angle(bool rad) {
-    // logic: arc-length = WHEEL_C
-    //      : radius = perpendicular sensor - point of pivoting
-    //      : theta / arc-length = 2 * pi / 2 * pi * radius
-    //      => theta =  arc-length / radius RADIANS
-    // double mag = (center_abs_dist());
-    // double theta = mag / PIVOT_P_TO_PERP_ODOM;
-    return rad ? degrees_to_radians(items.imu->get_heading()) : items.imu->get_heading();
+    double a = items.imu->get_heading();
+    while (x >= 360) a -= 360;
+    while (x < 0) a += 360;
+    return rad ? degrees_to_radians(a) : a;
 }
 
 void Robot::initialize(Items &i)
@@ -190,4 +187,22 @@ double Robot::radians_to_degrees(double radians)
 double Robot::degrees_to_radians(double degrees)
 {
     return (degrees * PI) / 180;
+}
+
+void Robot::brake() {
+    set_hold();
+    items.right1->brake();
+    items.right2->brake();
+    items.right3->brake();
+    items.left1->brake();
+    items.left2->brake();
+    items.left3->brake();
+    double in;
+    do {
+        in = sqrt(
+            items.imu->get_accel().z*items.imu->get_accel().z + 
+            items.imu->get_accel().y*items.imu->get_accel().y
+        );
+    } while (abs(in) < 0.0001);
+    set_coast();
 }

@@ -17,6 +17,7 @@
 
 #include "cartline.h"
 #include "vectorxd.h"
+#include "autons.h"
 #include "items.h"
 #include "robot.h"
 #include "waypoint.h"

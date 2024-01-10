@@ -1,23 +1,68 @@
 #include "main.h"
 #include "depend.h"
 #include "tests.h"
+using namespace std::chrono;
 
 std::vector<Waypoint> spawn1 = {
-	{"move", 7},
+#ifndef RIGHT_SIDE
+	//WINPOINT LEFT:
+	{"move", 15},
 	{"wings"},
-	{"turn", 315},
+	{"wait", 500},
+	{"turn", 45},
 	{"wings"},
-	{"turn", 60},
-	{"move", 26},
+	{"move", 20},
+	{"turn", 20},
+	{"power", 127, 1000},
+	{"move", -15},
+	{"turn", 90},
+	{"move", 50},
 	{"move", -26.5},
-	{"turn", 300},
+	{"turn", -60},
 	{"move", -47},
+#else
+	// WINPOINT RIGHT:
+	{"move", 15},
+	{"wings"},
+	{"wait", 500},
+	{"turn", -45},
+	{"wings"},
+	{"move", 20},
+	{"turn", -20},
+	{"power", 127, 1000},
+	{"move", -15},
+	{"turn", -90},
+	{"move", 50},
+	{"move", -26.5},
+	{"turn", 60},
+	{"move", -47},
+#endif
+	// // 5 ball AUTON:
+	// {"in"},
+	// {"move", 60},
+	// {"turn", -45},
+	// {"move", -29},
+	// {"move", 2},
+	// {"turn", 180},
+	// {"out"},
+	// {"wait", 200},
+	// {"in"},
+	// {"turn", 135},
+	// {"move", 52},
+	// {"move", -52},
+	// {"turn", -135},
+	// {"move", 5},
+	// {"turn", -90},
+	// {"move", -53},
+	// {"turn", -135},
+	// {"wings"},
+	// {"move", -5},
+	// {"turn", -45},
+	// {"move", -12},
 };
 
 std::vector<Waypoint> skills = {
-	{"turn", 315},
-	{"move", 7},
-	{"spamcata"},
+	
 };
 
 Items items;
@@ -44,10 +89,51 @@ void competition_initialize() {
 // Runs the user autonomous code.
 void autonomous()
 {
+	
+#ifndef SKILLS
 	items.autonmous = true;
-	pros::lcd::clear();
+	pros::lcd::clear();	
 	int count = 0;
 	for (Waypoint current_goal : spawn1) {
+		pros::lcd::print(1, "%i", count++);
+
+		current_goal.execute_aux_command(&robot);
+
+		CartesianLine robot_line(0, robot.x, robot.y);
+		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
+
+		do {
+			std::vector<double> vect;
+			if (
+				current_goal.command == "move" ||
+				current_goal.command == "turn" ||
+				current_goal.command == "curve" ||
+				current_goal.command == "power"
+			) vect = maping.updatePID(current_goal, robot_line, goal_line);
+			else break;
+
+			robot.set_both_sides(vect[1], vect[0]);
+			maping.update();
+			pros::delay(AUTON_LOOP_DELAY);
+		} while (maping.is_running());
+
+		robot.set_both_sides(0, 0);
+
+		robot.x = 0;
+		robot.y = 0;
+		robot.theta = 0;
+		maping.reset_all();
+	}
+#else
+	robot.set_both_sides(1, 1);
+	pros::delay(100);
+	items.stop();
+	robot.items.cata->move_voltage(120000);
+	pros::delay(60000);
+	
+	pros::lcd::clear();
+	int count = 0;
+	for (Waypoint current_goal : skills) {
 
 		current_goal.execute_aux_command(&robot);
 
@@ -79,9 +165,20 @@ void autonomous()
 		robot.theta = 0;
 		maping.reset_all();
 	}
-}
+#endif
 
-// Runs the operator control code.
+	// robot.set_hold();
+	// robot.set_both_sides(127, 127);
+	// pros::delay(1000);
+	// items.stop();
+	// pros::delay(500);
+	// robot.set_both_sides(-127, -127);
+	// pros::delay(750);
+	// items.stop();
+	// pros::delay(1000);
+	// robot.set_coast();
+}
+// Runs the operator control code.`
 void opcontrol()
 {
 	//autonomous(); // disable this during comp...

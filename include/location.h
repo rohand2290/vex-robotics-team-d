@@ -59,6 +59,9 @@ private:
     // PID timer:
     int timer = 0;
     int abs_timer = 0;
+    // PID Class:
+    PID dis;
+    PID turn_casual;
 public:
     /// @brief Non-default constructor of Location
     /// @param r Robot instance

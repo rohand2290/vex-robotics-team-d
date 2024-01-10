@@ -70,6 +70,8 @@ public:
     /// @param degrees degrees as double
     /// @return radians as double
     double degrees_to_radians(double degrees);
+    /// @brief Brakes the robot untill all inertia is lost...
+    void brake();
 };
 
 #endif // ROBOT_H
