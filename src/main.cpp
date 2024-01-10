@@ -184,7 +184,7 @@ void opcontrol()
 	//autonomous(); // disable this during comp...
 	items.autonmous = false;
 	items.stop();
-	items.master->print(0, 0, "LOL");
+	items.master->print(0, 0, "Starting OPCONTROL");
 	// Driver Code:
 	while (true)
 	{
