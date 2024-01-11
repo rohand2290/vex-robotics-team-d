@@ -79,3 +79,12 @@ void Waypoint::execute_aux_command(Robot* robot) {
         }
     }
 }
+
+bool Waypoint::is_motion_command() {
+    return 
+        command == "move" ||
+		command == "turn" ||
+		command == "curve" ||
+		command == "power" ||
+        command == "swing";
+}

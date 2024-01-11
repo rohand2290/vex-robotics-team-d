@@ -48,6 +48,7 @@ void Location::initialize(Robot& r) {
     reset_all();
     dis.initialize(POWER_KP, POWER_KI, POWER_KD);
     turn_casual.initialize(TURN_KP, TURN_KI, TURN_KD);
+    swing.initialize(SWING_KP, SWING_KI, SWING_KD);
 }
 
 std::vector<double> Location::update() {
@@ -56,9 +57,11 @@ std::vector<double> Location::update() {
     rel_th = robot->get_abs_angle() - old_th;
     robot->theta = robot->get_abs_angle();
 
+    double time_factor = ((pros::millis() - start_iter) / 1000.0) * MECH_ADVANTAGE;
+    double mag = (rel_l + rel_r) / 2;
     std::vector<double> arr = {
-        ((rel_l + rel_r) / 2 * sin(robot->degrees_to_radians(robot->theta))), // conversion factor...
-        ((rel_l + rel_r) / 2 * cos(robot->degrees_to_radians(robot->theta))),
+        (mag * sin(robot->degrees_to_radians(robot->theta))) * time_factor,
+        (mag * cos(robot->degrees_to_radians(robot->theta))) * time_factor,
     };
 
     robot->x += arr[0];
@@ -90,11 +93,10 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         return v;
 
     } else if (goal.command == "turn") {
-        // turn PID:
-        error = angleDifference(robot->items.imu->get_rotation(), goal.param1);
+        error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
         double turn = turn_casual.update(error);
         std::vector<double> v = {-turn, turn};
-        if (abs(error_l) < MIN_ALLOWED_ERROR_DEG) timer++;
+        if (abs(error_turn_casual) < MIN_ALLOWED_ERROR_DEG) timer++;
 
         abs_timer++;
         return v;
@@ -103,63 +105,73 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         pros::delay(goal.param2);
         robot->items.stop();
     } else if (goal.command == "curve") { //// @TODO
-        // curve PID: (first val is mag, second is ending theta)
-        double x = sin(robot->degrees_to_radians(goal.param2)) * goal.param1;
-        double y = cos(robot->degrees_to_radians(goal.param2)) * goal.param1;
-        double t = robot->theta - robot->radians_to_degrees(atan(x / y));
+        // // curve PID: (first val is mag, second is ending theta)
+        // double x = sin(robot->degrees_to_radians(goal.param2)) * goal.param1;
+        // double y = cos(robot->degrees_to_radians(goal.param2)) * goal.param1;
+        // double t = robot->theta - robot->radians_to_degrees(atan(x / y));
         
-        CartesianCircle temp(0, 0, 0);
-        double arclen = (goal.param2 * PI * goal.param1) / (360.0 * sin(t / 2));
-        double radius = temp.compute_radius(x, y, t);
-        std::vector<Point2D> points = temp.find_intersections(x, y, radius);
+        // CartesianCircle temp(0, 0, 0);
+        // double arclen = (goal.param2 * PI * goal.param1) / (360.0 * sin(t / 2));
+        // double radius = temp.compute_radius(x, y, t);
+        // std::vector<Point2D> points = temp.find_intersections(x, y, radius);
 
-        // construct circles to follow:
-        CartesianCircle c(0, 0, 0);
-        {
-            // FIX:
-            CartesianCircle c1(points[0].x, points[0].y, radius);
-            CartesianCircle c2(points[1].x, points[1].y, radius);
-            TERMINATE();
-            if (
-                ABS(standrad_to_bearing(normalize(c1.derivative_at(0))) - robot->theta) >
-                ABS(standrad_to_bearing(normalize(c2.derivative_at(0))) - robot->theta)
-            ) c = c2;
-            else c = c1;
-        }        
+        // // construct circles to follow:
+        // CartesianCircle c(0, 0, 0);
+        // {
+        //     // FIX:
+        //     CartesianCircle c1(points[0].x, points[0].y, radius);
+        //     CartesianCircle c2(points[1].x, points[1].y, radius);
+        //     TERMINATE();
+        //     if (
+        //         ABS(standrad_to_bearing(normalize(c1.derivative_at(0))) - robot->theta) >
+        //         ABS(standrad_to_bearing(normalize(c2.derivative_at(0))) - robot->theta)
+        //     ) c = c2;
+        //     else c = c1;
+        // }        
     
-        // align bot at init:
-        double init_angle = c.derivative_at(0);
-        long ti = 0;
-        while (ti < MIN_ALLOWED_ERROR_TIME) {
-            // turn PID:
-            error_l = angleDifference(robot->theta, init_angle);
-            double turn = pid(error_l, integral_l, prev_error_l, goal, true);
-            pros::lcd::print(1, "%f", turn);
-            std::vector<double> v = {-turn, turn};
-            if (ABS(error_l) < MIN_ALLOWED_ERROR_DEG) ti++;
-        }
-        // start follwing path:
-        ti = 0;
-        pros::lcd::print(1, "DONE!");
-        TERMINATE();
-        while (ti < MIN_ALLOWED_ERROR_TIME) {
-            double error_x = goal_line.x - robot->x;
-            double error_y = goal_line.y - robot->y;
-            robot_line.slope = tan(robot->degrees_to_radians(robot->theta));
-            goal_line.slope = robot_line.get_perp(robot_line.get_slope());
-            int ci = 1;
-            if (error_y < 0) ci = -1;
-            error = ci * sqrt(error_x*error_x + error_y*error_y);
-            double power = pid(error, integral, prev_error, goal, false);
+        // // align bot at init:
+        // double init_angle = c.derivative_at(0);
+        // long ti = 0;
+        // while (ti < MIN_ALLOWED_ERROR_TIME) {
+        //     // turn PID:
+        //     error_l = angleDifference(robot->theta, init_angle);
+        //     double turn = pid(error_l, integral_l, prev_error_l, goal, true);
+        //     pros::lcd::print(1, "%f", turn);
+        //     std::vector<double> v = {-turn, turn};
+        //     if (ABS(error_l) < MIN_ALLOWED_ERROR_DEG) ti++;
+        // }
+        // // start follwing path:
+        // ti = 0;
+        // pros::lcd::print(1, "DONE!");
+        // TERMINATE();
+        // while (ti < MIN_ALLOWED_ERROR_TIME) {
+        //     double error_x = goal_line.x - robot->x;
+        //     double error_y = goal_line.y - robot->y;
+        //     robot_line.slope = tan(robot->degrees_to_radians(robot->theta));
+        //     goal_line.slope = robot_line.get_perp(robot_line.get_slope());
+        //     int ci = 1;
+        //     if (error_y < 0) ci = -1;
+        //     error = ci * sqrt(error_x*error_x + error_y*error_y);
+        //     double power = pid(error, integral, prev_error, goal, false);
 
-            error_l = angleDifference(robot->theta, c.derivative_at(robot->x));
-            double turn = pid(error_l, integral_l, prev_error_l, goal, true);
+        //     error_l = angleDifference(robot->theta, c.derivative_at(robot->x));
+        //     double turn = pid(error_l, integral_l, prev_error_l, goal, true);
 
-            std::vector<double> v = {power - turn, power + turn};
-            robot->set_both_sides(v[1], v[0]);
+        //     std::vector<double> v = {power - turn, power + turn};
+        //     robot->set_both_sides(v[1], v[0]);
 
-            if (error < MIN_ALLOWED_ERROR) ti++;
-        }
+        //     if (error < MIN_ALLOWED_ERROR) ti++;
+        // }
+    } else if (goal.command == "swing") {
+        error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
+        double turn = swing.update(error);
+        std::vector<double> v;
+        if (goal.param1 < 0) v = {0, turn};
+        else v = {turn, 0};
+
+        if (abs(error_turn_casual) < MIN_ALLOWED_ERROR_DEG) timer++;
+        abs_timer++;
+        return v;
     }
 }
 
@@ -173,18 +185,13 @@ void Location::reset_all()
 	robot->items.right3->tare_position();
     robot->items.imu->tare_rotation();
     robot->items.imu->tare_heading();
-    timer = 0;
-    abs_timer = 0;
-    error = 0;
-    prev_error = 0;
-    integral = 0;
-    error_l = 0;
-    prev_error_l = 0;
-    integral_l = 0;
+    dis.reset();
+    turn_casual.reset();
+    swing.reset();
 }
 
 bool Location::is_running() {
-    if (abs_timer >= MIN_ALLOWED_ERROR_TIMEOUT) return false;
+    // if (abs_timer >= MIN_ALLOWED_ERROR_TIMEOUT) return false;
     return timer <= MIN_ALLOWED_ERROR_TIME;
 }
 

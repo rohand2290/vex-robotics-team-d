@@ -6,6 +6,8 @@
 class Robot {
 private:
     int intake_state = 0;
+    double current_val = 0;
+    PID brake_pid;
 public:
     Items items;
     double x;

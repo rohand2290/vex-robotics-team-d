@@ -87,86 +87,39 @@ void competition_initialize() {
 }
 
 // Runs the user autonomous code.
-void autonomous()
-{
-	
-#ifndef SKILLS
+void autonomous() {
 	items.autonmous = true;
 	pros::lcd::clear();	
 	int count = 0;
+#ifndef SKILLS
 	for (Waypoint current_goal : spawn1) {
-		pros::lcd::print(1, "%i", count++);
-
-		current_goal.execute_aux_command(&robot);
-
-		CartesianLine robot_line(0, robot.x, robot.y);
-		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
-
-		do {
-			std::vector<double> vect;
-			if (
-				current_goal.command == "move" ||
-				current_goal.command == "turn" ||
-				current_goal.command == "curve" ||
-				current_goal.command == "power"
-			) vect = maping.updatePID(current_goal, robot_line, goal_line);
-			else break;
-
-			robot.set_both_sides(vect[1], vect[0]);
-			maping.update();
-			pros::delay(AUTON_LOOP_DELAY);
-		} while (maping.is_running());
-
-		robot.set_both_sides(0, 0);
-
-		robot.x = 0;
-		robot.y = 0;
-		robot.theta = 0;
-		maping.reset_all();
-	}
 #else
-	robot.set_both_sides(1, 1);
-	pros::delay(100);
-	items.stop();
-	robot.items.cata->move_voltage(120000);
-	pros::delay(60000);
-	
-	pros::lcd::clear();
-	int count = 0;
 	for (Waypoint current_goal : skills) {
-
+#endif
 		current_goal.execute_aux_command(&robot);
 
 		CartesianLine robot_line(0, robot.x, robot.y);
 		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
 
 		do {
+			maping.start_iter = pros::millis();
 			std::vector<double> vect;
-			if (
-				current_goal.command == "move" ||
-				current_goal.command == "turn" ||
-				current_goal.command == "curve"
-			) vect = maping.updatePID(current_goal, robot_line, goal_line);
+			if (current_goal.is_motion_command()) vect = maping.updatePID(current_goal, robot_line, goal_line);
 			else break;
 
 			robot.set_both_sides(vect[1], vect[0]);
-			pros::lcd::print(0, "%f,%f", goal_line.x, goal_line.y);
-			pros::lcd::print(1, "%i, %i", vect[1], vect[0]);
 			maping.update();
 			pros::delay(AUTON_LOOP_DELAY);
 		} while (maping.is_running());
 
 		robot.set_both_sides(0, 0);
 
-		items.master->print(0, 0, "%i", count++);
-
 		robot.x = 0;
 		robot.y = 0;
 		robot.theta = 0;
 		maping.reset_all();
 	}
-#endif
-
+	/*
 	// robot.set_hold();
 	// robot.set_both_sides(127, 127);
 	// pros::delay(1000);
@@ -177,6 +130,7 @@ void autonomous()
 	// items.stop();
 	// pros::delay(1000);
 	// robot.set_coast();
+	*/
 }
 // Runs the operator control code.`
 void opcontrol()

@@ -25,6 +25,8 @@ public:
     /// @param error error value from sensor
     /// @return PID computed power
     double update(double error);
+    /// @brief Resets the internal values... Constants are left same.
+    void reset();
 };
 
 

@@ -55,15 +55,16 @@ void Robot::initialize(Items &i)
     items.left1->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     items.left2->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     items.left3->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-    items.left1->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
-    items.left2->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
-    items.left3->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
-    items.right1->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
-    items.right2->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
-    items.right3->set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+    items.left1->set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    items.left2->set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    items.left3->set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    items.right1->set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    items.right2->set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    items.right3->set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
     items.imu->reset(true);
     items.imu->tare();
     items.imu->set_heading(0);
+    brake_pid.initialize(BREAK_KP, 0, 0);
 }
 
 Robot::~Robot() {}
@@ -105,11 +106,27 @@ void Robot::set_both_sides(int right, int left)
     }
 }
 
+static double get_avg_dis(Items& items) {
+    double normal = items.right1->get_position() + items.right2->get_position() + items.right3->get_position();
+    double normal2 = items.left1->get_position() + items.left2->get_position() + items.left3->get_position();
+    return (normal + normal2) / 2;
+}
+
 void Robot::set_speed_chassis(int y, int x)
 {
-    int left = y - x;
-    int right = y + x;
-    set_both_sides(right, left);
+    if (abs(y) > JOYSTICK_DEADZONE || abs(x) > JOYSTICK_DEADZONE) {
+        brake_pid.reset();
+        if (y > 127) y = 127; if (y < -127) y = -127;
+        if (x > 127) x = 127; if (x < -127) y = -127;
+        int left = y - x;
+        int right = y + x;
+        set_both_sides(right, left);
+        current_val = get_avg_dis(items);
+    } else {
+        double error = current_val - get_avg_dis(items);
+        int power = brake_pid.update(error);
+        set_both_sides(power, power);
+    }
 }
 
 void Robot::set_intake(int analog1, int analog2, int pist)

@@ -44,7 +44,7 @@
 // ============== Auton: ================
 // gamemode:
 //#define SKILLS // uncomment if not using skills
-#define RIGHT_SIDE
+#define JOYSTICK_DEADZONE 5 // deadzone analog value for which drive wont be triggered.
 // trackion wheels:
 #define WHEEL_C 8.63937979737 // wheel circumference
 #define TICKS_PER_REVOLUTION 300
@@ -62,18 +62,21 @@
 #define POWER_KP 0.75
 #define POWER_KI 1
 #define POWER_KD 1.2
-#define POWER_ERROR_MAX 99999999
-#define POWER_ERROR_MIN -99999999
 // turn:
 #define TURN_KP 0.18
 #define TURN_KI 0.5
 #define TURN_KD 1
-#define TURN_ERROR_MAX 99999999
-#define TURN_ERROR_MIN -99999999
 // cata:
 #define CATA_KP 0.5
+// break:
+#define BREAK_KP 0.1
+// swing:
+#define SWING_KP 0.18
+#define SWING_KI 0.5
+#define SWING_KD 1
 // ======================= ODOM: ========================
 #define ERROR_MEASUREMENT 0.05
+#define MECH_ADVANTAGE 0.5 // mechanical advantage between drive motors and wheels.
 
 // maximum allowed error:
 #define MIN_ALLOWED_ERROR 0.7

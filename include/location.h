@@ -51,18 +51,17 @@ private:
     double rel_th = 0;
     // PID:
     double error = 0;
-    double prev_error = 0;
-    double integral = 0;
-    double error_l = 0;
-    double prev_error_l = 0;
-    double integral_l = 0;
+    double error_turn_casual = 0;
+    double error_swing = 0;
     // PID timer:
     int timer = 0;
     int abs_timer = 0;
     // PID Class:
     PID dis;
     PID turn_casual;
+    PID swing;
 public:
+    long long start_iter;
     /// @brief Non-default constructor of Location
     /// @param r Robot instance
     void initialize(Robot& r);
@@ -79,32 +78,6 @@ public:
     /// @brief Calculates the amount to update coordinates
     /// @return Vector of updated coordinates
     std::vector<double> update();
-    /// @brief Proportion of PID
-    /// @param error current error
-    /// @param isturn calculating turn or power PID?
-    /// @return Proportion
-    double P(double error, bool isturn);
-    /// @brief Integral of PID
-    /// @param error current error
-    /// @param integral reference to integral
-    /// @param goal goal we want to reach
-    /// @param isturn calculating turn or power PID?
-    /// @return Integral
-    double I(double error, double& integral, Waypoint& goal, bool isturn);
-    /// @brief Derivative of PID
-    /// @param prev_error old caches error
-    /// @param error curent error
-    /// @param isturn calculating turn or power PID?
-    /// @return Derivative
-    double D(double& prev_error, double error, bool isturn);
-    /// @brief Calculates the PID number.
-    /// @param error current error
-    /// @param integral reference to integral
-    /// @param prev_error old cached error
-    /// @param goal goal we want to reach
-    /// @param isturn calculating turn or power PID?
-    /// @return PID number
-    double pid(double error, double& integral, double& prev_error, Waypoint& goal, bool isturn);
     /// @brief Returns motor values depending on PID value
     /// @param goal goal we want to reach
     /// @return Vector of motor values. (0 is left, 1 is right)

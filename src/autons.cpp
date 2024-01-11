@@ -29,3 +29,10 @@ double PID::update(double error) {
 	D *= KD;
 	return P + I + D;
 }
+
+void PID::reset() {
+    integral = 0;
+    prev_error = 0;
+}
+
+
