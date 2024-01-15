@@ -157,7 +157,7 @@ void opcontrol()
 		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1));
 		robot.set_wings_back(items.master->get_digital_new_press(DIGITAL_R2));
 		robot.set_cata(items.master->get_digital(DIGITAL_Y));
-		robot.set_blocker(items.master->get_digital_new_press(DIGITAL_B));
+		robot.set_blocker(items.master->get_digital_new_press(DIGITAL_B), items.master->get_digital_new_press(DIGITAL_A));
 
 		pros::lcd::print(0, "p:%i t:%i", items.master->get_analog(ANALOG_LEFT_Y), items.master->get_analog(ANALOG_RIGHT_X));
 		pros::lcd::print(1, "i-f:%i i-o:%i", items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));

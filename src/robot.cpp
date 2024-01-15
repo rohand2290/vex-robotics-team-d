@@ -181,15 +181,16 @@ void Robot::set_wings_back(int stick)
     items.wings_back->set_value(items.wing_back_pos);
 }
 
-void Robot::set_blocker(int analog) {
+void Robot::set_blocker(int analog, int lock) {
     if (analog) items.intake_pos = !items.intake_pos;
     
     if (items.intake_pos) {
-        items.lift1->set_value(1);
-        items.lift2->set_value(1);
+        items.pto->set_value(1);
+        if (lock) lock_state = !lock_state;
+        if (lock_state) set_hold();
+        else set_coast();
     } else {
-        items.lift1->set_value(0);
-        items.lift2->set_value(0);
+        items.pto->set_value(0);
     }
 }
 

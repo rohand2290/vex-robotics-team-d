@@ -6,6 +6,7 @@
 class Robot {
 private:
     int intake_state = 0;
+    int lock_state = 0;
     double current_val = 0;
     PID brake_pid;
 public:
@@ -66,7 +67,7 @@ public:
     void set_cata(int analog);
     /// @brief Set the blocker...
     /// @param analog imput button
-    void set_blocker(int analog);
+    void set_blocker(int analog, int lock);
     /// @brief Converts radians to degrees
     /// @param radians radians as double
     /// @return coresponding degrees as double
