@@ -23,8 +23,8 @@
 #define INTAKE_PORT_RIGHT 6 // Defines the 2nd port of the right side of intake.
 
 // Catapult:
-#define CATA_PORT 20 // Defines the port of the cata.
-#define CATA_ENCODER 15 // Define the encoder port for cata
+#define CATA_PORT 10 // Defines the port of the cata.
+#define CATA_ENCODER 20 // Define the encoder port for cata
 #define CATA_REST 90 // Defines the resting position of the cata...
 
 // Pistons:
@@ -34,7 +34,7 @@
 #define WING_2_PORT 'B'
 
 // IMU:
-#define IMU_PORT 10
+#define IMU_PORT 11
 
 // ======== PREFERENCES: =========
 
@@ -44,7 +44,7 @@
 // ============== Auton: ================
 // gamemode:
 //#define SKILLS // uncomment if not using skills
-#define JOYSTICK_DEADZONE 5 // deadzone analog value for which drive wont be triggered.
+#define JOYSTICK_DEADZONE 10 // deadzone analog value for which drive wont be triggered.
 // trackion wheels:
 #define WHEEL_C 8.63937979737 // wheel circumference
 #define TICKS_PER_REVOLUTION 300
