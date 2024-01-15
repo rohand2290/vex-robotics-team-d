@@ -29,7 +29,8 @@
 
 // Pistons:
 #define INTAKE_PISTON_PORT 69
-#define WINGS_PORT 'H'
+#define WINGS_FRONT_PORT 'H'
+#define WINGS_BACK_PORT 'C'
 #define LIFT_1_PORT 'A'
 #define LIFT_2_PORT 'B'
 

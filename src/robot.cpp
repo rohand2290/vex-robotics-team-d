@@ -171,17 +171,14 @@ void Robot::set_cata(int analog) {
 
 void Robot::set_wings(int stick)
 {
-    // auto now = std::chrono::high_resolution_clock::now();
-    // if (items.intake_pos && stick) {
-    //     items.intake_piston->set_value(0);
-    //     int dur = (int)std::chrono::duration_cast<std::chrono::milliseconds>(now - time).count();
-    //     if (dur > 500) {
-    //         items.wing_pos = 1;
-    //         items.wings->set_value(items.wing_pos);
-    //     };
-    // }
     if (stick) items.wing_pos = !items.wing_pos;
     items.wings->set_value(items.wing_pos);
+}
+
+void Robot::set_wings_back(int stick) 
+{
+    if (stick) items.wing_back_pos = !items.wing_back_pos;
+    items.wings_back->set_value(items.wing_back_pos);
 }
 
 void Robot::set_blocker(int analog) {

@@ -3,6 +3,7 @@
 
 void Items::initialize()  {
     wing_pos = false;
+    wing_pos = false;
     intake_pos = false;
     autonmous = true;
     master = new pros::Controller(pros::E_CONTROLLER_MASTER);
@@ -15,10 +16,10 @@ void Items::initialize()  {
     intake_left = new pros::Motor (INTAKE_PORT_LEFT, pros::E_MOTOR_GEAR_200);
     intake_right = new pros::Motor (INTAKE_PORT_RIGHT, pros::E_MOTOR_GEAR_200, true);
     cata = new pros::Motor(CATA_PORT, pros::E_MOTOR_GEAR_100, true);
-    wings = new pros::ADIDigitalOut (WINGS_PORT);
+    wings = new pros::ADIDigitalOut (WINGS_FRONT_PORT);
+    wings_back = new pros::ADIDigitalOut (INTAKE_PISTON_PORT);
     lift1 = new pros::ADIDigitalOut (LIFT_1_PORT);
     lift2 = new pros::ADIDigitalOut (LIFT_2_PORT);
-    intake_piston = new pros::ADIDigitalOut (INTAKE_PISTON_PORT);
     encoder_left = new pros::Rotation (ENCODER_PORT_1, true);
     encoder_right = new pros::Rotation (ENCODER_PORT_2);
     encoder_center = new pros::Rotation (ENCODER_PORT_3);
@@ -50,12 +51,12 @@ Items::~Items() {
     delete intake_right;
     delete cata;
     delete wings;
+    delete wings_back;
     delete lift1;
     delete lift2;
     delete encoder_left;
     delete encoder_right;
     delete encoder_center;
     delete encoder_cata;
-    delete intake_piston;
     delete imu;
 }

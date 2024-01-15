@@ -9,6 +9,7 @@ struct Items {
 public:
     int wing_pos;
     int intake_pos;
+    int wing_back_pos;
     int autonmous;
     pros::Controller* master;
     pros::Motor* left1; // front
@@ -21,7 +22,7 @@ public:
     pros::Motor* intake_right;
     pros::Motor* cata;
     pros::ADIDigitalOut* wings;
-    pros::ADIDigitalOut* intake_piston;
+    pros::ADIDigitalOut* wings_back;
     pros::ADIDigitalOut* lift1;
     pros::ADIDigitalOut* lift2;
     pros::Rotation* encoder_left;

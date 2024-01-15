@@ -58,6 +58,9 @@ public:
     /// @brief Set the wings in sticky format.
     /// @param stick input button
     void set_wings(int stick);
+    /// @brief Set the wings on the back in sticky format.
+    /// @param stick input button
+    void set_wings_back(int stick);
     /// @brief Set the catapult...
     /// @param analog input button
     void set_cata(int analog);
