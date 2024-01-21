@@ -139,7 +139,6 @@ void opcontrol()
 	//autonomous(); // disable this during comp...
 	items.autonmous = false;
 	items.stop();
-	items.master->print(0, 0, "Starting OPCONTROL");
 	// Driver Code:
 	while (true)
 	{
@@ -161,6 +160,9 @@ void opcontrol()
 
 		pros::lcd::print(0, "p:%i t:%i", items.master->get_analog(ANALOG_LEFT_Y), items.master->get_analog(ANALOG_RIGHT_X));
 		pros::lcd::print(1, "i-f:%i i-o:%i", items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
+
+		// maping.update();
+		// pros::lcd::print(0, "%f", items.imu->get_rotation());
 
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}

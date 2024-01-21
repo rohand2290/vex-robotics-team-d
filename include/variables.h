@@ -14,17 +14,17 @@
 #define LEFT_WHEELS_PORT_2 8 // Defines the 2nd port of the left wheels.
 #define LEFT_WHEELS_PORT_3 7 // Defines the 3rd port of the left wheels.
 // Right drive:
-#define RIGHT_WHEELS_PORT_1 19 // Defines the 1st port of the right wheels.
-#define RIGHT_WHEELS_PORT_2 18 // Defines the 2nd port of the right wheels.
-#define RIGHT_WHEELS_PORT_3 17 // Defines the 3rd port of the right wheels.
+#define RIGHT_WHEELS_PORT_1 2 // Defines the 1st port of the right wheels.
+#define RIGHT_WHEELS_PORT_2 3 // Defines the 2nd port of the right wheels.
+#define RIGHT_WHEELS_PORT_3 4 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
-#define INTAKE_PORT_LEFT 16 // Defines the 1st port of the left side of intake.
-#define INTAKE_PORT_RIGHT 6 // Defines the 2nd port of the right side of intake.
+#define INTAKE_PORT_LEFT 19 // Defines the 1st port of the left side of intake.
+#define INTAKE_PORT_RIGHT 69 // Defines the 2nd port of the right side of intake.
 
 // Catapult:
 #define CATA_PORT 10 // Defines the port of the cata.
-#define CATA_ENCODER 20 // Define the encoder port for cata
+#define CATA_ENCODER 1 // Define the encoder port for cata
 #define CATA_REST 90 // Defines the resting position of the cata...
 
 // Pistons:
@@ -34,7 +34,7 @@
 #define WING_2_PORT 'B'
 
 // IMU:
-#define IMU_PORT 11
+#define IMU_PORT 6
 
 // ======== PREFERENCES: =========
 
@@ -67,7 +67,7 @@
 #define TURN_KI 0.5
 #define TURN_KD 1
 // cata:
-#define CATA_KP 0.5
+#define CATA_KP 1
 // break:
 #define BREAK_KP 0.1
 // swing:
@@ -76,7 +76,7 @@
 #define SWING_KD 1
 // ======================= ODOM: ========================
 #define ERROR_MEASUREMENT 0.05
-#define MECH_ADVANTAGE 0.5 // mechanical advantage between drive motors and wheels.
+#define MECH_ADVANTAGE 0.6 // mechanical advantage between drive motors and wheels.
 
 // maximum allowed error:
 #define MIN_ALLOWED_ERROR 0.7

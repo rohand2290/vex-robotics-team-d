@@ -118,14 +118,15 @@ void Robot::set_speed_chassis(int y, int x)
         brake_pid.reset();
         if (y > 127) y = 127; if (y < -127) y = -127;
         if (x > 127) x = 127; if (x < -127) y = -127;
-        int left =  -y - x;
-        int right = -y + x;
+        int left =  y - x;
+        int right = y + x;
         set_both_sides(right, left);
         current_val = get_avg_dis(items);
     } else {
-        double error = current_val - get_avg_dis(items);
-        int power = brake_pid.update(error);
-        set_both_sides(power, power);
+        // double error = current_val - get_avg_dis(items);
+        // int power = brake_pid.update(error);
+        // set_both_sides(power, power);
+        set_both_sides(0, 0);
     }
 }
 
