@@ -60,8 +60,11 @@ private:
     PID dis;
     PID turn_casual;
     PID swing;
+    // Coordinates:
 public:
-    long long start_iter;
+    unsigned long long start_iter;
+    double cx = 0;
+    double cy = 0;
     /// @brief Non-default constructor of Location
     /// @param r Robot instance
     void initialize(Robot& r);

@@ -10,13 +10,13 @@
 // ======== PORTS: ===========
 
 // Left drive:
-#define LEFT_WHEELS_PORT_1 9 // Defines the 1st port of the left wheels.
-#define LEFT_WHEELS_PORT_2 8 // Defines the 2nd port of the left wheels.
-#define LEFT_WHEELS_PORT_3 7 // Defines the 3rd port of the left wheels.
+#define LEFT_WHEELS_PORT_1 2 // Defines the 1st port of the left wheels.
+#define LEFT_WHEELS_PORT_2 3 // Defines the 2nd port of the left wheels.
+#define LEFT_WHEELS_PORT_3 4 // Defines the 3rd port of the left wheels.
 // Right drive:
-#define RIGHT_WHEELS_PORT_1 2 // Defines the 1st port of the right wheels.
-#define RIGHT_WHEELS_PORT_2 3 // Defines the 2nd port of the right wheels.
-#define RIGHT_WHEELS_PORT_3 4 // Defines the 3rd port of the right wheels.
+#define RIGHT_WHEELS_PORT_1 7 // Defines the 1st port of the right wheels.
+#define RIGHT_WHEELS_PORT_2 8 // Defines the 2nd port of the right wheels.
+#define RIGHT_WHEELS_PORT_3 9 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
 #define INTAKE_PORT_LEFT 19 // Defines the 1st port of the left side of intake.
@@ -30,8 +30,8 @@
 // Pistons:
 #define INTAKE_PISTON_PORT 69
 #define PTO 'C'
-#define WING_1_PORT 'A'
-#define WING_2_PORT 'B'
+#define WING_1_PORT 'B'
+#define WING_2_PORT 'A'
 
 // IMU:
 #define IMU_PORT 6

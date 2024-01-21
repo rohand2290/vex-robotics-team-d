@@ -115,13 +115,9 @@ static double get_avg_dis(Items& items) {
 void Robot::set_speed_chassis(int y, int x)
 {
     if (abs(y) > JOYSTICK_DEADZONE || abs(x) > JOYSTICK_DEADZONE) {
-        brake_pid.reset();
-        if (y > 127) y = 127; if (y < -127) y = -127;
-        if (x > 127) x = 127; if (x < -127) y = -127;
         int left =  y - x;
         int right = y + x;
         set_both_sides(right, left);
-        current_val = get_avg_dis(items);
     } else {
         // double error = current_val - get_avg_dis(items);
         // int power = brake_pid.update(error);

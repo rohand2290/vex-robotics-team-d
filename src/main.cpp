@@ -142,6 +142,7 @@ void opcontrol()
 	// Driver Code:
 	while (true)
 	{
+		// maping.start_iter = pros::millis();
 		// DRIVE TRAIN ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		// set speed chassis
 		robot.set_speed_chassis(
@@ -158,11 +159,11 @@ void opcontrol()
 		robot.set_cata(items.master->get_digital(DIGITAL_Y));
 		robot.set_blocker(items.master->get_digital_new_press(DIGITAL_B), items.master->get_digital_new_press(DIGITAL_A));
 
-		pros::lcd::print(0, "p:%i t:%i", items.master->get_analog(ANALOG_LEFT_Y), items.master->get_analog(ANALOG_RIGHT_X));
-		pros::lcd::print(1, "i-f:%i i-o:%i", items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
+		// pros::lcd::print(0, "p:%i t:%i", items.master->get_analog(ANALOG_LEFT_Y), items.master->get_analog(ANALOG_RIGHT_X));
+		// pros::lcd::print(1, "i-f:%i i-o:%i", items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
 
-		// maping.update();
-		// pros::lcd::print(0, "%f", items.imu->get_rotation());
+		// std::vector<double> m = maping.update();
+		// pros::lcd::print(0, "%f, %f", m[0], m[1]);
 
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}

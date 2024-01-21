@@ -54,24 +54,24 @@ void Location::initialize(Robot& r) {
 std::vector<double> Location::update() {
     rel_l = left_abs_dist() - old_l;
 	rel_r = right_abs_dist() - old_r;
-    rel_th = robot->get_abs_angle() - old_th;
+    // rel_th = robot->get_abs_angle() - old_th;
     robot->theta = robot->get_abs_angle();
 
-    double time_factor = ((pros::millis() - start_iter) / 1000.0) * MECH_ADVANTAGE;
+    double time_factor = MECH_ADVANTAGE * 1.2;
     double mag = (rel_l + rel_r) / 2;
     std::vector<double> arr = {
         (mag * sin(robot->degrees_to_radians(robot->theta))) * time_factor,
         (mag * cos(robot->degrees_to_radians(robot->theta))) * time_factor,
     };
 
-    robot->x += arr[0];
-    robot->y += arr[1];
+    cx += arr[0];
+    cy += arr[1];
 
     old_l = left_abs_dist();
 	old_r = right_abs_dist();
-    old_th = robot->get_abs_angle();
+    // old_th = robot->get_abs_angle();
 
-    return arr;
+    return {cx, cy};
 }
 
 static double angleDifference(double start, double end) {
