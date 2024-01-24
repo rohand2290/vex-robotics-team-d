@@ -58,14 +58,17 @@
 // Start Angle:
 #define ANGLE_START 0 // bearing front
 // ============================ PID Constants: ======================
+// max values ever for PID:
+#define MAX_I_VAL 360
+#define MIN_I_VAL -360
 // power:
 #define POWER_KP 0.75
 #define POWER_KI 1
 #define POWER_KD 1.2
 // turn:
-#define TURN_KP 0.18
-#define TURN_KI 0.5
-#define TURN_KD 1
+#define TURN_KP 0.17
+#define TURN_KI 0.00001
+#define TURN_KD 0.001
 // cata:
 #define CATA_KP 1
 // break:
@@ -79,9 +82,9 @@
 #define MECH_ADVANTAGE 0.6 // mechanical advantage between drive motors and wheels.
 
 // maximum allowed error:
-#define MIN_ALLOWED_ERROR 0.7
-#define MIN_ALLOWED_ERROR_DEG 10
-#define MIN_ALLOWED_ERROR_TIME 35
+#define MIN_ALLOWED_ERROR 0.5
+#define MIN_ALLOWED_ERROR_DEG 1
+#define MIN_ALLOWED_ERROR_TIME 100
 #define MIN_ALLOWED_ERROR_TIMEOUT 200
 
 // ======= Miscelanious: =========
@@ -91,7 +94,7 @@
 // this can also be used to change smoothness if smooth drive is enabled.
 // If it is too little, it might starve the proccessor from energy with too much load.
 #define OPCONTROL_LOOP_DELAY 5 // ms
-#define AUTON_LOOP_DELAY 5 // ms
+#define AUTON_LOOP_DELAY 1 // ms
 #define PI 3.141592653589793
 #define ROBOT_WIDTH 3.54331 // in
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0

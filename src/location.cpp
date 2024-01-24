@@ -94,7 +94,10 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
 
     } else if (goal.command == "turn") {
         error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
-        double turn = turn_casual.update(error);
+        
+        double turn = turn_casual.update(error_turn_casual);
+        pros::lcd::print(0, "%f", error_turn_casual);
+
         std::vector<double> v = {-turn, turn};
         if (abs(error_turn_casual) < MIN_ALLOWED_ERROR_DEG) timer++;
 

@@ -24,9 +24,13 @@ double PID::update(double error) {
 	if (abs(error) < ACCURACY) {
 		integral = 0;
 	}
+    if (error > MAX_I_VAL || error < MIN_I_VAL) {
+        integral = 0;
+    }
 	double I = integral * KI;
 	double D = error - prev_error;
 	D *= KD;
+
 	return P + I + D;
 }
 

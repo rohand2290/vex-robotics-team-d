@@ -4,61 +4,7 @@
 using namespace std::chrono;
 
 std::vector<Waypoint> spawn1 = {
-#ifndef RIGHT_SIDE
-	//WINPOINT LEFT:
-	{"move", 15},
-	{"wings"},
-	{"wait", 500},
-	{"turn", 45},
-	{"wings"},
-	{"move", 20},
-	{"turn", 20},
-	{"power", 127, 1000},
-	{"move", -15},
 	{"turn", 90},
-	{"move", 50},
-	{"move", -26.5},
-	{"turn", -60},
-	{"move", -47},
-#else
-	// WINPOINT RIGHT:
-	{"move", 15},
-	{"wings"},
-	{"wait", 500},
-	{"turn", -45},
-	{"wings"},
-	{"move", 20},
-	{"turn", -20},
-	{"power", 127, 1000},
-	{"move", -15},
-	{"turn", -90},
-	{"move", 50},
-	{"move", -26.5},
-	{"turn", 60},
-	{"move", -47},
-#endif
-	// // 5 ball AUTON:
-	// {"in"},
-	// {"move", 60},
-	// {"turn", -45},
-	// {"move", -29},
-	// {"move", 2},
-	// {"turn", 180},
-	// {"out"},
-	// {"wait", 200},
-	// {"in"},
-	// {"turn", 135},
-	// {"move", 52},
-	// {"move", -52},
-	// {"turn", -135},
-	// {"move", 5},
-	// {"turn", -90},
-	// {"move", -53},
-	// {"turn", -135},
-	// {"wings"},
-	// {"move", -5},
-	// {"turn", -45},
-	// {"move", -12},
 };
 
 std::vector<Waypoint> skills = {
@@ -105,7 +51,9 @@ void autonomous()
 		do {
 			maping.start_iter = pros::millis();
 			std::vector<double> vect;
-			if (current_goal.is_motion_command()) vect = maping.updatePID(current_goal, robot_line, goal_line);
+			if (current_goal.is_motion_command()) {
+				vect = maping.updatePID(current_goal, robot_line, goal_line); 
+			}
 			else break;
 
 			robot.set_both_sides(vect[1], vect[0]);
@@ -162,8 +110,8 @@ void opcontrol()
 		// pros::lcd::print(0, "p:%i t:%i", items.master->get_analog(ANALOG_LEFT_Y), items.master->get_analog(ANALOG_RIGHT_X));
 		// pros::lcd::print(1, "i-f:%i i-o:%i", items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
 
-		// std::vector<double> m = maping.update();
-		// pros::lcd::print(0, "%f, %f", m[0], m[1]);
+		std::vector<double> m = maping.update();
+		pros::lcd::print(0, "%f, %f", m[0], m[1]);
 
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
