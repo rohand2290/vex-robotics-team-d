@@ -4,7 +4,12 @@
 using namespace std::chrono;
 
 std::vector<Waypoint> spawn1 = {
-	{"turn", 90},
+	{"move", 35},
+	{"turn", 270},
+	{"move", 40},
+	{"out"},
+	{"wait", 1000},
+	{"stop"},
 };
 
 std::vector<Waypoint> skills = {
@@ -28,9 +33,7 @@ void initialize()
 // Runs while the robot is in the disabled state
 void disabled() { items.stop(); }
 // Runs after initialize(), and before autonomous when connected to the Field Management System or the VEX Competition Switch.
-void competition_initialize() {
-	robot.initialize(items);
-}
+void competition_initialize() {}
 
 // Runs the user autonomous code.
 void autonomous() 
@@ -43,7 +46,7 @@ void autonomous()
 #else
 	for (Waypoint current_goal : skills) {
 #endif
-		current_goal.execute_aux_command(&robot);
+		bool error_type = current_goal.execute_aux_command(&robot);
 
 		CartesianLine robot_line(0, robot.x, robot.y);
 		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
@@ -52,7 +55,7 @@ void autonomous()
 			maping.start_iter = pros::millis();
 			std::vector<double> vect;
 			if (current_goal.is_motion_command()) {
-				vect = maping.updatePID(current_goal, robot_line, goal_line); 
+				vect = maping.updatePID(current_goal, robot_line, goal_line, error_type); 
 			}
 			else break;
 
@@ -81,10 +84,10 @@ void autonomous()
 	// robot.set_coast();
 	*/
 }
-// Runs the operator control code.`
+// Runs the operator control code.
 void opcontrol()
 {
-	//autonomous(); // disable this during comp...
+	// autonomous(); // disable this during comp...
 	items.autonmous = false;
 	items.stop();
 	// Driver Code:

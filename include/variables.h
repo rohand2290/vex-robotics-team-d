@@ -62,9 +62,9 @@
 #define MAX_I_VAL 360
 #define MIN_I_VAL -360
 // power:
-#define POWER_KP 0.75
-#define POWER_KI 1
-#define POWER_KD 1.2
+#define POWER_KP 0.899
+#define POWER_KI 0.00001
+#define POWER_KD 0
 // turn:
 #define TURN_KP 0.17
 #define TURN_KI 0.00001
@@ -82,10 +82,10 @@
 #define MECH_ADVANTAGE 0.6 // mechanical advantage between drive motors and wheels.
 
 // maximum allowed error:
-#define MIN_ALLOWED_ERROR 0.5
+#define MIN_ALLOWED_ERROR 1.7
 #define MIN_ALLOWED_ERROR_DEG 1
 #define MIN_ALLOWED_ERROR_TIME 100
-#define MIN_ALLOWED_ERROR_TIMEOUT 200
+#define MIN_ALLOWED_ERROR_TIMEOUT 1500
 
 // ======= Miscelanious: =========
 

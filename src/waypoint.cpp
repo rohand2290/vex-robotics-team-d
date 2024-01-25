@@ -36,7 +36,7 @@ bool Path::goal_reached(Waypoint& goal, double x, double y) {
     return distance < allowable_error;
 }
 
-void Waypoint::execute_aux_command(Robot* robot) {
+bool Waypoint::execute_aux_command(Robot* robot) {
     if (command == "move" || command == "turn" || command == "curve");
     else if (command == "stop") {
         robot->items.intake_left->brake();
@@ -65,7 +65,14 @@ void Waypoint::execute_aux_command(Robot* robot) {
             robot->items.cata->move_voltage(120000);
             pros::delay(AUTON_LOOP_DELAY);
         }
+    } else if (command == "cata") {
+        robot->run_cata_x_times(param1);
+    } else if (command == "precise") {
+        return false;
+    } else if (command == "pass") {
+        return true;
     }
+    return false;
 }
 
 bool Waypoint::is_motion_command() {

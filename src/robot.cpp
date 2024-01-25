@@ -87,8 +87,8 @@ void Robot::set_both_sides(int right, int left)
 {
     if (items.autonmous) {
         // sensitive for auton:
-        right *= 120000 / 127;
-        left *= 120000 / 127;
+        right *= 120000.0 / 127;
+        left *= 120000.0 / 127;
         items.right1->move_voltage(right);
         items.left1->move_voltage(left);
         items.left2->move_voltage(left);
@@ -215,6 +215,23 @@ void Robot::brake() {
             items.imu->get_accel().z*items.imu->get_accel().z + 
             items.imu->get_accel().y*items.imu->get_accel().y
         );
+        pros::delay(1);
     } while (abs(in) < 0.0001);
     set_coast();
+}
+
+void Robot::run_cata_x_times(int x) {
+    double prev_pos = get_cata_position(); 
+    int count = 0, temp = false;
+    items.cata->move_voltage(120000);
+    do {
+        pros::delay(5);
+        double change = get_cata_position() - prev_pos;
+        if (change <= 0) {
+            ++count;
+            temp = true;
+        }
+        if (temp && change > 0) temp = false;
+    } while (count < x);
+    items.cata->brake();
 }

@@ -78,6 +78,9 @@ public:
     double degrees_to_radians(double degrees);
     /// @brief Brakes the robot untill all inertia is lost...
     void brake();
+    /// @brief Runs the cata for x number of times. Will do nothing if x <= 0
+    /// @param x number of times to run cata
+    void run_cata_x_times(int x);
 };
 
 #endif // ROBOT_H

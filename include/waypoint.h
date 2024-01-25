@@ -11,7 +11,7 @@ struct Waypoint {
 
     /// @brief Executes a command for the bot to follow during the waypoint
     /// @param robot Robot instance
-    void execute_aux_command(Robot* robot);
+    bool execute_aux_command(Robot* robot);
     /// @brief Checks if current command is motion related...
     /// @return true if it is.
     bool is_motion_command();

@@ -46,6 +46,7 @@ void Location::initialize(Robot& r) {
     x = &r.x;
     y = &r.y;
     reset_all();
+
     dis.initialize(POWER_KP, POWER_KI, POWER_KD);
     turn_casual.initialize(TURN_KP, TURN_KI, TURN_KD);
     swing.initialize(SWING_KP, SWING_KI, SWING_KD);
@@ -84,22 +85,30 @@ static double angleDifference(double start, double end) {
 
 std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_line, CartesianLine& goal_line, bool turn) {
     if (goal.command == "move") {
-        error = goal.param1 - ((right_abs_dist() + left_abs_dist()) / 2);
+        double val = sqrt(cx*cx + cy*cy);
+        error = goal.param1 - val;
+        if (robot->items.master->get_digital(pros::E_CONTROLLER_DIGITAL_A))
+            robot->items.master->print(0, 0, "%f", error);
         double power = dis.update(error);
         abs_timer++;
+        pros::lcd::print(0, "%f", error);
+        pros::lcd::print(1, "%f", cx);
+        pros::lcd::print(2, "%f", cy);
 
         std::vector<double> v = {power, power};
-        if (abs(error) < MIN_ALLOWED_ERROR) timer++;
+        if (turn && error <= 0) timer = MIN_ALLOWED_ERROR_TIME; 
+        else if (abs(error) < MIN_ALLOWED_ERROR && !turn) timer++;
         return v;
 
     } else if (goal.command == "turn") {
         error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
         
         double turn = turn_casual.update(error_turn_casual);
-        pros::lcd::print(0, "%f", error_turn_casual);
 
         std::vector<double> v = {-turn, turn};
-        if (abs(error_turn_casual) < MIN_ALLOWED_ERROR_DEG) timer++;
+
+        if (turn && error <= 0) timer = MIN_ALLOWED_ERROR_TIME; 
+        else if (abs(error_turn_casual) < MIN_ALLOWED_ERROR_DEG && !turn) timer++;
 
         abs_timer++;
         return v;
@@ -191,11 +200,16 @@ void Location::reset_all()
     dis.reset();
     turn_casual.reset();
     swing.reset();
+
+    timer = 0;
+    abs_timer = 0;
+    cx = 0;
+    cy = 0;
 }
 
 bool Location::is_running() {
     // if (abs_timer >= MIN_ALLOWED_ERROR_TIMEOUT) return false;
-    return timer <= MIN_ALLOWED_ERROR_TIME;
+    return timer <= MIN_ALLOWED_ERROR_TIME && abs_timer <= MIN_ALLOWED_ERROR_TIMEOUT;
 }
 
 
