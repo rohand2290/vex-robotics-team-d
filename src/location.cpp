@@ -115,7 +115,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
     } else if (goal.command == "power") {
         robot->set_both_sides(goal.param1, goal.param1);
         pros::delay(goal.param2);
-        robot->items.stop();
+        robot->set_both_sides(0, 0);
     } else if (goal.command == "curve") { //// @TODO
         // // curve PID: (first val is mag, second is ending theta)
         // double x = sin(robot->degrees_to_radians(goal.param2)) * goal.param1;
@@ -205,6 +205,10 @@ void Location::reset_all()
     abs_timer = 0;
     cx = 0;
     cy = 0;
+
+    error = 0;
+    error_turn_casual = 0;
+    error_swing = 0;
 }
 
 bool Location::is_running() {

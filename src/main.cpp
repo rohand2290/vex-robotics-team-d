@@ -4,11 +4,15 @@
 using namespace std::chrono;
 
 std::vector<Waypoint> spawn1 = {
-	{"move", 35},
-	{"turn", 270},
-	{"move", 40},
+	{"move", 20},
+	{"bwings"},
+	{"turn", 30},
+	{"move", 10},
+	{"turn", 45},
+	{"bwings"},
+	{"power", 120000, 1000},
 	{"out"},
-	{"wait", 1000},
+	{"wait", 500},
 	{"stop"},
 };
 
@@ -68,7 +72,6 @@ void autonomous()
 
 		robot.x = 0;
 		robot.y = 0;
-		robot.theta = 0;
 		maping.reset_all();
 	}
 	/*

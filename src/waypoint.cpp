@@ -50,6 +50,9 @@ bool Waypoint::execute_aux_command(Robot* robot) {
     } else if (command == "wings") {
         robot->items.wing_pos = !robot->items.wing_pos;
         robot->items.wings->set_value(robot->items.wing_pos);
+    } else if (command == "bwings") {
+        robot->items.wing_back_pos = !robot->items.wing_back_pos;
+        robot->items.wings_back->set_value(robot->items.wing_back_pos);
     } else if (command == "rise") {
         robot->items.pto->set_value(1);
     } else if (command == "fall") {
