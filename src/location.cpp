@@ -88,7 +88,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         error_turn_casual = angleDifference(robot->items.imu->get_rotation(), old_angle);
         double turn = turn_casual.update(error_turn_casual);
         
-        double val = sqrt(cx*cx + cy*cy);
+        double val = goal.param1 < 0 ? -sqrt(cx*cx + cy*cy) : sqrt(cx*cx + cy*cy);
         error = goal.param1 - val;
         if (robot->items.master->get_digital(pros::E_CONTROLLER_DIGITAL_A))
             robot->items.master->print(0, 0, "%f", error);
