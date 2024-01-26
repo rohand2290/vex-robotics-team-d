@@ -87,7 +87,6 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
     if (goal.command == "move") {
         error_turn_casual = angleDifference(robot->items.imu->get_rotation(), old_angle);
         double turn = turn_casual.update(error_turn_casual);
-        std::vector<double> v = {-turn, turn};
         
         double val = sqrt(cx*cx + cy*cy);
         error = goal.param1 - val;
@@ -95,7 +94,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
             robot->items.master->print(0, 0, "%f", error);
         double power = dis.update(error);
         abs_timer++;
-        
+
         if (power > 127) power = 127;
         else if (power < -127) power = -127;
         power *= abs(cos(error_turn_casual));
