@@ -85,17 +85,23 @@ static double angleDifference(double start, double end) {
 
 std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_line, CartesianLine& goal_line, bool turn) {
     if (goal.command == "move") {
+        error_turn_casual = angleDifference(robot->items.imu->get_rotation(), old_angle);
+        double turn = turn_casual.update(error_turn_casual);
+        std::vector<double> v = {-turn, turn};
+        
         double val = sqrt(cx*cx + cy*cy);
         error = goal.param1 - val;
         if (robot->items.master->get_digital(pros::E_CONTROLLER_DIGITAL_A))
             robot->items.master->print(0, 0, "%f", error);
         double power = dis.update(error);
         abs_timer++;
-        pros::lcd::print(0, "%f", error);
-        pros::lcd::print(1, "%f", cx);
-        pros::lcd::print(2, "%f", cy);
+        
+        if (power > 127) power = 127;
+        else if (power < -127) power = -127;
+        power *= abs(cos(error_turn_casual));
 
-        std::vector<double> v = {power, power};
+        std::vector<double> v = {power - turn, power + turn};
+
         if (turn && error <= 0) timer = MIN_ALLOWED_ERROR_TIME; 
         else if (abs(error) < MIN_ALLOWED_ERROR && !turn) timer++;
         return v;
@@ -177,9 +183,9 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
     } else if (goal.command == "swing") {
         error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
         double turn = swing.update(error);
-        std::vector<double> v;
-        if (goal.param1 < 0) v = {0, turn};
-        else v = {turn, 0};
+        std::vector<double> v = {-turn, turn};
+        if (v[0] < 0) v[0] = 0;
+        if (v[1] < 0) v[1] = 0;
 
         if (abs(error_turn_casual) < MIN_ALLOWED_ERROR_DEG) timer++;
         abs_timer++;

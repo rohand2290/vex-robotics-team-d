@@ -60,8 +60,8 @@ private:
     PID dis;
     PID turn_casual;
     PID swing;
-    // Coordinates:
 public:
+    double old_angle = 0;
     unsigned long long start_iter;
     double cx = 0;
     double cy = 0;

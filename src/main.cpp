@@ -50,6 +50,7 @@ void autonomous()
 #else
 	for (Waypoint current_goal : skills) {
 #endif
+		maping.old_angle = items.imu->get_rotation();
 		bool error_type = current_goal.execute_aux_command(&robot);
 
 		CartesianLine robot_line(0, robot.x, robot.y);
