@@ -3,17 +3,54 @@
 #include "tests.h"
 using namespace std::chrono;
 
+/*
+* PLAN:
+
+	Move forward 80 inches
+	Intake
+	Wings
+	135 degrees clockwise
+	Move forward 48 inches
+	Move backward 5 inches
+	135 degrees clockwise
+	Move forward 44 inches
+	Intake
+	Turn 180 degrees
+	More forwards 44 inches
+	Turn 45 degrees counterclockwise
+	Move backwards 54 inches
+	Turn 90 degrees counterclockwise
+	Move forward 45 inches
+	Move back 45 inches
+	Turn 45 degrees counterclockwise
+	Wings
+	Move backwards 8 inches 
+	Turn 45 Degrees  counterclockwise 
+	Move backwards 24 inches
+	Turn 45 clockwise
+	Move forward 44 inches
+	Turn 45 clockwise
+	Move forward 25 inches
+
+*/
 std::vector<Waypoint> spawn1 = {
-	{"move", 20},
-	{"bwings"},
-	{"turn", 30},
-	{"move", 10},
-	{"turn", 45},
-	{"bwings"},
-	{"power", 120000, 1000},
-	{"out"},
-	{"wait", 500},
-	{"stop"},
+	{"move", 30},
+	{"move", -30},
+	// {"in"},
+	// {"wait", 1000},
+	// {"stop"},
+	// {"turn", 135},
+	// {"move", 48},
+	// // {"move", -5},
+	// // {"turn", 270},
+	// // {"move", 44},
+	// // {"in"},
+	// // {"wait", 1000},
+	// // {"stop"},
+	// // {"turn", 90},
+	// // {"move", 44},
+	// // {"turn", 135},
+	// // {""},
 };
 
 std::vector<Waypoint> skills = {
@@ -71,8 +108,8 @@ void autonomous()
 
 		robot.set_both_sides(0, 0);
 
-		robot.x = 0;
-		robot.y = 0;
+		maping.cx = 0;
+		maping.cy = 0;
 		maping.reset_all();
 	}
 	/*
@@ -91,7 +128,7 @@ void autonomous()
 // Runs the operator control code.
 void opcontrol()
 {
-	// autonomous(); // disable this during comp...
+	autonomous(); // disable this during comp...
 	items.autonmous = false;
 	items.stop();
 	// Driver Code:
@@ -116,9 +153,6 @@ void opcontrol()
 
 		// pros::lcd::print(0, "p:%i t:%i", items.master->get_analog(ANALOG_LEFT_Y), items.master->get_analog(ANALOG_RIGHT_X));
 		// pros::lcd::print(1, "i-f:%i i-o:%i", items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
-
-		std::vector<double> m = maping.update();
-		pros::lcd::print(0, "%f, %f", m[0], m[1]);
 
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}

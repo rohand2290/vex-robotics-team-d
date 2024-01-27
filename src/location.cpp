@@ -97,9 +97,9 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
 
         if (power > 127) power = 127;
         else if (power < -127) power = -127;
-        power *= abs(cos(error_turn_casual));
+        // power *= abs(cos(error_turn_casual)); // uncomment to enable angle stabalization:
 
-        std::vector<double> v = {power - turn, power + turn};
+        std::vector<double> v = {power, power}; // add -turn, turn to enable angle stabalization.
 
         if (turn && error <= 0) timer = MIN_ALLOWED_ERROR_TIME; 
         else if (abs(error) < MIN_ALLOWED_ERROR && !turn) timer++;
@@ -200,6 +200,7 @@ void Location::reset_all()
 	robot->items.right1->tare_position();
     robot->items.left3->tare_position();
 	robot->items.right3->tare_position();
+
     robot->items.imu->tare_rotation();
     robot->items.imu->tare_heading();
     dis.reset();
@@ -211,6 +212,11 @@ void Location::reset_all()
     cx = 0;
     cy = 0;
 
+    old_l = 0;
+    old_r = 0;
+    rel_r = 0;
+    rel_l = 0;
+
     error = 0;
     error_turn_casual = 0;
     error_swing = 0;
@@ -220,8 +226,6 @@ bool Location::is_running() {
     // if (abs_timer >= MIN_ALLOWED_ERROR_TIMEOUT) return false;
     return timer <= MIN_ALLOWED_ERROR_TIME && abs_timer <= MIN_ALLOWED_ERROR_TIMEOUT;
 }
-
-
 
 
 

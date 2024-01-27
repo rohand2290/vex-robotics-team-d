@@ -85,7 +85,7 @@
 #define MIN_ALLOWED_ERROR 1.7
 #define MIN_ALLOWED_ERROR_DEG 1
 #define MIN_ALLOWED_ERROR_TIME 100
-#define MIN_ALLOWED_ERROR_TIMEOUT 1500
+#define MIN_ALLOWED_ERROR_TIMEOUT 2500
 
 // ======= Miscelanious: =========
 
