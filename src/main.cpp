@@ -24,8 +24,8 @@ using namespace std::chrono;
 	Move back 45 inches
 	Turn 45 degrees counterclockwise
 	Wings
-	Move backwards 8 inches 
-	Turn 45 Degrees  counterclockwise 
+	Move backwards 8 inches
+	Turn 45 Degrees  counterclockwise
 	Move backwards 24 inches
 	Turn 45 clockwise
 	Move forward 44 inches
@@ -34,44 +34,44 @@ using namespace std::chrono;
 
 */
 std::vector<Waypoint> spawn1 = {
-	{"in"},
-	{"move", 64},
-	{"turn", 120},
-	{"wings"},
-	{"out"},
-	{"power", 120000, 750},
-	{"move", -5},
-	{"turn", 140},
-	{"move", 30},
-	{"in"},
-	{"wait", 250},
-	{"turn", 180},
-	{"out"},
-	{"power", 120000, 1000},
+	// {"in"},
+	// {"move", 62},
+	// {"turn", 120},
+	// {"wings"},
+	// {"out"},
+	// {"power", 120000, 750},
+	// {"move", -5},
+	// {"turn", 140},
+	// {"move", 26},
+	// {"in"},
+	// {"wait", 250},
+	// {"turn", 170},
+	// {"out"},
+	// {"power", 120000, 1000},
 	// works till here...
-	{"turn", 135},
-	{"move", 40},
-	{"turn", 90},
-	{"in"},
-	{"move", 28},
-	{"move", -49},
-	{"bwings"},
-	{"turn", -45},
-	{"move", 14},
-	{"bwings"},
-	{"turn", 45},
-	{"power", 120000, 250},
-	{"move", -2},
-	{"turn", 180},
-	{"power", 120000, 250},
-	{"move", -19},
-	{"turn", -55},
-	{"bwings"},
-	{"move", 57}
-};
+	// {"turn", 90}};
+	{"move", 50}};
+// {"turn", 90},
+// {"in"},
+// {"move", 28},
+// {"move", -49},
+// {"bwings"},
+// {"turn", -45},
+// {"move", 14},
+// {"bwings"},
+// {"turn", 45},
+// {"power", 120000, 250},
+// {"move", -2},
+// {"turn", 180},
+// {"power", 120000, 250},
+// {"move", -19},
+// {"turn", -55},
+// {"bwings"},
+// {"move", 57}};
 
-std::vector<Waypoint> skills = {
-	
+std::vector<Waypoint>
+	skills = {
+
 };
 
 Items items;
@@ -94,15 +94,17 @@ void disabled() { items.stop(); }
 void competition_initialize() {}
 
 // Runs the user autonomous code.
-void autonomous() 
+void autonomous()
 {
 	items.autonmous = true;
-	pros::lcd::clear();	
+	pros::lcd::clear();
 	int count = 0;
 #ifndef SKILLS
-	for (Waypoint current_goal : spawn1) {
+	for (Waypoint current_goal : spawn1)
+	{
 #else
-	for (Waypoint current_goal : skills) {
+	for (Waypoint current_goal : skills)
+	{
 #endif
 		maping.old_angle = items.imu->get_rotation();
 		bool error_type = current_goal.execute_aux_command(&robot);
@@ -110,13 +112,16 @@ void autonomous()
 		CartesianLine robot_line(0, robot.x, robot.y);
 		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
 
-		do {
+		do
+		{
 			maping.start_iter = pros::millis();
 			std::vector<double> vect;
-			if (current_goal.is_motion_command()) {
-				vect = maping.updatePID(current_goal, robot_line, goal_line, error_type); 
+			if (current_goal.is_motion_command())
+			{
+				vect = maping.updatePID(current_goal, robot_line, goal_line, error_type);
 			}
-			else break;
+			else
+				break;
 
 			robot.set_both_sides(vect[1], vect[0]);
 			maping.update();
@@ -145,7 +150,7 @@ void autonomous()
 // Runs the operator control code.
 void opcontrol()
 {
-	autonomous(); // disable if testing autonomous
+	// autonomous(); // disable if testing autonomous
 	items.autonmous = false;
 	items.stop();
 	// Driver Code:
@@ -156,13 +161,11 @@ void opcontrol()
 		// set speed chassis
 		robot.set_speed_chassis(
 			items.master->get_analog(ANALOG_LEFT_Y),
-			items.master->get_analog(ANALOG_RIGHT_X)
-		);
+			items.master->get_analog(ANALOG_RIGHT_X));
 		// actions acording to buttons:
 		robot.set_intake(
 			items.master->get_digital_new_press(DIGITAL_L1), items.master->get_digital_new_press(DIGITAL_L2),
-			items.master->get_digital_new_press(DIGITAL_A)
-		);
+			items.master->get_digital_new_press(DIGITAL_A));
 		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1));
 		robot.set_wings_back(items.master->get_digital_new_press(DIGITAL_R2));
 		robot.set_cata(items.master->get_digital(DIGITAL_Y));
@@ -174,4 +177,3 @@ void opcontrol()
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
 }
-
