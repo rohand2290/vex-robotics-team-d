@@ -6,7 +6,7 @@ using namespace std::chrono;
 /*
 * PLAN:
 
-	Move forward 80 inches
+	Move forward 180 inches
 	Intake
 	Wings
 	135 degrees clockwise
@@ -34,23 +34,38 @@ using namespace std::chrono;
 
 */
 std::vector<Waypoint> spawn1 = {
-	{"move", 30},
-	{"move", -30},
-	// {"in"},
-	// {"wait", 1000},
-	// {"stop"},
-	// {"turn", 135},
-	// {"move", 48},
-	// // {"move", -5},
-	// // {"turn", 270},
-	// // {"move", 44},
-	// // {"in"},
-	// // {"wait", 1000},
-	// // {"stop"},
-	// // {"turn", 90},
-	// // {"move", 44},
-	// // {"turn", 135},
-	// // {""},
+	{"in"},
+	{"move", 64},
+	{"turn", 120},
+	{"wings"},
+	{"out"},
+	{"power", 120000, 500},
+	{"move", -5},
+	{"turn", 140},
+	{"move", 33},
+	{"in"},
+	{"wait", 250},
+	{"turn", 180},
+	{"move", -10},
+	{"turn", 135},
+	{"move", 40},
+	{"turn", 90},
+	{"in"},
+	{"move", 28},
+	{"move", -49},
+	{"bwings"},
+	{"turn", -45},
+	{"move", 14},
+	{"bwings"},
+	{"turn", 45},
+	{"power", 120000, 250},
+	{"move", -2},
+	{"turn", 180},
+	{"power", 120000, 250},
+	{"move", -19},
+	{"turn", -55},
+	{"bwings"},
+	{"move", 57}
 };
 
 std::vector<Waypoint> skills = {

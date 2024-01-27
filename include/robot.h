@@ -81,6 +81,7 @@ public:
     /// @brief Runs the cata for x number of times. Will do nothing if x <= 0
     /// @param x number of times to run cata
     void run_cata_x_times(int x);
+    // Break absolute function
+    void break_absolute();
 };
-
 #endif // ROBOT_H

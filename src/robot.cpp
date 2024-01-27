@@ -235,3 +235,12 @@ void Robot::run_cata_x_times(int x) {
     } while (count < x);
     items.cata->brake();
 }
+
+void Robot::break_absolute() {
+    items.left1->move(0);
+    items.left2->move(0);
+    items.left3->move(0);
+    items.right1->move(0);
+    items.right2->move(0);
+    items.right3->move(0);
+}

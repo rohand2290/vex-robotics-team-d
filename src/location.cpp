@@ -106,7 +106,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         return v;
 
     } else if (goal.command == "turn") {
-        error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
+        error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1 + old_angle);
         
         double turn = turn_casual.update(error_turn_casual);
 
@@ -118,9 +118,11 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         abs_timer++;
         return v;
     } else if (goal.command == "power") {
+        is_bashing = true;
         robot->set_both_sides(goal.param1, goal.param1);
         pros::delay(goal.param2);
-        robot->set_both_sides(0, 0);
+        robot->break_absolute();
+        return {0, 0};
     } else if (goal.command == "curve") { //// @TODO
         // // curve PID: (first val is mag, second is ending theta)
         // double x = sin(robot->degrees_to_radians(goal.param2)) * goal.param1;
@@ -182,9 +184,9 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
     } else if (goal.command == "swing") {
         error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
         double turn = swing.update(error);
-        std::vector<double> v = {-turn, turn};
-        if (v[0] < 0) v[0] = 0;
-        if (v[1] < 0) v[1] = 0;
+        std::vector<double> v;
+        if (goal.param1 < 0) v = {-turn, 0};
+        else v = {0, turn};
 
         if (abs(error_turn_casual) < MIN_ALLOWED_ERROR_DEG) timer++;
         abs_timer++;
@@ -220,10 +222,13 @@ void Location::reset_all()
     error = 0;
     error_turn_casual = 0;
     error_swing = 0;
+
+    is_bashing = 0;
 }
 
 bool Location::is_running() {
     // if (abs_timer >= MIN_ALLOWED_ERROR_TIMEOUT) return false;
+    if (is_bashing) return false;
     return timer <= MIN_ALLOWED_ERROR_TIME && abs_timer <= MIN_ALLOWED_ERROR_TIMEOUT;
 }
 

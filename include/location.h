@@ -60,6 +60,7 @@ private:
     PID dis;
     PID turn_casual;
     PID swing;
+    bool is_bashing = false;
 public:
     double old_angle = 0;
     unsigned long long start_iter;

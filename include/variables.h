@@ -74,9 +74,9 @@
 // break:
 #define BREAK_KP 0.1
 // swing:
-#define SWING_KP 0.18
-#define SWING_KI 0.5
-#define SWING_KD 1
+#define SWING_KP 1
+#define SWING_KI 0
+#define SWING_KD 0
 // ======================= ODOM: ========================
 #define ERROR_MEASUREMENT 0.05
 #define MECH_ADVANTAGE 0.6 // mechanical advantage between drive motors and wheels.
