@@ -206,7 +206,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         if (abs(error_turn_casual) < MIN_ALLOWED_ERROR_DEG) timer++;
         abs_timer++;
         return v;
-    } else if (goal.command == "raw") { //// @TODO
+    } else if (goal.command == "raw") {
         double dx = goal.param1 - cx;
         double dy = goal.param2 - cy;
         error_turn_casual = angleDifference(robot->items.imu->get_rotation(), toTheta(dx, dy));

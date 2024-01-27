@@ -70,7 +70,31 @@ public:
     }
 
     void get_raw_coordinates() {
-        
+        items.master->clear();
+        int state = 0;
+        Location maping;
+        maping.initialize(robot);
+        while (true) {            
+            double x;
+            double y;
+            while (!state) {
+                maping.update();
+                if (items.master->get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) state = !state;
+
+                x = maping.cx;
+                y = maping.cy;
+                pros::delay(5);           
+            }
+            maping.reset_all();
+            items.master->print(0, 0, "%f,%f", x, y);
+
+            while (!state) {
+                if (items.master->get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) state = !state;
+                pros::delay(5);
+            }
+
+            items.master->clear_line(0);
+        }
     }
 };
 
