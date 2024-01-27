@@ -58,7 +58,7 @@ public:
             }
             pros::delay(1);
 
-            if (items.master->get_digital(DIGITAL_A)) break;
+            if (items.master->get_digital(pros::E_CONTROLLER_DIGITAL_A)) break;
         }
         items.stop();
 
@@ -67,6 +67,10 @@ public:
         pros::lcd::print(1, "L RPM: %i %s", (int)max_l, speedl ? "pass" : "fail");
         pros::lcd::print(2, "Speed E: %s", equal ? "pass" : "fail");
         TERMINATE();
+    }
+
+    void get_raw_coordinates() {
+        
     }
 };
 

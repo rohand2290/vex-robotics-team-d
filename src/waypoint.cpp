@@ -37,7 +37,7 @@ bool Path::goal_reached(Waypoint& goal, double x, double y) {
 }
 
 bool Waypoint::execute_aux_command(Robot* robot) {
-    if (command == "move" || command == "turn" || command == "curve");
+    if (command == "move" || command == "turn" || command == "curve" || command == "swing" || command == "raw");
     else if (command == "stop") {
         robot->items.intake_left->brake();
         robot->items.intake_right->brake();
@@ -84,5 +84,6 @@ bool Waypoint::is_motion_command() {
 		command == "turn" ||
 		command == "curve" ||
 		command == "power" ||
-        command == "swing";
+        command == "swing" || 
+        command == "raw";
 }
