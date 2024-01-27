@@ -83,6 +83,19 @@ static double angleDifference(double start, double end) {
     return red;
 }
 
+static double toTheta(double x, double y) {
+    if (x == 0) x += 0.00000001;
+    double a = atan(abs(y) / abs(x));
+
+    if (x >= 0) {
+        if (y >= 0) return a;
+        else return 2 * PI - a;
+    } else {
+        if (y >= 0) return PI - a;
+        else return PI + a;
+    }
+}
+
 std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_line, CartesianLine& goal_line, bool turn) {
     if (goal.command == "move") {
         error_turn_casual = angleDifference(robot->items.imu->get_rotation(), old_angle);
@@ -191,14 +204,18 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         if (abs(error_turn_casual) < MIN_ALLOWED_ERROR_DEG) timer++;
         abs_timer++;
         return v;
-    } else if (goal.command == "raw") {
-        double a = atan((goal.param2 - cy) / (goal.param1 - cx));
+    } else if (goal.command == "raw") { //// @TODO
+        double dx = goal.param1 - cx;
+        double dy = goal.param2 - cy;
         
-        error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
+        error_turn_casual = angleDifference(robot->items.imu->get_rotation(), toTheta(
+            dx, dy
+        ));
         double turn = turn_casual.update(error_turn_casual);
         
-        double val = sqrt(cx*cx + cy*cy);
-        error = goal.param1 - val;
+        double val = sqrt(dx*dx + dy*dy);
+        if (dx);
+
         if (robot->items.master->get_digital(pros::E_CONTROLLER_DIGITAL_A))
             robot->items.master->print(0, 0, "%f", error);
         double power = dis.update(error);
@@ -206,9 +223,9 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
 
         if (power > 127) power = 127;
         else if (power < -127) power = -127;
-        power *= abs(cos(error_turn_casual)); // uncomment to enable angle stabalization:
+        power *= abs(cos(error_turn_casual));
 
-        std::vector<double> v = {power - turn, power + turn}; // add -turn, turn to enable angle stabalization.
+        std::vector<double> v = {power - turn, power + turn};
 
         if (turn && error <= 0) timer = MIN_ALLOWED_ERROR_TIME; 
         else if (abs(error) < MIN_ALLOWED_ERROR && !turn) timer++;
