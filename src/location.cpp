@@ -114,8 +114,10 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
 
         std::vector<double> v = {power, power}; // add -turn, turn to enable angle stabalization.
 
-        if (turn && error <= 0) timer = MIN_ALLOWED_ERROR_TIME; 
-        else if (abs(error) < MIN_ALLOWED_ERROR && !turn) timer++;
+        if (abs(error) < MIN_ALLOWED_ERROR) {
+            if (turn) timer = MIN_ALLOWED_ERROR_TIME;
+            timer++;
+        }
         return v;
 
     } else if (goal.command == "turn") {
@@ -207,14 +209,15 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
     } else if (goal.command == "raw") { //// @TODO
         double dx = goal.param1 - cx;
         double dy = goal.param2 - cy;
-        
-        error_turn_casual = angleDifference(robot->items.imu->get_rotation(), toTheta(
-            dx, dy
-        ));
+        error_turn_casual = angleDifference(robot->items.imu->get_rotation(), toTheta(dx, dy));
         double turn = turn_casual.update(error_turn_casual);
         
         double val = sqrt(dx*dx + dy*dy);
-        if (dx);
+        if (dx < 0) {
+            if (cx < goal.param1 || cy > goal.param2) val *= -1;
+        } else {
+            if (cx > goal.param1 || cy > goal.param2) val *= -1;
+        }
 
         if (robot->items.master->get_digital(pros::E_CONTROLLER_DIGITAL_A))
             robot->items.master->print(0, 0, "%f", error);
@@ -226,9 +229,10 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         power *= abs(cos(error_turn_casual));
 
         std::vector<double> v = {power - turn, power + turn};
-
-        if (turn && error <= 0) timer = MIN_ALLOWED_ERROR_TIME; 
-        else if (abs(error) < MIN_ALLOWED_ERROR && !turn) timer++;
+        if (abs(error) < MIN_ALLOWED_ERROR) {
+            if (turn) timer = MIN_ALLOWED_ERROR_TIME;
+            timer++;
+        }
         return v;
     }
 }
