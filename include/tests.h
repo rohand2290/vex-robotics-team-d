@@ -27,7 +27,7 @@ public:
         pros::lcd::clear();
         items.master->clear();
         items.master->print(0, 0, "Lift robot up");
-        for (int i = 1; i <= 5; ++i) {
+        for (int i = 5; i >= 0; --i) {
             items.master->print(1, 0, "Starting in: %i", i);
             pros::delay(1000);
         }
@@ -68,7 +68,7 @@ public:
         pros::lcd::print(2, "Speed E: %s", equal ? "pass" : "fail");
         TERMINATE();
     }
-
+    /// @brief Gets the raw coordinates for driving forever...
     void get_raw_coordinates() {
         items.master->clear();
         int state = 0;
@@ -94,6 +94,16 @@ public:
             }
 
             items.master->clear_line(0);
+        }
+    }
+    /// @brief Gets the cata position to help with cata PID
+    void get_cata_pos() {
+        double pos;
+        while (true) {
+            pos = robot.get_cata_position();
+            if (items.master->get_digital(pros::E_CONTROLLER_DIGITAL_A))
+                items.master->print(0, 0, "%f", pos);
+            pros::delay(5);
         }
     }
 };
