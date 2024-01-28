@@ -34,40 +34,41 @@ using namespace std::chrono;
 
 */
 std::vector<Waypoint> spawn1 = {
-	// {"in"},
-	// {"move", 62},
-	// {"turn", 120},
-	// {"wings"},
-	// {"out"},
-	// {"power", 120000, 750},
-	// {"move", -5},
-	// {"turn", 140},
-	// {"move", 26},
-	// {"in"},
-	// {"wait", 250},
-	// {"turn", 170},
-	// {"out"},
-	// {"power", 120000, 1000},
-	// works till here...
-	// {"turn", 90}};
+	{"in"},
+	{"move", 62},
+	{"turn", 120},
+	{"wings"},
+	{"out"},
+	{"power", 120000, 750},
+	{"wings"},
+	{"move", -5},
+	{"turn", 140},
+	{"move", 26},
+	{"in"},
+	{"wait", 250},
+	{"turn", 220},
+	{"out"},
+	{"power", 120000, 1000},
+	//works till here...
+	{"turn", 90},
 	{"move", 50}};
-// {"turn", 90},
-// {"in"},
-// {"move", 28},
-// {"move", -49},
-// {"bwings"},
-// {"turn", -45},
-// {"move", 14},
-// {"bwings"},
-// {"turn", 45},
-// {"power", 120000, 250},
-// {"move", -2},
-// {"turn", 180},
-// {"power", 120000, 250},
-// {"move", -19},
-// {"turn", -55},
-// {"bwings"},
-// {"move", 57}};
+	// {"turn", 90},
+	// {"in"},
+	// {"move", 28},
+	// {"move", -49},
+	// {"bwings"},
+	// {"turn", -45},
+	// {"move", 14},
+	// {"bwings"},
+	// {"turn", 45},
+	// {"power", 120000, 250},
+	// {"move", -2},
+	// {"turn", 180},
+	// {"power", 120000, 250},
+	// {"move", -19},
+	// {"turn", -55},
+	// {"bwings"},
+	// {"move", 57}};
 
 std::vector<Waypoint>
 	skills = {
@@ -151,7 +152,7 @@ void autonomous()
 // Runs the operator control code.
 void opcontrol()
 {
-	// autonomous(); // disable if testing autonomous
+	autonomous(); // disable if testing autonomous
 	items.autonmous = false;
 	items.stop();
 	// Driver Code:
