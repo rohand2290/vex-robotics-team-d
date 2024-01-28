@@ -135,7 +135,7 @@ void autonomous()
 // Runs the operator control code.
 void opcontrol()
 {
-	autonomous(); // disable if testing autonomous
+	//autonomous(); // disable if testing autonomous
 	items.autonmous = false;
 	items.stop();
 	// Driver Code:
