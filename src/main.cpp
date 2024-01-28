@@ -54,8 +54,7 @@ std::vector<Waypoint> spawn1 = {
 	{"move", 50}
 };
 
-std::vector<Waypoint>
-	skills = {
+std::vector<Waypoint> skills = {
 
 };
 
