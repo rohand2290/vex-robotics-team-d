@@ -41,3 +41,23 @@ This file contains the Waypoint class. This class represents a waypoint to be fo
 
 Please keep in mind that there is no hesitation in abstracting further (a file for motor stuff, math stuff, sensor stuff, etc.), as it might be crucial in the long run.
 Just make sure to include it in this README file with a good explaination, so we can avoid confusion.
+## Auton Commands:
+
+* move: takes 1 parameter (first param) as inches. Moves bot x inches. negative inches for backwards, positive for forwards.
+* turn: takes 1 parameter (first param) as degrees. Turn bot that many degrees relative to current position. Positive for clockwise, negative for counterclockwise.
+* in: activates intake...
+* out: activates outake...
+* wings: toggles state of front wings...
+* bwings: toggles state of back wings...
+* stop: stops the intake.
+* rise: engages PTO
+* fall: disengages PTO
+* coast: sets drive train brake mode to COAST
+* hold: sets drive train brake mode to HOLD
+* wait: takes 1 parameter (first param) as milliseconds. halts the program for that many milliseconds.
+* spamcata: runs the cata untill program is terminated.
+* power: takes 2 parameters. First is analog range [-127, 127], second is milliseconds. Power will manually set drive motors to the given first parameter for the given milliseconds given in second parameter.
+* cata: takes 1 parameter (first param) in whole numbers. Runs cata for the given amount of times
+* precise: Sets error mode to precise, making movements precise, steady, and slow after this command.
+* pass: Sets the error mode to pass, making movements fast, less steady, and little bit inacurate (depending on constants)
+
