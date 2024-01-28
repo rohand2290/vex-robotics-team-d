@@ -99,6 +99,7 @@ void autonomous()
 	items.autonmous = true;
 	pros::lcd::clear();
 	int count = 0;
+	bool error_type = false;
 #ifndef SKILLS
 	for (Waypoint current_goal : spawn1)
 	{
@@ -107,7 +108,7 @@ void autonomous()
 	{
 #endif
 		maping.old_angle = items.imu->get_rotation();
-		bool error_type = current_goal.execute_aux_command(&robot);
+		error_type = current_goal.execute_aux_command(&robot);
 
 		CartesianLine robot_line(0, robot.x, robot.y);
 		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
