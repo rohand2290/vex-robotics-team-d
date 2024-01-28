@@ -91,6 +91,9 @@ public:
     /// @brief Checks if PID is still running...
     /// @return true (done) or false (not done)
     bool is_running();
+    /// @brief Returns the absolute angle changed since begining of the program...
+    /// @return Absolute angle in degrees...
+    double get_angle_abs();
 };
 
 #endif // LOCATION_H

@@ -67,9 +67,6 @@ std::vector<Waypoint> spawn1 = {
 	{"turn", -45},
 	{"bwings"},
 	{"raw", 20 * sin(d2r(-45)), 20 * cos(d2r(-45))},
-	//// {"pass"},
-	//// {"raw", 0, 42.65},
-	//// {"raw", 23.38, 0},
 };
 
 std::vector<Waypoint> skills = {
@@ -98,6 +95,7 @@ void competition_initialize() {}
 // Runs the user autonomous code.
 void autonomous()
 {
+	maping.reset_all();
 	items.autonmous = true;
 	pros::lcd::clear();
 	int count = 0;
@@ -213,10 +211,6 @@ void opcontrol()
 		robot.set_wings_back(items.master->get_digital_new_press(DIGITAL_R2));
 		robot.set_cata(items.master->get_digital(DIGITAL_Y));
 		robot.set_blocker(items.master->get_digital_new_press(DIGITAL_B), items.master->get_digital_new_press(DIGITAL_A));
-
-		// pros::lcd::print(0, "p:%i t:%i", items.master->get_analog(ANALOG_LEFT_Y), items.master->get_analog(ANALOG_RIGHT_X));
-		// pros::lcd::print(1, "i-f:%i i-o:%i", items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2));
-
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
 }

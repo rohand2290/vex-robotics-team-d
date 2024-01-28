@@ -33,8 +33,6 @@ void Robot::set_hold() {
 
 double Robot::get_abs_angle(bool rad) {
     double a = items.imu->get_heading();
-    while (x >= 360) a -= 360;
-    while (x < 0) a += 360;
     return rad ? degrees_to_radians(a) : a;
 }
 
