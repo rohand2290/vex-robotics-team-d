@@ -33,25 +33,43 @@ using namespace std::chrono;
 	Move forward 25 inches
 
 */
+static double d2r(double x) {
+	return 0.0174533 * x;
+}
 std::vector<Waypoint> spawn1 = {
+	{"pass"},
 	{"in"},
 	{"move", 62},
 	{"turn", 120},
+	{"stop"},
 	{"wings"},
 	{"out"},
 	{"power", 120000, 750},
 	{"wings"},
-	{"move", -5},
-	{"turn", 140},
+	{"stop"},
+	{"move", -10},
+	{"turn", 130},
 	{"move", 26},
 	{"in"},
-	{"wait", 250},
-	{"turn", 220},
+	{"turn", 170},
 	{"out"},
 	{"power", 120000, 1000},
+	{"stop"},
 	//works till here...
+	{"move", -5},
+	{"turn", 105},
+	{"move", 60},
 	{"turn", 90},
-	{"move", 50}
+	{"in"},
+	{"move", 30},
+	{"stop"},
+	{"move", -45},
+	{"turn", -45},
+	{"bwings"},
+	{"raw", 20 * sin(d2r(-45)), 20 * cos(d2r(-45))},
+	//// {"pass"},
+	//// {"raw", 0, 42.65},
+	//// {"raw", 23.38, 0},
 };
 
 std::vector<Waypoint> skills = {
@@ -133,9 +151,49 @@ void autonomous()
 	*/
 }
 // Runs the operator control code.
+static void get_raw_coordinates() {
+        items.master->clear();
+        int state;
+        Location maping;
+        maping.initialize(robot);
+        while (true) {  
+			state = 0;         
+            double x;
+            double y;
+			items.master->print(0, 0, "reading...");
+            while (!state) {
+                maping.update();
+                if (items.master->get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) state = !state;
+
+                x = maping.cx;
+                y = maping.cy;
+                pros::delay(5);           
+            }
+            maping.reset_all();
+            items.master->print(0, 0, "%f,%f", x, y);
+            while (!state) {
+                if (items.master->get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) state = !state;
+                pros::delay(20);
+            }
+			items.master->clear();
+        }
+    }
+static void get_stats(Location& maping) {
+        while (true) {
+            maping.update();
+            pros::lcd::print(0, "%f", items.imu->get_rotation());
+            pros::lcd::print(1, "%f", maping.cx);
+            pros::lcd::print(2, "%f", maping.cy);
+
+            pros::delay(20);
+        }
+    }
 void opcontrol()
 {
-	//autonomous(); // disable if testing autonomous
+	autonomous(); // disable if testing autonomous
+	//get_raw_coordinates();
+	//get_stats(maping);
+	
 	items.autonmous = false;
 	items.stop();
 	// Driver Code:

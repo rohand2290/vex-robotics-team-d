@@ -83,9 +83,9 @@
 
 // maximum allowed error:
 #define MIN_ALLOWED_ERROR 1.7
-#define MIN_ALLOWED_ERROR_DEG 1
+#define MIN_ALLOWED_ERROR_DEG 5
 #define MIN_ALLOWED_ERROR_TIME 100
-#define MIN_ALLOWED_ERROR_TIMEOUT 2500
+#define MIN_ALLOWED_ERROR_TIMEOUT 3000
 
 // ======= Miscelanious: =========
 

@@ -106,6 +106,17 @@ public:
             pros::delay(5);
         }
     }
+    /// @brief Get coordinates...
+    void get_stats(Location& maping) {
+        while (true) {
+            maping.update();
+            pros::lcd::print(0, "%f", items.imu->get_rotation());
+            pros::lcd::print(1, "%f", maping.cx);
+            pros::lcd::print(2, "%f", maping.cy);
+
+            pros::delay(20);
+        }
+    }
 };
 
 #endif // TESTS_H
