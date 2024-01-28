@@ -25,7 +25,7 @@ using namespace std::chrono;
 	Turn 45 degrees counterclockwise
 	Wings
 	Move backwards 8 inches
-	Turn 45 Degrees  counterclockwise
+	Turn 45 Degrees counterclockwise
 	Move backwards 24 inches
 	Turn 45 clockwise
 	Move forward 44 inches
@@ -51,24 +51,8 @@ std::vector<Waypoint> spawn1 = {
 	{"power", 120000, 1000},
 	//works till here...
 	{"turn", 90},
-	{"move", 50}};
-	// {"turn", 90},
-	// {"in"},
-	// {"move", 28},
-	// {"move", -49},
-	// {"bwings"},
-	// {"turn", -45},
-	// {"move", 14},
-	// {"bwings"},
-	// {"turn", 45},
-	// {"power", 120000, 250},
-	// {"move", -2},
-	// {"turn", 180},
-	// {"power", 120000, 250},
-	// {"move", -19},
-	// {"turn", -55},
-	// {"bwings"},
-	// {"move", 57}};
+	{"move", 50}
+};
 
 std::vector<Waypoint>
 	skills = {
