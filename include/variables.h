@@ -77,6 +77,9 @@
 #define SWING_KP 1
 #define SWING_KI 0
 #define SWING_KD 0
+// raw movement cosine constants:
+#define COS_FACTOR 0.95 // set to 1 if doesnt work
+#define SENSITIVE_FACTOR 2.7 // leave same if doesnt work
 // ======================= ODOM: ========================
 #define ERROR_MEASUREMENT 0.05
 #define MECH_ADVANTAGE 0.6 // mechanical advantage between drive motors and wheels.
@@ -85,6 +88,7 @@
 #define MIN_ALLOWED_ERROR 1.7
 #define MIN_ALLOWED_ERROR_DEG 5
 #define MIN_ALLOWED_ERROR_TIME 100
+#define MIN_ALLOWED_ERROR_TIMEOUT_DEG 1000
 #define MIN_ALLOWED_ERROR_TIMEOUT 3000
 
 // ======= Miscelanious: =========
