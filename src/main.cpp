@@ -40,7 +40,7 @@ std::vector<Waypoint> spawn1 = {
 	{"pass"},
 	{"in"},
 	{"move", 62},
-	{"turn", 120},
+	{"turn", 130},
 	{"stop"},
 	{"wings"},
 	{"out"},
