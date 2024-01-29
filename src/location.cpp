@@ -278,8 +278,8 @@ void Location::reset_all()
 bool Location::is_running() {
     // if (abs_timer >= MIN_ALLOWED_ERROR_TIMEOUT) return false;
     if (is_bashing) return false;
-    return timer <= MIN_ALLOWED_ERROR_TIME && abs_timer <= is_turning ? 
-        MIN_ALLOWED_ERROR_TIMEOUT_DEG : MIN_ALLOWED_ERROR_TIMEOUT;
+    return timer <= MIN_ALLOWED_ERROR_TIME && abs_timer <= (is_turning ? 
+        MIN_ALLOWED_ERROR_TIMEOUT_DEG : MIN_ALLOWED_ERROR_TIMEOUT);
 }
 
 double Location::get_angle_abs() {
