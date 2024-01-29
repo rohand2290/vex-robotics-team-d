@@ -121,6 +121,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         return v;
 
     } else if (goal.command == "turn") {
+        is_turning = true;
         if (goal.param2 == 0)
             error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
         else
@@ -228,7 +229,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
 
         if (power > 127) power = 127;
         else if (power < -127) power = -127;
-        power *= abs(cos(2.7 * robot->degrees_to_radians((int)error_turn_casual)));
+        power *= abs(COS_FACTOR * cos(SENSITIVE_FACTOR * robot->degrees_to_radians((int)error_turn_casual)));
 
         std::vector<double> v = {power - turn, power + turn};
         if (abs(error) < MIN_ALLOWED_ERROR) {
@@ -249,7 +250,7 @@ void Location::reset_all()
     robot->items.left3->tare_position();
 	robot->items.right3->tare_position();
 
-    old_angle = robot->items.imu->get_rotation();
+    old_angle += robot->items.imu->get_rotation();
     robot->items.imu->tare_rotation();
     robot->items.imu->tare_heading();
     dis.reset();
@@ -271,12 +272,14 @@ void Location::reset_all()
     error_swing = 0;
 
     is_bashing = 0;
+    is_turning = 0;
 }
 
 bool Location::is_running() {
     // if (abs_timer >= MIN_ALLOWED_ERROR_TIMEOUT) return false;
     if (is_bashing) return false;
-    return timer <= MIN_ALLOWED_ERROR_TIME && abs_timer <= MIN_ALLOWED_ERROR_TIMEOUT;
+    return timer <= MIN_ALLOWED_ERROR_TIME && abs_timer <= is_turning ? 
+        MIN_ALLOWED_ERROR_TIMEOUT_DEG : MIN_ALLOWED_ERROR_TIMEOUT;
 }
 
 double Location::get_angle_abs() {

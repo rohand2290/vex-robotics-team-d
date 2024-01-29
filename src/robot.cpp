@@ -196,7 +196,7 @@ double Robot::radians_to_degrees(double radians)
 
 double Robot::degrees_to_radians(double degrees)
 {
-    return (degrees * PI) / 180;
+    return degrees * 0.0174533;
 }
 
 void Robot::brake() {
@@ -214,7 +214,7 @@ void Robot::brake() {
             items.imu->get_accel().y*items.imu->get_accel().y
         );
         pros::delay(1);
-    } while (abs(in) < 0.0001);
+    } while (abs(in) < 0.001);
     set_coast();
 }
 
