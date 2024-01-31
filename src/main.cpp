@@ -36,11 +36,17 @@ using namespace std::chrono;
 static double d2r(double x) {
 	return 0.0174533 * x;
 }
+static void reverse_turns(std::vector<Waypoint>& v) {
+	for (Waypoint& i : v) {
+		if (i.command == "turn") i.param1 *= -1;
+	}
+}
+///// ============================================= 6 Triball non-disruption Auton =====
 std::vector<Waypoint> spawn1 = {
 	{"pass"},
 	{"in"},
 	{"move", 62},
-	{"turn", 130},
+	{"turn", 120},
 	{"stop"},
 	{"wings"},
 	{"out"},
@@ -48,26 +54,50 @@ std::vector<Waypoint> spawn1 = {
 	{"wings"},
 	{"stop"},
 	{"move", -10},
-	{"turn", 130},
-	{"move", 26},
+	{"turn", 120},
+	{"move", 23.5},
 	{"in"},
-	{"turn", 170},
+	{"turn", -135},
 	{"out"},
 	{"power", 120000, 900},
 	{"stop"},
 	//works till here...
 	{"move", -5},
-	{"turn", 105},
-	{"move", 55},
-	{"turn", 100},
+	{"turn", 90},
+	{"move", 50},
+	{"turn", 90},
 	{"in"},
-	{"move", 34},
+	{"move", 28},
 	{"stop"},
-	{"move", -45},
+	{"move", -32},
 	{"turn", -45},
 	{"bwings"},
-	{"raw", 20 * sin(d2r(-45)), 20 * cos(d2r(-45))},
+	{"move", -20},
+	{"turn", -45},
+	{"bwings"},
+	{"power", -120000, 500},
+	{"move", 5},
+	{"turn", 180},
+	{"power", 120000, 250},
+	{"move", -5},
 };
+////////// ====================================== WINPOINT ==================
+// std::vector<Waypoint> spawn1 = {
+// 	{"pass"},
+// 	{"bwings"},
+// 	{"move", -10},
+// 	{"turn", 45},
+// 	{"bwings"},
+// 	{"wait", 500},
+// 	{"power", -120000, 500},
+// 	{"move", 5},
+// 	{"turn", -10},
+// 	{"move", 5},
+// 	{"turn", -195},
+// 	{"move", -27.5},
+// 	{"turn", -45},
+// 	{"move", -33},
+// };
 
 std::vector<Waypoint> skills = {
 
@@ -188,7 +218,7 @@ static void get_stats(Location& maping) {
     }
 void opcontrol()
 {
-	autonomous(); // disable if testing autonomous
+	//autonomous(); // disable if testing autonomous
 	//get_raw_coordinates();
 	//get_stats(maping);
 	
