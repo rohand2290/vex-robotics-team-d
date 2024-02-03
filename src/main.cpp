@@ -43,43 +43,79 @@ static void reverse_turns(std::vector<Waypoint>& v) {
 }
 ///// ============================================= 6 Triball non-disruption Auton =====
 std::vector<Waypoint> spawn1 = {
+	/////// ================= NORMAL AUTON
+	// {"pass"},
+	// {"in"},
+	// {"move", 62},
+	// {"turn", 120},
+	// {"stop"},
+	// {"wings"},
+	// {"out"},
+	// {"power", 120000, 550},
+	// {"wings"},
+	// {"stop"},
+	// {"move", -10},
+	// {"turn", 120},
+	// {"move", 23.5},
+	// {"in"},
+	// {"turn", -135},
+	// {"out"},
+	// {"power", 120000, 900},
+	// {"stop"},
+	// //works till here...
+	// {"move", -5},
+	// {"turn", 90},
+	// {"move", 50},
+	// {"turn", 90},
+	// {"in"},
+	// {"move", 28},
+	// {"stop"},
+	// {"move", -32},
+	// {"turn", -45},
+	// {"bwings"},
+	// {"move", -20},
+	// {"turn", -45},
+	// {"bwings"},
+	// {"power", -120000, 500},
+	// {"move", 5},
+	// {"turn", 180},
+	// {"power", 120000, 250},
+	// {"move", -5},
+	// ==================== SKILLS:
 	{"pass"},
-	{"in"},
-	{"move", 62},
-	{"turn", 120},
-	{"stop"},
-	{"wings"},
-	{"out"},
-	{"power", 120000, 550},
-	{"wings"},
-	{"stop"},
-	{"move", -10},
-	{"turn", 120},
-	{"move", 23.5},
-	{"in"},
-	{"turn", -135},
-	{"out"},
-	{"power", 120000, 900},
-	{"stop"},
-	//works till here...
-	{"move", -5},
-	{"turn", 90},
-	{"move", 50},
-	{"turn", 90},
-	{"in"},
-	{"move", 28},
-	{"stop"},
-	{"move", -32},
-	{"turn", -45},
 	{"bwings"},
-	{"move", -20},
-	{"turn", -45},
+	{"move", -10},
+	{"turn", 45},
 	{"bwings"},
 	{"power", -120000, 500},
-	{"move", 5},
-	{"turn", 180},
-	{"power", 120000, 250},
-	{"move", -5},
+	{"move", 20},
+	//{"turn", -70},
+	//{"move", 10},
+	{"cata", 50},
+	{"move", 30},
+	{"wings"},
+	{"move", 20},
+	{"move", -15},
+	{"turn", 90},
+	{"wings"},
+	{"turn", -90},
+	{"wings"},
+	{"move", 40},
+	{"wings"},
+	{"turn", 160},
+	{"bwings"},
+	{"power", -120000, 700},
+	{"move", -20},
+	{"turn", -100},
+	{"move", 10},
+	{"turn", 90},
+	{"power", -120000, 700},
+	{"move", -20},
+	{"turn", -100},
+	{"move", 10},
+	{"turn", 90},
+	{"power", -120000, 700},
+	{"move", -10}
 };
 ////////// ====================================== WINPOINT ==================
 // std::vector<Waypoint> spawn1 = {
@@ -99,42 +135,42 @@ std::vector<Waypoint> spawn1 = {
 // 	{"move", -33},
 // };
 // ============================================== SKILLS ========================
-// std::vector<Waypoint> spawn1 = {
-// 	{"pass"},
-// 	{"bwings"},
-// 	{"move", -10},
-// 	{"turn", 45},
-// 	{"bwings"},
-// 	{"power", -120000, 500},
-// 	{"move", 20},
-// 	//{"turn", -70},
-// 	//{"move", 10},
-// 	{"cata", 50},
-// 	{"move", 30},
-// 	{"wings"},
-// 	{"move", 20},
-// 	{"move", -15},
-// 	{"turn", 90},
-// 	{"wings"},
-// 	{"turn", -90},
-// 	{"wings"},
-// 	{"move", 40},
-// 	{"wings"},
-// 	{"turn", 160},
-// 	{"bwings"},
-// 	{"power", -120000, 700},
-// 	{"move", -20},
-// 	{"turn", -100},
-// 	{"move", 10},
-// 	{"turn", 90},
-// 	{"power", -120000, 700},
-// 	{"move", -20},
-// 	{"turn", -100},
-// 	{"move", 10},
-// 	{"turn", 90},
-// 	{"power", -120000, 700},
-// 	{"move", -10}
-// };
+std::vector<Waypoint> spawn1 = {
+	{"pass"},
+	{"bwings"},
+	{"move", -10},
+	{"turn", 45},
+	{"bwings"},
+	{"power", -120000, 500},
+	{"move", 20},
+	//{"turn", -70},
+	//{"move", 10},
+	{"cata", 50},
+	{"move", 30},
+	{"wings"},
+	{"move", 20},
+	{"move", -15},
+	{"turn", 90},
+	{"wings"},
+	{"turn", -90},
+	{"wings"},
+	{"move", 40},
+	{"wings"},
+	{"turn", 160},
+	{"bwings"},
+	{"power", -120000, 700},
+	{"move", -20},
+	{"turn", -100},
+	{"move", 10},
+	{"turn", 90},
+	{"power", -120000, 700},
+	{"move", -20},
+	{"turn", -100},
+	{"move", 10},
+	{"turn", 90},
+	{"power", -120000, 700},
+	{"move", -10}
+};
 
 Items items;
 Robot robot;
@@ -158,15 +194,17 @@ void competition_initialize() {}
 // Runs the user autonomous code.
 void autonomous()
 {
-	//maping.reset_all();
+	maping.reset_all();
 	items.autonmous = true;
-	pros::lcd::clear();
 	int count = 0;
 	bool error_type = false;
-	pros::lcd::print(0, "%s", spawn1[0]);
-	while (true);
+#ifndef SKILLS
 	for (Waypoint current_goal : spawn1)
 	{
+#else
+	for (Waypoint current_goal : skills)
+	{
+#endif
 		maping.old_angle = items.imu->get_rotation();
 		error_type = current_goal.execute_aux_command(&robot);
 		CartesianLine robot_line(0, robot.x, robot.y);

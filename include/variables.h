@@ -43,6 +43,7 @@
 
 // ============== Auton: ================
 // gamemode:
+//#define SKILLS
 #define JOYSTICK_DEADZONE 10 // deadzone analog value for which drive wont be triggered.
 // trackion wheels:
 #define WHEEL_C 8.63937979737 // wheel circumference
