@@ -25,7 +25,7 @@
 // Catapult:
 #define CATA_PORT 10 // Defines the port of the cata.
 #define CATA_ENCODER 1 // Define the encoder port for cata
-#define CATA_REST 90 // Defines the resting position of the cata...
+#define CATA_REST 80 // Defines the resting position of the cata...
 
 // Pistons:
 #define INTAKE_PISTON_PORT 69
