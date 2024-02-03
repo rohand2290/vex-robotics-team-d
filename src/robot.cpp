@@ -160,7 +160,7 @@ void Robot::set_cata(int analog) {
         // items.cata->move(ABS(power));
         items.cata->move(0);
     } else {
-        items.cata->move_voltage(90000);
+        items.cata->move_voltage(120000);
     }
 }
 
