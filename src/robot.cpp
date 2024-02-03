@@ -225,11 +225,12 @@ void Robot::run_cata_x_times(int x) {
     do {
         pros::delay(5);
         double change = get_cata_position() - prev_pos;
-        if (change <= 0) {
+        if (change <= 0 && !temp) {
             ++count;
             temp = true;
         }
         if (temp && change > 0) temp = false;
+        prev_pos = get_cata_position();
     } while (count < x);
     items.cata->brake();
 }
