@@ -25,7 +25,7 @@
 // Catapult:
 #define CATA_PORT 10 // Defines the port of the cata.
 #define CATA_ENCODER 1 // Define the encoder port for cata
-#define CATA_REST 90 // Defines the resting position of the cata...
+#define CATA_REST 80 // Defines the resting position of the cata...
 
 // Pistons:
 #define INTAKE_PISTON_PORT 69
@@ -43,7 +43,7 @@
 
 // ============== Auton: ================
 // gamemode:
-//#define SKILLS // uncomment if not using skills
+//#define SKILLS
 #define JOYSTICK_DEADZONE 10 // deadzone analog value for which drive wont be triggered.
 // trackion wheels:
 #define WHEEL_C 8.63937979737 // wheel circumference
@@ -86,7 +86,7 @@
 
 // maximum allowed error:
 #define MIN_ALLOWED_ERROR 1.7
-#define MIN_ALLOWED_ERROR_DEG 5
+#define MIN_ALLOWED_ERROR_DEG 6.5
 #define MIN_ALLOWED_ERROR_TIME 100
 #define MIN_ALLOWED_ERROR_TIMEOUT_DEG 1000
 #define MIN_ALLOWED_ERROR_TIMEOUT 3000

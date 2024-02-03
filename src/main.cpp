@@ -43,6 +43,7 @@ static void reverse_turns(std::vector<Waypoint>& v) {
 }
 ///// ============================================= 6 Triball non-disruption Auton =====
 std::vector<Waypoint> spawn1 = {
+	/////// ================= NORMAL AUTON
 	// {"pass"},
 	// {"in"},
 	// {"move", 62},
@@ -80,6 +81,7 @@ std::vector<Waypoint> spawn1 = {
 	// {"turn", 180},
 	// {"power", 120000, 250},
 	// {"move", -5},
+	// ==================== SKILLS:
 	{"pass"},
 	{"bwings"},
 	{"move", -10},
@@ -87,16 +89,15 @@ std::vector<Waypoint> spawn1 = {
 	{"bwings"},
 	{"power", -120000, 500},
 	{"move", 20},
-	{"turn", -70},
+	//{"turn", -70},
+	//{"move", 10},
 	{"cata", 50},
-	{"move", -30},
-	{"turn", 170},
+	{"move", 30},
 	{"wings"},
 	{"move", 20},
 	{"move", -15},
-	{"wings"},
 	{"turn", 90},
-	{"move", 48},
+	{"wings"},
 	{"turn", -90},
 	{"wings"},
 	{"move", 40},
@@ -170,7 +171,6 @@ std::vector<Waypoint> skills = {
 	{"turn", 90},
 	{"power", -120000, 700},
 	{"move", -10}
-
 };
 
 Items items;
@@ -197,7 +197,6 @@ void autonomous()
 {
 	maping.reset_all();
 	items.autonmous = true;
-	pros::lcd::clear();
 	int count = 0;
 	bool error_type = false;
 #ifndef SKILLS
@@ -209,10 +208,8 @@ void autonomous()
 #endif
 		maping.old_angle = items.imu->get_rotation();
 		error_type = current_goal.execute_aux_command(&robot);
-
 		CartesianLine robot_line(0, robot.x, robot.y);
 		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
-
 		do
 		{
 			maping.start_iter = pros::millis();

@@ -156,11 +156,11 @@ void Robot::set_intake(int analog1, int analog2, int pist)
 void Robot::set_cata(int analog) {
     if (!analog) {
         // P Stuff:
-        // double power = CATA_KP * (CATA_REST - get_cata_position());
-        // items.cata->move(ABS(power));
-        items.cata->move(0);
+        double power = CATA_KP * (CATA_REST - get_cata_position());
+        items.cata->move(power);
+        // items.cata->move(0);
     } else {
-        items.cata->move_voltage(90000);
+        items.cata->move_voltage(120000);
     }
 }
 
@@ -225,11 +225,12 @@ void Robot::run_cata_x_times(int x) {
     do {
         pros::delay(5);
         double change = get_cata_position() - prev_pos;
-        if (change <= 0) {
+        if (change <= 0 && !temp) {
             ++count;
             temp = true;
         }
         if (temp && change > 0) temp = false;
+        prev_pos = get_cata_position();
     } while (count < x);
     items.cata->brake();
 }
