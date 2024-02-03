@@ -98,44 +98,43 @@ std::vector<Waypoint> spawn1 = {
 // 	{"turn", -45},
 // 	{"move", -33},
 // };
-
-std::vector<Waypoint> skills = {
-	{"pass"},
-	{"bwings"},
-	{"move", -10},
-	{"turn", 45},
-	{"bwings"},
-	{"power", -120000, 500},
-	{"move", 20},
-	//{"turn", -70},
-	//{"move", 10},
-	{"cata", 50},
-	{"move", 30},
-	{"wings"},
-	{"move", 20},
-	{"move", -15},
-	{"turn", 90},
-	{"wings"},
-	{"turn", -90},
-	{"wings"},
-	{"move", 40},
-	{"wings"},
-	{"turn", 160},
-	{"bwings"},
-	{"power", -120000, 700},
-	{"move", -20},
-	{"turn", -100},
-	{"move", 10},
-	{"turn", 90},
-	{"power", -120000, 700},
-	{"move", -20},
-	{"turn", -100},
-	{"move", 10},
-	{"turn", 90},
-	{"power", -120000, 700},
-	{"move", -10}
-
-};
+// ============================================== SKILLS ========================
+// std::vector<Waypoint> spawn1 = {
+// 	{"pass"},
+// 	{"bwings"},
+// 	{"move", -10},
+// 	{"turn", 45},
+// 	{"bwings"},
+// 	{"power", -120000, 500},
+// 	{"move", 20},
+// 	//{"turn", -70},
+// 	//{"move", 10},
+// 	{"cata", 50},
+// 	{"move", 30},
+// 	{"wings"},
+// 	{"move", 20},
+// 	{"move", -15},
+// 	{"turn", 90},
+// 	{"wings"},
+// 	{"turn", -90},
+// 	{"wings"},
+// 	{"move", 40},
+// 	{"wings"},
+// 	{"turn", 160},
+// 	{"bwings"},
+// 	{"power", -120000, 700},
+// 	{"move", -20},
+// 	{"turn", -100},
+// 	{"move", 10},
+// 	{"turn", 90},
+// 	{"power", -120000, 700},
+// 	{"move", -20},
+// 	{"turn", -100},
+// 	{"move", 10},
+// 	{"turn", 90},
+// 	{"power", -120000, 700},
+// 	{"move", -10}
+// };
 
 Items items;
 Robot robot;
@@ -159,24 +158,19 @@ void competition_initialize() {}
 // Runs the user autonomous code.
 void autonomous()
 {
-	maping.reset_all();
+	//maping.reset_all();
 	items.autonmous = true;
 	pros::lcd::clear();
 	int count = 0;
 	bool error_type = false;
-#ifndef SKILLS
+	pros::lcd::print(0, "%s", spawn1[0]);
+	while (true);
 	for (Waypoint current_goal : spawn1)
 	{
-#else
-	for (Waypoint current_goal : skills)
-	{
-#endif
 		maping.old_angle = items.imu->get_rotation();
 		error_type = current_goal.execute_aux_command(&robot);
-
 		CartesianLine robot_line(0, robot.x, robot.y);
 		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
-
 		do
 		{
 			maping.start_iter = pros::millis();
@@ -252,7 +246,7 @@ static void get_stats(Location& maping) {
     }
 void opcontrol()
 {
-	//autonomous(); // disable if testing autonomous
+	autonomous(); // disable if testing autonomous
 	//get_raw_coordinates();
 	//get_stats(maping);
 	
