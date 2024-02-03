@@ -84,6 +84,17 @@ std::vector<Waypoint> spawn1 = {
 	// ==================== SKILLS:
 	{"pass"},
 	{"bwings"},
+	{"move", -10},
+	{"turn", 60},
+	{"bwings"},
+	{"power", -120000, 500},
+	{"move", 25},
+	{"turn", -70},
+	{"cata", 50},
+	{"move", -30},
+	{"turn", 170},
+	{"wings"},
+	{"move", 20},
 	{"move", -15},
 	{"turn", 60},
 	{"power", -120000, 600},
@@ -134,7 +145,7 @@ std::vector<Waypoint> spawn1 = {
 // 	{"turn", -45},
 // 	{"move", -33},
 // };
-
+// ============================================== SKILLS ========================
 std::vector<Waypoint> skills = {
 	{"pass"},
 	{"bwings"},
