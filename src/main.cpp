@@ -135,7 +135,7 @@ std::vector<Waypoint> spawn1 = {
 // 	{"move", -33},
 // };
 // ============================================== SKILLS ========================
-std::vector<Waypoint> spawn1 = {
+std::vector<Waypoint> skills = {
 	{"pass"},
 	{"bwings"},
 	{"move", -10},
