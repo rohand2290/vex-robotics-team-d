@@ -156,9 +156,9 @@ void Robot::set_intake(int analog1, int analog2, int pist)
 void Robot::set_cata(int analog) {
     if (!analog) {
         // P Stuff:
-        double power = CATA_KP * (CATA_REST - get_cata_position());
-        items.cata->move(power);
-        // items.cata->move(0);
+        //double power = CATA_KP * (CATA_REST - get_cata_position());
+        //items.cata->move(power);
+        items.cata->move(0);
     } else {
         items.cata->move_voltage(120000);
     }
