@@ -126,31 +126,35 @@ void Robot::set_speed_chassis(int y, int x)
 
 void Robot::set_intake(int analog1, int analog2, int pist)
 {
-    if (intake_state == 0) {
-        if (analog1) {
-            set_in(-255, items);
-            intake_state = 1;
-        } else if (analog2) {
-            set_in(255, items);
-            intake_state = -1;
-        }
-    } else if (intake_state == 1) {
-        if (analog1) {
-            set_in(0, items);
-            intake_state = 0;
-        } else if (analog2) {
-            set_in(255, items);
-            intake_state = -1;
-        }
-    } else if (intake_state == -1) {
-        if (analog1) {
-            set_in(-255, items);
-            intake_state = 1;
-        } else if (analog2) {
-            set_in(0, items);
-            intake_state = 0;
-        }
-    }
+    // if (intake_state == 0) {
+    //     if (analog1) {
+    //         set_in(-255, items);
+    //         intake_state = 1;
+    //     } else if (analog2) {
+    //         set_in(255, items);
+    //         intake_state = -1;
+    //     }
+    // } else if (intake_state == 1) {
+    //     if (analog1) {
+    //         set_in(0, items);
+    //         intake_state = 0;
+    //     } else if (analog2) {
+    //         set_in(255, items);
+    //         intake_state = -1;
+    //     }
+    // } else if (intake_state == -1) {
+    //     if (analog1) {
+    //         set_in(-255, items);
+    //         intake_state = 1;
+    //     } else if (analog2) {
+    //         set_in(0, items);
+    //         intake_state = 0;
+    //     }
+    // }
+    if (analog1) set_in(-127, items);
+    else if (analog2) set_in(127, items);
+    else set_in(0, items);
+
 }
 
 void Robot::set_cata(int analog) {
