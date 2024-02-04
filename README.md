@@ -59,5 +59,6 @@ Just make sure to include it in this README file with a good explaination, so we
 * power: takes 2 parameters. First is analog range [-127, 127], second is milliseconds. Power will manually set drive motors to the given first parameter for the given milliseconds given in second parameter.
 * cata: takes 1 parameter (first param) in whole numbers. Runs cata for the given amount of times
 * precise: Sets error mode to precise, making movements precise, steady, and slow after this command.
+* tcata: Runs cata motor for 1st param (ms) of time.
 * pass: Sets the error mode to pass, making movements fast, less steady, and little bit inacurate (depending on constants)
 

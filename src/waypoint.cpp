@@ -70,7 +70,12 @@ bool Waypoint::execute_aux_command(Robot* robot) {
         }
     } else if (command == "cata") {
         robot->run_cata_x_times(param1);
-    } else if (command == "precise") {
+    } else if (command == "tcata") {
+        robot->items.cata->move_velocity(120000);
+        pros::delay(param1);
+        robot->items.cata->brake();
+    } 
+    else if (command == "precise") {
         return false;
     } else if (command == "pass") {
         return true;
