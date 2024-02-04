@@ -84,17 +84,32 @@ std::vector<Waypoint> spawn1 = {
 	// ==================== SKILLS:
 	{"pass"},
 	{"bwings"},
-	{"move", -10},
+	{"move", -12},
 	{"turn", 60},
 	{"bwings"},
-	{"power", -120000, 500},
-	{"move", 15},
+	{"power", -63, 1000},
+	{"move", 12},
+	{"turn", 70},
+	{"move", 5},
+	{"cata", 5},
+	// all good done matchloading 
+	{"move", -47},
+	{"turn", 211},
+	{"wings"},
+	{"move", 11},
+	{"wings"},
+	{"move", -35},
+	{"turn", -80},
+	{"move", 30},
 	{"turn", 80},
-	{"move",0.5},
-	// {"cata", 50},
-	// {"move", -30},
-	// {"turn", 170},
-	// {"wings"},
+	{"wings"},
+	{"power",120000,5000}
+	// all good on one side and getting it over to other side 
+	
+	
+	// {"turn", -90},
+	// {"move", 40},
+	// {"turn", 90}
 	// {"move", 20},
 	// {"move", -15},
 	// {"turn", 60},
@@ -300,7 +315,7 @@ void opcontrol()
 	autonomous(); // disable if testing autonomous
 	//get_raw_coordinates();
 	//get_stats(maping);
-	
+
 	items.autonmous = false;
 	items.stop();
 	// Driver Code:
