@@ -322,6 +322,51 @@ static void get_stats(Location& maping) {
             pros::delay(20);
         }
     }
+static void test_pid() {
+	std::vector<Waypoint> spawn1 = {
+		// TEST MOVEMENT:
+		{"move", 30},
+		//// or TEST TURN
+		// {"turn", 90},
+	};
+	maping.reset_all();
+	items.autonmous = true;
+	int count = 0;
+	bool error_type = false;
+#ifndef SKILLS
+	for (Waypoint current_goal : spawn1)
+	{
+#else
+	for (Waypoint current_goal : skills)
+	{
+#endif
+		maping.old_angle = items.imu->get_rotation();
+		error_type = current_goal.execute_aux_command(&robot);
+		CartesianLine robot_line(0, robot.x, robot.y);
+		CartesianLine goal_line(0, current_goal.param1 * sin(robot.theta), current_goal.param1 * cos(robot.theta));
+		do
+		{
+			maping.start_iter = pros::millis();
+			std::vector<double> vect;
+			if (current_goal.is_motion_command())
+			{
+				vect = maping.updatePID(current_goal, robot_line, goal_line, error_type);
+			}
+			else
+				break;
+
+			robot.set_both_sides(vect[1], vect[0]);
+			maping.update();
+			pros::delay(AUTON_LOOP_DELAY);
+		} while (true); // this is why this is a test
+
+		robot.set_both_sides(0, 0);
+
+		maping.cx = 0;
+		maping.cy = 0;
+		maping.reset_all();
+	}
+}
 void opcontrol()
 {
 	autonomous(); // disable if testing autonomous
