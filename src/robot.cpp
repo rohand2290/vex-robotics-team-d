@@ -223,7 +223,7 @@ void Robot::run_cata_x_times(int x) {
     int count = 0, temp = false;
     items.cata->move_voltage(120000);
     do {
-        pros::delay(5);
+        pros::delay(20);
         double change = get_cata_position() - prev_pos;
         if (change <= 0 && !temp) {
             ++count;
