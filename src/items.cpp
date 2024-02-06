@@ -1,11 +1,13 @@
 #include "depend.h"
 #include "api.h"
+#include "pros/motors.h"
 
 void Items::initialize()  {
     wing_pos = false;
     wing_pos = false;
     intake_pos = false;
     autonmous = true;
+    cata_state = false;
     master = new pros::Controller(pros::E_CONTROLLER_MASTER);
     left1  = new pros::Motor (LEFT_WHEELS_PORT_1, pros::E_MOTOR_GEAR_600, true);
     left2  = new pros::Motor (LEFT_WHEELS_PORT_2, pros::E_MOTOR_GEAR_600, true);
@@ -14,7 +16,8 @@ void Items::initialize()  {
     right2 = new pros::Motor (RIGHT_WHEELS_PORT_2, pros::E_MOTOR_GEAR_600);
     right3 = new pros::Motor (RIGHT_WHEELS_PORT_3, pros::E_MOTOR_GEAR_600);
     intake_left = new pros::Motor (INTAKE_PORT_LEFT, pros::E_MOTOR_GEAR_600, pros::E_MOTOR_BRAKE_COAST);
-    intake_right = new pros::Motor (INTAKE_PORT_RIGHT, pros::E_MOTOR_GEAR_200, true);
+    intake_right = new pros::Motor (INTAKE_PORT_RIGHT, pros::E_MOTOR_GEAR_200, pros::E_MOTOR_BRAKE_COAST);
+    intake_right->set_reversed(true);
     cata = new pros::Motor(CATA_PORT, pros::E_MOTOR_GEAR_100);
     wings = new pros::ADIDigitalOut (WING_1_PORT);
     wings_back = new pros::ADIDigitalOut (WING_2_PORT);

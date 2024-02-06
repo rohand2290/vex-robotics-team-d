@@ -25,7 +25,7 @@
 // Catapult:
 #define CATA_PORT 10 // Defines the port of the cata.
 #define CATA_ENCODER 1 // Define the encoder port for cata
-#define CATA_REST 80 // Defines the resting position of the cata...
+#define CATA_REST 90 // Defines the resting position of the cata...
 
 // Pistons:
 #define INTAKE_PISTON_PORT 69
@@ -70,7 +70,7 @@
 #define TURN_KI 0.00001
 #define TURN_KD 0.001
 // cata:
-#define CATA_KP 1
+#define CATA_KP 2.5
 // break:
 #define BREAK_KP 0.1
 // swing:

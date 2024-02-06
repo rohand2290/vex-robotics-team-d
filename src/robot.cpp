@@ -126,38 +126,46 @@ void Robot::set_speed_chassis(int y, int x)
 
 void Robot::set_intake(int analog1, int analog2, int pist)
 {
-    if (intake_state == 0) {
-        if (analog1) {
-            set_in(-255, items);
-            intake_state = 1;
-        } else if (analog2) {
-            set_in(255, items);
-            intake_state = -1;
-        }
-    } else if (intake_state == 1) {
-        if (analog1) {
-            set_in(0, items);
-            intake_state = 0;
-        } else if (analog2) {
-            set_in(255, items);
-            intake_state = -1;
-        }
-    } else if (intake_state == -1) {
-        if (analog1) {
-            set_in(-255, items);
-            intake_state = 1;
-        } else if (analog2) {
-            set_in(0, items);
-            intake_state = 0;
-        }
-    }
+    // if (intake_state == 0) {
+    //     if (analog1) {
+    //         set_in(-255, items);
+    //         intake_state = 1;
+    //     } else if (analog2) {
+    //         set_in(255, items);
+    //         intake_state = -1;
+    //     }
+    // } else if (intake_state == 1) {
+    //     if (analog1) {
+    //         set_in(0, items);
+    //         intake_state = 0;
+    //     } else if (analog2) {
+    //         set_in(255, items);
+    //         intake_state = -1;
+    //     }
+    // } else if (intake_state == -1) {
+    //     if (analog1) {
+    //         set_in(-255, items);
+    //         intake_state = 1;
+    //     } else if (analog2) {
+    //         set_in(0, items);
+    //         intake_state = 0;
+    //     }
+    // }
+    if (analog1) set_in(-255, items);
+    if (analog2) set_in(255, items);
+    if (analog1 == 0 && analog2 == 0) set_in(0, items);
 }
 
-void Robot::set_cata(int analog) {
-    if (!analog) {
+void Robot::set_cata(int analog, int analog2) {
+    if (analog2) items.cata_state = !items.cata_state;
+    if (items.cata_state) {
         // P Stuff:
-        //double power = CATA_KP * (CATA_REST - get_cata_position());
-        //items.cata->move(power);
+        double power = CATA_KP * (CATA_REST - get_cata_position());
+        items.cata->move(power);
+        return;
+    }
+    
+    if (!analog) {
         items.cata->move(0);
     } else {
         items.cata->move_voltage(120000);

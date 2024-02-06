@@ -51,20 +51,22 @@ std::vector<Waypoint> spawn1 = {
 	// {"stop"},
 	// {"wings"},
 	// {"out"},
-	// {"power", 120000, 550},
+	// {"power", 120000, 750},
 	// {"wings"},
 	// {"stop"},
 	// {"move", -10},
-	// {"turn", 120},
-	// {"move", 23.5},
+	// {"wings"},
+	// {"turn", 130},
+	// {"move", 24.5},
 	// {"in"},
 	// {"turn", -135},
 	// {"out"},
 	// {"power", 120000, 900},
 	// {"stop"},
-	// //works till here...
-	// {"move", -5},
+	//works till here...
+	// {"move", -10}, // original : -5
 	// {"turn", 90},
+	// {"wait", 10},
 	// {"move", 50},
 	// {"turn", 90},
 	// {"in"},
@@ -90,8 +92,8 @@ std::vector<Waypoint> spawn1 = {
 	// {"power", -63, 1000},
 	// {"move", 12},
 	// {"turn", 70},
-	// {"move", 5},
-	// {"cata", 5},
+	// {"power", 10, 200},
+	// {"tcata", 35000},
 	// //all good done matchloading 
 	// {"move", -47},
 	// {"turn", 211},
@@ -103,20 +105,20 @@ std::vector<Waypoint> spawn1 = {
 	// {"move", 30},
 	// {"turn", 80},
 	// {"wings"},
-	{"power",120000,1300},
-	{"turn", 170},
-	{"bwings"},
-	{"power",-120000,600},
-	{"move", 30},
-	{"bwings"},
-	{"turn", -80},
-	{"move", 48},
-	{"turn", 120},
-	{"bwings"},
-	{"power",-120000,600},
-	{"move", 10}
-	//good up till here 
-	//{"move", -20},
+	// {"power",120000,1300},
+	// {"turn", 170},
+	// {"bwings"},
+	// {"power",-120000,600},
+	// {"move", 30},
+	// {"bwings"},
+	// {"turn", -80},
+	// {"move", 48},
+	// {"turn", 120},
+	// {"bwings"},
+	// {"power",-120000,600},
+	// {"move", 10},
+	// ////good up till here 
+	// {"move", -20},
 	// {"move", 20},
 	// {"move", -15},
 	// {"turn", 90},
@@ -139,61 +141,26 @@ std::vector<Waypoint> spawn1 = {
 	// {"turn", 90},
 	// {"power", -120000, 700},
 	// {"move", -10}
-};
-////////// ====================================== WINPOINT ==================
-// std::vector<Waypoint> spawn1 = {
-// 	{"pass"},
-// 	{"bwings"},
-// 	{"move", -10},
-// 	{"turn", 45},
-// 	{"bwings"},
-// 	{"wait", 500},
-// 	{"power", -120000, 500},
-// 	{"move", 5},
-// 	{"turn", -10},
-// 	{"move", 5},
-// 	{"turn", -195},
-// 	{"move", -27.5},
-// 	{"turn", -45},
-// 	{"move", -33},
-// };
-// ============================================== SKILLS ========================
-std::vector<Waypoint> skills = {
+	// ========================== WINPOINT
 	{"pass"},
 	{"bwings"},
-	{"move", -10},
-	{"turn", 45},
+	{"move", -12},
+	{"turn", 60},
 	{"bwings"},
-	{"power", -120000, 500},
-	{"move", 20},
-	{"turn", -70},
-	{"cata", 50},
-	{"move", -30},
-	{"turn", 170},
-	{"wings"},
-	{"move", 20},
-	{"move", -15},
-	{"wings"},
-	{"turn", 90},
-	{"move", 48},
-	{"turn", -90},
-	{"wings"},
-	{"move", 40},
-	{"wings"},
-	{"turn", 160},
-	{"bwings"},
-	{"power", -120000, 700},
-	{"move", -20},
-	{"turn", -100},
-	{"move", 10},
-	{"turn", 90},
-	{"power", -120000, 700},
-	{"move", -20},
-	{"turn", -100},
-	{"move", 10},
-	{"turn", 90},
-	{"power", -120000, 700},
-	{"move", -10}
+	{"power", -63, 1000},
+	{"move", 5},
+	{"turn", -10},
+	{"move", 5},
+	{"turn", -195}, 
+	{"move", -27.5},
+	{"turn", -52.5},
+	{"move", -33},
+	// ============================ SABATOGE AUTON:
+	// {"in"},
+	// {"move", 62.5},
+	// {"wings"},
+	// {"move", -62.5},
+	// {"stop"},
 };
 
 Items items;
@@ -308,7 +275,8 @@ static void get_stats(Location& maping) {
     }
 void opcontrol()
 {
-	autonomous(); // disable if testing autonomous
+	//get_stats(maping);
+	//autonomous(); // disable if testing autonomous
 	//get_raw_coordinates();
 	//get_stats(maping);
 
@@ -325,11 +293,12 @@ void opcontrol()
 			items.master->get_analog(ANALOG_RIGHT_X));
 		// actions acording to buttons:
 		robot.set_intake(
-			items.master->get_digital_new_press(DIGITAL_L1), items.master->get_digital_new_press(DIGITAL_L2),
+			items.master->get_digital(DIGITAL_L1), items.master->get_digital(DIGITAL_L2),
 			items.master->get_digital_new_press(DIGITAL_A));
 		robot.set_wings(items.master->get_digital_new_press(DIGITAL_R1));
 		robot.set_wings_back(items.master->get_digital_new_press(DIGITAL_R2));
-		robot.set_cata(items.master->get_digital(DIGITAL_Y));
+		robot.set_cata(items.master->get_digital(DIGITAL_Y)
+			,items.master->get_digital_new_press(DIGITAL_X));
 		robot.set_blocker(items.master->get_digital_new_press(DIGITAL_B), items.master->get_digital_new_press(DIGITAL_A));
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
