@@ -55,8 +55,7 @@ void Location::initialize(Robot& r) {
 std::vector<double> Location::update() {
     rel_l = left_abs_dist() - old_l;
 	rel_r = right_abs_dist() - old_r;
-    // rel_th = robot->get_abs_angle() - old_th;
-    robot->theta = robot->get_abs_angle();
+    robot->theta = get_angle_abs();
 
     double time_factor = MECH_ADVANTAGE * 1.2;
     double mag = (rel_l + rel_r) / 2;
@@ -70,7 +69,6 @@ std::vector<double> Location::update() {
 
     old_l = left_abs_dist();
 	old_r = right_abs_dist();
-    // old_th = robot->get_abs_angle();
 
     return {cx, cy};
 }
@@ -122,7 +120,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
 
     } else if (goal.command == "turn") {
         is_turning = true;
-        if (goal.param2 == 0)
+        if (goal.param2 == 1)
             error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
         else
             error_turn_casual = angleDifference(robot->items.imu->get_rotation(), get_angle_abs());
@@ -283,7 +281,7 @@ bool Location::is_running() {
 }
 
 double Location::get_angle_abs() {
-    return robot->items.imu->get_rotation() + old_angle;
+    return robot->items.imu->get_rotation() - old_angle;
 }
 
 

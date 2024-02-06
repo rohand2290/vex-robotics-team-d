@@ -1,6 +1,8 @@
 #ifndef AUTONS_H
 #define AUTONS_H
 
+#include "depend.h"
+
 class PID {
 private:
     double KP;
@@ -29,17 +31,17 @@ public:
     void reset();
 };
 
-class Autotuner {
-private:
-    Robot& robot;
-    Location& maping;
+// class Autotuner {
+// private:
+//     Robot& robot;
+//     Location& maping;
 
-public:
+// public:
 
-    Autotuner(Location& m, Robot& r);
-    void run(Waypoint command);
+//     Autotuner(Location& m, Robot& r);
+//     void run(Waypoint command);
 
-};
+// };
 
 
 #endif

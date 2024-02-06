@@ -43,6 +43,11 @@ static void reverse_turns(std::vector<Waypoint>& v) {
 }
 ///// ============================================= 6 Triball non-disruption Auton =====
 std::vector<Waypoint> spawn1 = {
+	//// testing stuff
+	{"turn", 90},
+	{"turn", 90},
+	{"turn", 90, 1},
+
 	/////// ================= NORMAL AUTON
 	// {"pass"},
 	// {"in"},
@@ -103,18 +108,18 @@ std::vector<Waypoint> spawn1 = {
 	// {"move", 30},
 	// {"turn", 80},
 	// {"wings"},
-	{"power",120000,1300},
-	{"turn", 170},
-	{"bwings"},
-	{"power",-120000,600},
-	{"move", 30},
-	{"bwings"},
-	{"turn", -80},
-	{"move", 48},
-	{"turn", 120},
-	{"bwings"},
-	{"power",-120000,600},
-	{"move", 10}
+	// {"power",120000,1300},
+	// {"turn", 170},
+	// {"bwings"},
+	// {"power",-120000,600},
+	// {"move", 30},
+	// {"bwings"},
+	// {"turn", -80},
+	// {"move", 48},
+	// {"turn", 120},
+	// {"bwings"},
+	// {"power",-120000,600},
+	// {"move", 10}
 	//good up till here 
 	//{"move", -20},
 	// {"move", 20},
