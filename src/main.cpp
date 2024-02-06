@@ -333,13 +333,8 @@ static void test_pid() {
 	items.autonmous = true;
 	int count = 0;
 	bool error_type = false;
-#ifndef SKILLS
 	for (Waypoint current_goal : spawn1)
 	{
-#else
-	for (Waypoint current_goal : skills)
-	{
-#endif
 		maping.old_angle = items.imu->get_rotation();
 		error_type = current_goal.execute_aux_command(&robot);
 		CartesianLine robot_line(0, robot.x, robot.y);
@@ -367,6 +362,7 @@ static void test_pid() {
 		maping.reset_all();
 	}
 }
+
 void opcontrol()
 {
 	autonomous(); // disable if testing autonomous

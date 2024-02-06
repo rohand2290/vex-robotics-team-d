@@ -29,5 +29,17 @@ public:
     void reset();
 };
 
+class Autotuner {
+private:
+    Robot& robot;
+    Location& maping;
+
+public:
+
+    Autotuner(Location& m, Robot& r);
+    void run(Waypoint command);
+
+};
+
 
 #endif
