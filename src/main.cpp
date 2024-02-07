@@ -92,7 +92,7 @@ std::vector<Waypoint> spawn1 = {
 	{"turn", 75},
 	{"power", 10, 200},
 	{"hold"},
-	{"tcata", 1000},
+	{"tcata", 1000}, // change this to 30000 during actual match.
 	{"coast"},
 	//// done matchloading 
 	{"move", -40},
