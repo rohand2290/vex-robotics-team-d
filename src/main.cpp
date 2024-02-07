@@ -104,7 +104,7 @@ std::vector<Waypoint> spawn1 = {
 	{"pass"},
 	{"turn", 90},
 	{"wings"},
-	{"power", 120000, 2000},
+	{"power", 120000, 1000},
 	{"stop"},
 	{"wings"},
 	//// we are over the barrier...
