@@ -55,13 +55,13 @@ void Location::initialize(Robot& r) {
 std::vector<double> Location::update() {
     rel_l = left_abs_dist() - old_l;
 	rel_r = right_abs_dist() - old_r;
-    robot->theta = get_angle_abs();
+    robot->theta = robot->get_abs_angle(true);
 
     double time_factor = MECH_ADVANTAGE * 1.2;
     double mag = (rel_l + rel_r) / 2;
     std::vector<double> arr = {
-        (mag * sin(robot->degrees_to_radians(robot->theta))) * time_factor,
-        (mag * cos(robot->degrees_to_radians(robot->theta))) * time_factor,
+        (mag * sin(robot->theta)) * time_factor,
+        (mag * cos(robot->theta)) * time_factor,
     };
 
     cx += arr[0];
@@ -123,7 +123,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         if (goal.param2 == 1)
             error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
         else
-            error_turn_casual = angleDifference(robot->items.imu->get_rotation(), get_angle_abs());
+            error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
 
         double turn = turn_casual.update(error_turn_casual);
 
@@ -250,7 +250,6 @@ void Location::reset_all()
 
     old_angle += robot->items.imu->get_rotation();
     robot->items.imu->tare_rotation();
-    robot->items.imu->tare_heading();
     dis.reset();
     turn_casual.reset();
     swing.reset();
