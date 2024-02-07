@@ -8,9 +8,9 @@ private:
     double KP;
     double KI;
     double KD;
+public:
     double integral;
     double prev_error;
-public:
     /// @brief Default constructor.. Enter PID values here
     /// @param kp Proportion constant
     /// @param ki Integral constant
@@ -30,18 +30,6 @@ public:
     /// @brief Resets the internal values... Constants are left same.
     void reset();
 };
-
-// class Autotuner {
-// private:
-//     Robot& robot;
-//     Location& maping;
-
-// public:
-
-//     Autotuner(Location& m, Robot& r);
-//     void run(Waypoint command);
-
-// };
 
 
 #endif

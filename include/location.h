@@ -49,21 +49,22 @@ private:
 	double rel_l = 0;
 	double rel_r = 0;
     double rel_th = 0;
-    // PID:
-    double error = 0;
-    double error_turn_casual = 0;
-    double error_swing = 0;
     // PID timer:
     int timer = 0;
     int abs_timer = 0;
+public:
     // PID Class:
     PID dis;
     PID turn_casual;
     PID swing;
     bool is_bashing = false;
     bool is_turning = false;
-public:
+    // PID:
+    double error = 0;
+    double error_turn_casual = 0;
+    double error_swing = 0;
     double old_angle = 0;
+    // other:
     unsigned long long start_iter;
     double cx = 0;
     double cy = 0;
@@ -95,6 +96,16 @@ public:
     /// @brief Returns the absolute angle changed since begining of the program...
     /// @return Absolute angle in degrees...
     double get_angle_abs();
+};
+
+class Autotuner {
+private:
+    Robot& robot;
+    Location& maping;
+public:
+    Autotuner(Location& m, Robot& r);
+    void run(Waypoint command, int time);
+
 };
 
 #endif // LOCATION_H

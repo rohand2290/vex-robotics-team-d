@@ -237,6 +237,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         return v;
         // return {0, 0};
     }
+    return {0, 0};
 }
 
 void Location::reset_all()
@@ -283,7 +284,105 @@ double Location::get_angle_abs() {
     return robot->items.imu->get_rotation() - old_angle;
 }
 
+Autotuner::Autotuner(Location& l, Robot& r): maping(l), robot(r) {}
 
+static double get_avg_error(std::vector<double> model, std::vector<double> depict) {
+    double ret;
+    int i = 0;
+    for (; i < model.size(); ++i) {
+        ret += model[i] - depict[i];
+    }
+    return ret / i;
+}
+/**
+ * @brief Prerequisites: Odom is Tuned, and KP = 1; KI = 1; KD = 1;
+ * 
+ * @param command sample command to follow
+ * @param time amt of time to take for movement
+ */
+constexpr int MAX_ITERATIONS = 100;
+void Autotuner::run(Waypoint command, int time) {
+    std::vector<double> proportional;
+    std::vector<double> integral;
+    std::vector<double> derivative;
+    std::vector<double> model;
+
+	// step 1: get raw data.
+	maping.reset_all();
+	robot.items.autonmous = true;
+	int count = 0;
+	bool error_type = false;
+	maping.old_angle = robot.items.imu->get_rotation();
+	error_type = command.execute_aux_command(&robot);
+	CartesianLine robot_line(0, robot.x, robot.y);
+	CartesianLine goal_line(0, command.param1 * sin(robot.theta), command.param1 * cos(robot.theta));
+    do
+	{
+		maping.start_iter = pros::millis();
+		std::vector<double> vect;
+		if (command.is_motion_command()) vect = maping.updatePID(command, robot_line, goal_line, error_type);
+		else break;
+		robot.set_both_sides(vect[1], vect[0]);
+		maping.update();
+
+        if (command.command == "move") {
+            proportional.push_back(maping.error);
+            integral.push_back(maping.dis.integral);
+            derivative.push_back(maping.error - maping.dis.prev_error);
+        } else if (command.command == "turn") {
+            proportional.push_back(maping.error_turn_casual);
+            integral.push_back(maping.turn_casual.integral);
+            derivative.push_back(maping.error_turn_casual - maping.turn_casual.prev_error);
+        }
+
+        if (count >= time) model.push_back(command.param1);
+        else model.push_back(0);
+
+        pros::delay(1);
+        count++;
+	} while (maping.is_running());
+	robot.set_both_sides(0, 0);
+	maping.cx = 0;
+	maping.cy = 0;
+	maping.reset_all();
+
+    model.shrink_to_fit();
+    proportional.shrink_to_fit();
+    integral.shrink_to_fit();
+    derivative.shrink_to_fit();
+
+    // step 2: start tuning...
+    // step 2.1: tune kp
+
+    std::vector<double> p = proportional;
+    double old_error = 99999999;
+    double nKP = 1;
+    for (int _ = 0; _ < MAX_ITERATIONS; ++_) {
+        double diff;
+        int i = 0;
+        for (; i < model.size(); ++i) {
+            diff += model[i] / p[i];
+        }
+        diff /= i;
+        for (int i = 0; i < p.size(); ++i) {
+            p[i] *= diff;
+        }
+
+        double error = get_avg_error(model, proportional);
+        if (error < old_error) nKP = diff;
+        old_error = error;
+    }
+
+    // step 3 print out output...
+    pros::lcd::clear();
+    pros::lcd::print(0, "PID Values:");
+    pros::lcd::print(2, "KP: %f", nKP);
+    pros::lcd::print(3, "KI: Working on it...");
+    pros::lcd::print(4, "KD: Working on it...");
+    // step 4 terminate...
+    robot.items.stop();
+    TERMINATE();
+}
 
 
 
