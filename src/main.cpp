@@ -172,44 +172,8 @@ std::vector<Waypoint> spawn1 = {
 	// {"precise"},
 	// {"move", 36},
 };
-// ============================================== SKILLS ========================
-std::vector<Waypoint> skills = {
-	{"pass"},
-	{"bwings"},
-	{"move", -10},
-	{"turn", 45},
-	{"bwings"},
-	{"power", -120000, 500},
-	{"move", 20},
-	{"turn", -70},
-	{"cata", 50},
-	{"move", -30},
-	{"turn", 170},
-	{"wings"},
-	{"move", 20},
-	{"move", -15},
-	{"wings"},
-	{"turn", 90},
-	{"move", 48},
-	{"turn", -90},
-	{"wings"},
-	{"move", 40},
-	{"wings"},
-	{"turn", 160},
-	{"bwings"},
-	{"power", -120000, 700},
-	{"move", -20},
-	{"turn", -100},
-	{"move", 10},
-	{"turn", 90},
-	{"power", -120000, 700},
-	{"move", -20},
-	{"turn", -100},
-	{"move", 10},
-	{"turn", 90},
-	{"power", -120000, 700},
-	{"move", -10}
-};
+// ============================================== Random thing that doesnt cause syntax errors ========================
+std::vector<Waypoint> skills = {};
 
 Items items;
 Robot robot;
