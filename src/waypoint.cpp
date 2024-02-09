@@ -71,8 +71,10 @@ bool Waypoint::execute_aux_command(Robot* robot) {
     } else if (command == "cata") {
         robot->run_cata_x_times(param1);
     } else if (command == "tcata") {
-        robot->items.cata->move_velocity(120000);
-        pros::delay(param1);
+        for (int i = 0; i < param1; ++i) {
+            robot->items.cata->move_voltage(120000);
+            pros::delay(1);
+        }
         robot->items.cata->brake();
     } 
     else if (command == "precise") {

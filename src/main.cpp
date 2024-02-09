@@ -43,6 +43,8 @@ static void reverse_turns(std::vector<Waypoint>& v) {
 }
 
 std::vector<Waypoint> spawn1 = {
+	/////// ======================== TEST:
+	// {"spamcata"},
 	/////// ================= NORMAL AUTON
 	// {"pass"},
 	// {"in"},
@@ -81,54 +83,56 @@ std::vector<Waypoint> spawn1 = {
 	// {"power", 120000, 1000},
 	// {"move", -5},
 	//// ==================================================== SKILLS:
-	{"pass"},
-	{"bwings"},
-	{"move", -12},
-	{"turn", 60},
-	{"bwings"},
-	{"power", -63, 1000},
-	{"move", 12},
-	{"turn", 75},
-	{"power", 10, 200},
-	{"hold"},
-	{"tcata", 30000}, // change this to 30000 during actual match.
-	{"coast"},
-	//// done matchloading 
-	{"move", -40},
-	{"turn", 95},
-	{"wings"},
-	{"precise"},
-	{"out"},
-	{"move", 40},
-	{"pass"},
-	{"turn", 90},
-	{"wings"},
-	{"power", 120000, 1600},
-	{"stop"},
-	{"wings"},
-	//// we are over the barrier...
-	{"wait", 1000},
-	{"precise"},
-	{"turn", 180},
-	{"pass"},
-	{"bwings"},
-	{"power", -63, 1000},
-	{"bwings"},
-	{"move", 30},
-	{"turn", -90},
-	{"move", 25},
-	{"turn", 70},
-	{"bwings"},
-	{"power", -63, 1500},
-	{"move", 10},
-	// going to go climb
-	{"turn", 90},
-	{"move", 60},
-	{"turn", -90},
-	{"rise"},
-	{"move", 42},
-	{"fall"},
-	// ================================================ NORMAL WINPOINT:
+	// {"pass"},
+	// {"bwings"},
+	// {"move", -12},
+	// {"turn", 60},
+	// {"bwings"},
+	// {"power", -63, 1000},
+	// {"move", 12},
+	// {"turn", 75},
+	// {"in"},
+	// {"power", 15, 200},
+	// {"stop"},
+	// {"hold"},
+	// {"tcata", 30000}, // change this to 40000 during actual match.
+	// {"coast"},
+	// //// done matchloading 
+	// {"move", -40},
+	// {"turn", 95},
+	// {"wings"},
+	// {"precise"},
+	// {"out"},
+	// {"move", 40},
+	// {"pass"},
+	// {"turn", 90},
+	// {"wings"},
+	// {"power", 120000, 1700},
+	// {"stop"},
+	// {"wings"},
+	// //// we are over the barrier...
+	// {"wait", 1000},
+	// {"precise"},
+	// {"turn", 180},
+	// {"pass"},
+	// {"bwings"},
+	// {"power", -63, 1000},
+	// {"bwings"},
+	// {"move", 30},
+	// {"turn", -90},
+	// {"move", 25},
+	// {"turn", 70},
+	// {"bwings"},
+	// {"power", -63, 1500},
+	// {"move", 10},
+	// // going to go climb
+	// {"turn", 90},
+	// {"move", 60},
+	// {"turn", -90},
+	// {"rise"},
+	// {"move", 42},
+	// {"fall"},
+	////// ================================================ NORMAL WINPOINT:
 	// 	{"pass"},
 	// 	{"bwings"},
 	// 	{"move", -10},
@@ -144,7 +148,7 @@ std::vector<Waypoint> spawn1 = {
 	// 	{"turn", -45},
 	// 	{"move", -33},
 
-	// ================================================ DISRUPTION WINPOINT:
+	////// ================================================ DISRUPTION WINPOINT:
 	// {"precise"},
 	// {"move", 52},
 	// {"turn", 80},
@@ -328,7 +332,7 @@ static void test_pid() {
 
 void opcontrol()
 {
-	//autonomous(); // disable if testing autonomous
+	autonomous(); // disable if testing autonomous
 	//get_raw_coordinates();
 	//get_stats(maping);
 
