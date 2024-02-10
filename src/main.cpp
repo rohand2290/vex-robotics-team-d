@@ -44,7 +44,10 @@ static void reverse_turns(std::vector<Waypoint>& v) {
 
 std::vector<Waypoint> spawn1 = {
 	/////// ======================== TEST:
-	// {"spamcata"},
+	// {"turn", 90},
+	// {"turn", 180},
+	// {"turn", -180},
+	// {"turn", 315},
 	/////// ================= NORMAL AUTON
 	// {"out"},
 	// {"wait", 170},
@@ -86,99 +89,101 @@ std::vector<Waypoint> spawn1 = {
 	// {"power", 120000, 1000},
 	// {"move", -15},
 	//// ==================================================== SKILLS:
-	{"pass"},
-	{"move", -12},
-	{"turn", 60},
-	{"power", -63, 1000},
-	{"move", 12},
-	{"turn", 75},
-	{"in"},
-	{"power", 15, 200},
-	{"stop"},
-	{"hold"},
-	{"tcata", 30000}, // change this to 40000 during actual match.
-	{"coast"},
-	//// done matchloading
-	{"out"},
-	{"wait", 170},
-	{"stop"},
-	{"move", -40},
-	{"turn", 95},
-	{"wings"},
-	{"precise"},
-	{"out"},
-	{"move", 40},
-	{"pass"},
-	{"turn", 90},
-	{"wings"},
-	{"power", 120000, 1700},
-	{"stop"},
-	{"wings"},
-	//// we are over the barrier...
-	{"wait", 1000},
-	{"precise"},
-	{"turn", 180},
-	{"pass"},
-	{"bwings"},
-	{"power", -63, 1000},
-	{"bwings"},
-	{"move", 30},
-	{"turn", -90},
-	{"move", 25},
-	{"turn", 70},
-	{"bwings"},
-	{"power", -63, 1500},
-	{"move", 10},
-	// going to go climb
-	{"turn", 90},
-	{"move", 60},
-	{"turn", -90},
-	{"rise"},
-	{"move", 42},
-	{"fall"},
-	////// ================================================ NORMAL WINPOINT:
-	// 	{"pass"},
-	// 	{"bwings"},
-	// 	{"move", -10},
-	// 	{"turn", 45},
-	// 	{"bwings"},
-	// 	{"wait", 500},
-	// 	{"power", -120000, 500},
-	// 	{"move", 5},
-	// 	{"turn", -10},
-	// 	{"move", 5},
-	// 	{"turn", -195},
-	// 	{"move", -27.5},
-	// 	{"turn", -45},
-	// 	{"move", -33},
-
-	////// ================================================ DISRUPTION WINPOINT:
+	// {"pass"},
+	// {"in"},
+	// {"move", -12},
+	// {"turn", 60},
+	// {"power", -63, 1000},
+	// {"move", 12},
+	// {"turn", 75},
+	// {"power", 15, 200},
+	// {"stop"},
+	// {"hold"},
+	// {"tcata", 35000}, // change this to 30000 during actual match.
+	// {"coast"},
+	// // done matchloading
+	// {"out"},
+	// {"move", -40},
 	// {"precise"},
-	// {"move", 52},
-	// {"turn", 80},
+	// {"turn", 92.5},
 	// {"wings"},
 	// {"out"},
+	// {"move", 40},
 	// {"pass"},
-	// {"power", 127, 500},
-	// {"move", -21},
-	// {"wings"},
-	// {"turn", 105},
-	// {"in"},
-	// {"move", 43},
-	// {"stop"},
 	// {"turn", 90},
-	// {"move", 9.5},
-	// {"turn", 60},
-	// {"power", 63, 750},
-	// {"move", -15},
-	// {"turn", -45},
-	// {"bwings"},
-	// {"move", -20},
-	// {"turn", -60},
-	// {"bwings"},
-	// {"turn", -165},
+	// {"wings"},
+	// {"power", 120000, 1700},
+	// {"stop"},
+	// {"wings"},
+	// //// we are over the barrier...
+	// {"wait", 1000},
 	// {"precise"},
-	// {"move", 36},
+	// {"turn", 180},
+	// {"pass"},
+	// {"bwings"},
+	// {"power", -63, 1000},
+	// {"bwings"},
+	// {"move", 30},
+	// {"turn", -90},
+	// {"move", 25},
+	// {"turn", 70},
+	// {"bwings"},
+	// {"power", -63, 1500},
+	// {"move", 10},
+	// // going to go climb
+	// {"turn", 90},
+	// {"move", 60},
+	// {"turn", -90},
+	// {"rise"},
+	// {"move", 40.5},
+	// {"fall"},
+	//// ================================================ NORMAL WINPOINT:
+	// {"in"},
+	// {"pass"},
+	// {"bwings"},
+	// {"move", -10},
+	// {"stop"},
+	// {"turn", 60},
+	// {"bwings"},
+	// {"wait", 500},
+	// {"power", -120000, 500},
+	// {"move", 5},
+	// {"turn", -10},
+	// {"move", 5},
+	// {"precise"},
+	// {"turn", -195},
+	// {"move", -27.5},
+	// {"turn", -45},
+	// {"out"},
+	// {"move", -33},
+	// {"stop"},
+	////// ================================================ DISRUPTION WINPOINT:
+	{"precise"},
+	{"out"},
+	{"move", 50.5},
+	{"wings"},
+	{"turn", 80},
+	{"pass"},
+	{"power", 127, 500},
+	{"move", -21},
+	{"wings"},
+	{"turn", 105},
+	{"in"},
+	{"move", 43},
+	{"stop"},
+	{"turn", 90},
+	{"move", 12},
+	{"turn", 60},
+	{"power", 63, 750},
+	{"move", -17.5},
+	{"turn", -45},
+	{"bwings"},
+	{"move", -20},
+	{"turn", -60},
+	{"bwings"},
+	{"precise"},
+	{"turn", -165},
+	{"move", 36},
 };
 // ============================================== Random thing that doesnt cause syntax errors ========================
 std::vector<Waypoint> skills = {};
@@ -242,10 +247,9 @@ void autonomous()
 		maping.cy = 0;
 		maping.reset_all();
 	}
-	/*
-	// robot.set_hold();
+
 	// robot.set_both_sides(127, 127);
-	// pros::delay(1000);
+	// pros::delay(1500);
 	// items.stop();
 	// pros::delay(500);
 	// robot.set_both_sides(-127, -127);
@@ -253,7 +257,6 @@ void autonomous()
 	// items.stop();
 	// pros::delay(1000);
 	// robot.set_coast();
-	*/
 }
 // Runs the operator control code.
 static void get_raw_coordinates() {
@@ -296,7 +299,7 @@ static void get_stats(Location& maping) {
 static void test_pid() {
 	std::vector<Waypoint> spawn1 = {
 		// TEST MOVEMENT:
-		{"move", 30},
+		{"turn", 90},
 		//// or TEST TURN
 		// {"turn", 90},
 	};
@@ -325,17 +328,12 @@ static void test_pid() {
 			maping.update();
 			pros::delay(AUTON_LOOP_DELAY);
 		} while (true); // this is why this is a test
-
-		robot.set_both_sides(0, 0);
-
-		maping.cx = 0;
-		maping.cy = 0;
-		maping.reset_all();
 	}
 }
 
 void opcontrol()
 {
+	//test_pid();
 	//autonomous(); // disable if testing autonomous
 	//get_raw_coordinates();
 	//get_stats(maping);
