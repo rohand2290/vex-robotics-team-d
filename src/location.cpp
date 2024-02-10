@@ -295,7 +295,7 @@ static double get_avg_error(std::vector<double> model, std::vector<double> depic
     return ret / i;
 }
 /**
- * @brief Prerequisites: Odom is Tuned, and KP = 1; KI = 1; KD = 1;
+ * @brief Prerequisites: Odom is Tuned, and KP = 1; KI = 0; KD = 0;
  * 
  * @param command sample command to follow
  * @param time amt of time to take for movement
@@ -351,17 +351,20 @@ void Autotuner::run(Waypoint command, int time) {
     integral.shrink_to_fit();
     derivative.shrink_to_fit();
 
+    pros::lcd::clear();
+    pros::lcd::print(0, "Calculating Constants...");
+
     // step 2: start tuning...
     // step 2.1: tune kp
 
     std::vector<double> p = proportional;
-    double old_error = 99999999;
+    double best_error = 99999999;
     double nKP = 1;
     for (int _ = 0; _ < MAX_ITERATIONS; ++_) {
         double diff;
         int i = 0;
         for (; i < model.size(); ++i) {
-            diff += model[i] / p[i];
+            diff += proportional[i] / p[i];
         }
         diff /= i;
         for (int i = 0; i < p.size(); ++i) {
@@ -369,8 +372,10 @@ void Autotuner::run(Waypoint command, int time) {
         }
 
         double error = get_avg_error(model, proportional);
-        if (error < old_error) nKP = diff;
-        old_error = error;
+        if (error < best_error) { 
+            nKP = diff;
+            best_error = error; 
+        }
     }
 
     // step 3 print out output...
