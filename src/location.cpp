@@ -5,14 +5,14 @@ double Location::right_abs_dist()
 { // in terms of inches
     Items& items = robot->items;
     double normal = items.right1->get_position() + items.right2->get_position() + items.right3->get_position();
-    return (normal / 3) * WHEEL_C;
+    return (normal / 3) * WHEEL_C * MECH_ADVANTAGE;
 }
 
 double Location::left_abs_dist()
 { // in terms of inches
     Items& items = robot->items;
     double normal = items.left1->get_position() + items.left2->get_position() + items.left3->get_position();
-    return (normal / 3) * WHEEL_C;
+    return (normal / 3) * WHEEL_C * MECH_ADVANTAGE;
 }
 
 double Location::normalize(double deg) {
@@ -55,13 +55,13 @@ void Location::initialize(Robot& r) {
 std::vector<double> Location::update() {
     rel_l = left_abs_dist() - old_l;
 	rel_r = right_abs_dist() - old_r;
+    rel_th = robot->get_abs_angle() - old_th;
     robot->theta = robot->get_abs_angle(true);
 
-    double time_factor = MECH_ADVANTAGE * 1.2;
     double mag = (rel_l + rel_r) / 2;
     std::vector<double> arr = {
-        (mag * sin(robot->theta)) * time_factor,
-        (mag * cos(robot->theta)) * time_factor,
+        mag * sin(robot->theta),
+        mag * cos(robot->theta),
     };
 
     cx += arr[0];
@@ -69,6 +69,7 @@ std::vector<double> Location::update() {
 
     old_l = left_abs_dist();
 	old_r = right_abs_dist();
+    old_th = robot->get_abs_angle();
 
     return {cx, cy};
 }
