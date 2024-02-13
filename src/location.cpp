@@ -60,8 +60,8 @@ std::vector<double> Location::update() {
 
     double mag = (rel_l + rel_r) / 2;
     std::vector<double> arr = {
-        mag * sin(robot->theta),
-        mag * cos(robot->theta),
+        mag * sin(rel_th),
+        mag * cos(rel_th),
     };
 
     cx += arr[0];
@@ -295,6 +295,14 @@ static double get_avg_error(std::vector<double> model, std::vector<double> depic
     }
     return ret / i;
 }
+static double get_avg_error(std::vector<double> model, std::vector<double> depict, std::vector<double> add) {
+    double ret;
+    int i = 0;
+    for (; i < model.size(); ++i) {
+        ret += model[i] - (depict[i] + add[i]);
+    }
+    return ret / i;
+}
 /**
  * @brief Prerequisites: Odom is Tuned, and KP = 1; KI = 0; KD = 0;
  * 
@@ -343,6 +351,7 @@ void Autotuner::run(Waypoint command, int time) {
         count++;
 	} while (maping.is_running());
 	robot.set_both_sides(0, 0);
+    robot.items.stop();
 	maping.cx = 0;
 	maping.cy = 0;
 	maping.reset_all();
@@ -362,7 +371,7 @@ void Autotuner::run(Waypoint command, int time) {
     double best_error = 99999999;
     double nKP = 1;
     for (int _ = 0; _ < MAX_ITERATIONS; ++_) {
-        double diff;
+        double diff = 0;
         int i = 0;
         for (; i < model.size(); ++i) {
             diff += proportional[i] / p[i];
@@ -372,9 +381,30 @@ void Autotuner::run(Waypoint command, int time) {
             p[i] *= diff;
         }
 
-        double error = get_avg_error(model, proportional);
+        double error = get_avg_error(model, p);
         if (error < best_error) { 
             nKP = diff;
+            best_error = error; 
+        }
+    }
+
+    std::vector<double> d = derivative;
+    best_error = 99999999;
+    double nKD = 1;
+    for (int _ = 0; _ < MAX_ITERATIONS; ++_) {
+        double diff = 0;
+        int i = 0;
+        for (; i < model.size(); ++i) {
+            diff += proportional[i] / (p[i] + d[i]);
+        }
+        diff /= i;
+        for (int i = 0; i < d.size(); ++i) {
+            d[i] *= diff;
+        }
+
+        double error = get_avg_error(model, p, d);
+        if (error < best_error) { 
+            nKD = diff;
             best_error = error; 
         }
     }
@@ -383,8 +413,8 @@ void Autotuner::run(Waypoint command, int time) {
     pros::lcd::clear();
     pros::lcd::print(0, "PID Values:");
     pros::lcd::print(2, "KP: %f", nKP);
-    pros::lcd::print(3, "KI: Working on it...");
-    pros::lcd::print(4, "KD: Working on it...");
+    pros::lcd::print(3, "KI: Just do some small number...");
+    pros::lcd::print(4, "KD: %f", nKD);
     // step 4 terminate...
     robot.items.stop();
     TERMINATE();

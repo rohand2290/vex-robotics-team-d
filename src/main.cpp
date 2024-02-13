@@ -3,36 +3,6 @@
 #include "tests.h"
 using namespace std::chrono;
 
-/*
-* PLAN:
-
-	Move forward 180 inches
-	Intake
-	Wings
-	135 degrees clockwise
-	Move forward 48 inches
-	Move backward 5 inches
-	135 degrees clockwise
-	Move forward 44 inches
-	Intake
-	Turn 180 degrees
-	More forwards 44 inches
-	Turn 45 degrees counterclockwise
-	Move backwards 54 inches
-	Turn 90 degrees counterclockwise
-	Move forward 45 inches
-	Move back 45 inches
-	Turn 45 degrees counterclockwise
-	Wings
-	Move backwards 8 inches
-	Turn 45 Degrees counterclockwise
-	Move backwards 24 inches
-	Turn 45 clockwise
-	Move forward 44 inches
-	Turn 45 clockwise
-	Move forward 25 inches
-
-*/
 static double d2r(double x) {
 	return 0.0174533 * x;
 }
@@ -214,13 +184,8 @@ void autonomous()
 	items.autonmous = true;
 	int count = 0;
 	bool error_type = false;
-#ifndef SKILLS
 	for (Waypoint current_goal : spawn1)
 	{
-#else
-	for (Waypoint current_goal : skills)
-	{
-#endif
 		maping.old_angle = items.imu->get_rotation();
 		error_type = current_goal.execute_aux_command(&robot);
 		CartesianLine robot_line(0, robot.x, robot.y);
@@ -243,9 +208,10 @@ void autonomous()
 
 		robot.set_both_sides(0, 0);
 
-		maping.cx = 0;
-		maping.cy = 0;
-		maping.reset_all();
+		// I dont think we need to reset this...
+		// maping.cx = 0;
+		// maping.cy = 0;
+		// maping.reset_all();
 	}
 
 	// robot.set_both_sides(127, 127);
