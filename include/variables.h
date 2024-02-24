@@ -29,7 +29,9 @@
 
 // Pistons:
 #define INTAKE_PISTON_PORT 69
-#define PTO 'C'
+#define PTO_CATA 'C'
+#define PTO_INTAKE 'C'
+#define PTO_CLIMB 'C'
 #define WING_1_PORT 'B'
 #define WING_2_PORT 'A'
 

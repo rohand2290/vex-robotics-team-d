@@ -39,12 +39,15 @@ bool Path::goal_reached(Waypoint& goal, double x, double y) {
 bool Waypoint::execute_aux_command(Robot* robot) {
     if (command == "move" || command == "turn" || command == "curve" || command == "swing" || command == "raw");
     else if (command == "stop") {
+        robot->items.pto_intake->set_value(0);
         robot->items.intake_left->brake();
         robot->items.intake_right->brake();
     } else if (command == "in") {
+        robot->items.pto_intake->set_value(1);
         robot->items.intake_left->move(255);
         robot->items.intake_right->move(255);
     } else if (command == "out") {
+        robot->items.pto_intake->set_value(1);
         robot->items.intake_left->move(-255);
         robot->items.intake_right->move(-255);
     } else if (command == "wings") {
@@ -54,9 +57,9 @@ bool Waypoint::execute_aux_command(Robot* robot) {
         robot->items.wing_back_pos = !robot->items.wing_back_pos;
         robot->items.wings_back->set_value(robot->items.wing_back_pos);
     } else if (command == "rise") {
-        robot->items.pto->set_value(1);
+        robot->items.pto_climb->set_value(1);
     } else if (command == "fall") {
-        robot->items.pto->set_value(0);
+        robot->items.pto_climb->set_value(0);
     } else if (command == "coast") {
         robot->set_coast();
     } else if (command == "hold") {
@@ -71,11 +74,14 @@ bool Waypoint::execute_aux_command(Robot* robot) {
     } else if (command == "cata") {
         robot->run_cata_x_times(param1);
     } else if (command == "tcata") {
+        robot->items.pto_intake->set_value(1);
         for (int i = 0; i < param1; ++i) {
-            robot->items.cata->move_voltage(120000);
+            robot->items.intake_right->move_voltage(120000);
+            robot->items.intake_left->move_voltage(120000);
             pros::delay(1);
         }
-        robot->items.cata->brake();
+        robot->items.intake_right->brake();
+        robot->items.intake_left->brake();
     } 
     else if (command == "precise") {
         return false;

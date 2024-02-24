@@ -23,7 +23,9 @@ public:
     pros::Motor* cata;
     pros::ADIDigitalOut* wings;
     pros::ADIDigitalOut* wings_back;
-    pros::ADIDigitalOut* pto;
+    pros::ADIDigitalOut* pto_cata;
+    pros::ADIDigitalOut* pto_climb;
+    pros::ADIDigitalOut* pto_intake;
     pros::Rotation* encoder_left;
     pros::Rotation* encoder_right;
     pros::Rotation* encoder_center;
