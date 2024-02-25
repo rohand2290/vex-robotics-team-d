@@ -225,7 +225,7 @@ std::vector<Waypoint> skills = {
 >>>>>>> 516142c1b8617164520ada2940b1c879fe46986f
 };
 // ============================================== Random thing that doesnt cause syntax errors ========================
-std::vector<Waypoint> skills = {};
+std::vector<Waypoint> SKILLS = {};
 
 Items items;
 Robot robot;
