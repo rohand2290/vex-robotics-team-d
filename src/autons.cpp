@@ -38,5 +38,3 @@ void PID::reset() {
     integral = 0;
     prev_error = 0;
 }
-
-

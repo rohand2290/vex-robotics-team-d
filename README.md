@@ -61,4 +61,3 @@ Just make sure to include it in this README file with a good explaination, so we
 * precise: Sets error mode to precise, making movements precise, steady, and slow after this command.
 * tcata: Runs cata motor for 1st param (ms) of time.
 * pass: Sets the error mode to pass, making movements fast, less steady, and little bit inacurate (depending on constants)
-

@@ -24,4 +24,7 @@
 #include "location.h"
 #include "filters.h"
 
+double sin(double);
+double cos(double);
+
 #endif // DEPEND_H

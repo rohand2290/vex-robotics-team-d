@@ -19,7 +19,7 @@
 #define RIGHT_WHEELS_PORT_3 9 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
-#define INTAKE_PORT_LEFT 19 // Defines the 1st port of the left side of intake.
+#define INTAKE_PORT_LEFT 18 // Defines the 1st port of the left side of intake.
 #define INTAKE_PORT_RIGHT 15 // Defines the 2nd port of the right side of intake.
 
 // Catapult:
@@ -29,7 +29,9 @@
 
 // Pistons:
 #define INTAKE_PISTON_PORT 69
-#define PTO 'C'
+#define PTO_CATA 'C'
+#define PTO_INTAKE 'C'
+#define PTO_CLIMB 'C'
 #define WING_1_PORT 'B'
 #define WING_2_PORT 'A'
 

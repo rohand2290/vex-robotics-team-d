@@ -5,14 +5,14 @@ double Location::right_abs_dist()
 { // in terms of inches
     Items& items = robot->items;
     double normal = items.right1->get_position() + items.right2->get_position() + items.right3->get_position();
-    return (normal / 3) * WHEEL_C;
+    return (normal / 3) * WHEEL_C * MECH_ADVANTAGE;
 }
 
 double Location::left_abs_dist()
 { // in terms of inches
     Items& items = robot->items;
     double normal = items.left1->get_position() + items.left2->get_position() + items.left3->get_position();
-    return (normal / 3) * WHEEL_C;
+    return (normal / 3) * WHEEL_C * MECH_ADVANTAGE;
 }
 
 double Location::normalize(double deg) {
@@ -55,14 +55,13 @@ void Location::initialize(Robot& r) {
 std::vector<double> Location::update() {
     rel_l = left_abs_dist() - old_l;
 	rel_r = right_abs_dist() - old_r;
-    // rel_th = robot->get_abs_angle() - old_th;
-    robot->theta = robot->get_abs_angle();
+    rel_th = robot->get_abs_angle() - old_th;
+    robot->theta = robot->get_abs_angle(true);
 
-    double time_factor = MECH_ADVANTAGE * 1.2;
     double mag = (rel_l + rel_r) / 2;
     std::vector<double> arr = {
-        (mag * sin(robot->degrees_to_radians(robot->theta))) * time_factor,
-        (mag * cos(robot->degrees_to_radians(robot->theta))) * time_factor,
+        mag * sin(rel_th),
+        mag * cos(rel_th),
     };
 
     cx += arr[0];
@@ -70,7 +69,7 @@ std::vector<double> Location::update() {
 
     old_l = left_abs_dist();
 	old_r = right_abs_dist();
-    // old_th = robot->get_abs_angle();
+    old_th = robot->get_abs_angle();
 
     return {cx, cy};
 }
@@ -122,10 +121,10 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
 
     } else if (goal.command == "turn") {
         is_turning = true;
-        if (goal.param2 == 0)
+        if (goal.param2 == 1)
             error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
         else
-            error_turn_casual = angleDifference(robot->items.imu->get_rotation(), get_angle_abs());
+            error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
 
         double turn = turn_casual.update(error_turn_casual);
 
@@ -242,6 +241,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         return v;
         // return {0, 0};
     }
+    return {0, 0};
 }
 
 void Location::reset_all()
@@ -255,7 +255,6 @@ void Location::reset_all()
 
     old_angle += robot->items.imu->get_rotation();
     robot->items.imu->tare_rotation();
-    robot->items.imu->tare_heading();
     dis.reset();
     turn_casual.reset();
     swing.reset();
@@ -286,10 +285,143 @@ bool Location::is_running() {
 }
 
 double Location::get_angle_abs() {
-    return robot->items.imu->get_rotation() + old_angle;
+    return robot->items.imu->get_rotation() - old_angle;
 }
 
+Autotuner::Autotuner(Location& l, Robot& r): maping(l), robot(r) {}
 
+static double get_avg_error(std::vector<double> model, std::vector<double> depict) {
+    double ret;
+    int i = 0;
+    for (; i < model.size(); ++i) {
+        ret += model[i] - depict[i];
+    }
+    return ret / i;
+}
+static double get_avg_error(std::vector<double> model, std::vector<double> depict, std::vector<double> add) {
+    double ret;
+    int i = 0;
+    for (; i < model.size(); ++i) {
+        ret += model[i] - (depict[i] + add[i]);
+    }
+    return ret / i;
+}
+/**
+ * @brief Prerequisites: Odom is Tuned, and KP = 1; KI = 0; KD = 0;
+ * 
+ * @param command sample command to follow
+ * @param time amt of time to take for movement
+ */
+constexpr int MAX_ITERATIONS = 100;
+void Autotuner::run(Waypoint command, int time) {
+    std::vector<double> proportional;
+    std::vector<double> integral;
+    std::vector<double> derivative;
+    std::vector<double> model;
+
+	// step 1: get raw data.
+	maping.reset_all();
+	robot.items.autonmous = true;
+	int count = 0;
+	bool error_type = false;
+	maping.old_angle = robot.items.imu->get_rotation();
+	error_type = command.execute_aux_command(&robot);
+	CartesianLine robot_line(0, robot.x, robot.y);
+	CartesianLine goal_line(0, command.param1 * sin(robot.theta), command.param1 * cos(robot.theta));
+    do
+	{
+		maping.start_iter = pros::millis();
+		std::vector<double> vect;
+		if (command.is_motion_command()) vect = maping.updatePID(command, robot_line, goal_line, error_type);
+		else break;
+		robot.set_both_sides(vect[1], vect[0]);
+		maping.update();
+
+        if (command.command == "move") {
+            proportional.push_back(maping.error);
+            integral.push_back(maping.dis.integral);
+            derivative.push_back(maping.error - maping.dis.prev_error);
+        } else if (command.command == "turn") {
+            proportional.push_back(maping.error_turn_casual);
+            integral.push_back(maping.turn_casual.integral);
+            derivative.push_back(maping.error_turn_casual - maping.turn_casual.prev_error);
+        }
+
+        if (count >= time) model.push_back(command.param1);
+        else model.push_back(0);
+
+        pros::delay(1);
+        count++;
+	} while (maping.is_running());
+	robot.set_both_sides(0, 0);
+    robot.items.stop();
+	maping.cx = 0;
+	maping.cy = 0;
+	maping.reset_all();
+
+    model.shrink_to_fit();
+    proportional.shrink_to_fit();
+    integral.shrink_to_fit();
+    derivative.shrink_to_fit();
+
+    pros::lcd::clear();
+    pros::lcd::print(0, "Calculating Constants...");
+
+    // step 2: start tuning...
+    // step 2.1: tune kp
+
+    std::vector<double> p = proportional;
+    double best_error = 99999999;
+    double nKP = 1;
+    for (int _ = 0; _ < MAX_ITERATIONS; ++_) {
+        double diff = 0;
+        int i = 0;
+        for (; i < model.size(); ++i) {
+            diff += proportional[i] / p[i];
+        }
+        diff /= i;
+        for (int i = 0; i < p.size(); ++i) {
+            p[i] *= diff;
+        }
+
+        double error = get_avg_error(model, p);
+        if (error < best_error) { 
+            nKP = diff;
+            best_error = error; 
+        }
+    }
+
+    std::vector<double> d = derivative;
+    best_error = 99999999;
+    double nKD = 1;
+    for (int _ = 0; _ < MAX_ITERATIONS; ++_) {
+        double diff = 0;
+        int i = 0;
+        for (; i < model.size(); ++i) {
+            diff += proportional[i] / (p[i] + d[i]);
+        }
+        diff /= i;
+        for (int i = 0; i < d.size(); ++i) {
+            d[i] *= diff;
+        }
+
+        double error = get_avg_error(model, p, d);
+        if (error < best_error) { 
+            nKD = diff;
+            best_error = error; 
+        }
+    }
+
+    // step 3 print out output...
+    pros::lcd::clear();
+    pros::lcd::print(0, "PID Values:");
+    pros::lcd::print(2, "KP: %f", nKP);
+    pros::lcd::print(3, "KI: Just do some small number...");
+    pros::lcd::print(4, "KD: %f", nKD);
+    // step 4 terminate...
+    robot.items.stop();
+    TERMINATE();
+}
 
 
 

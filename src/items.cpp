@@ -16,12 +16,13 @@ void Items::initialize()  {
     right2 = new pros::Motor (RIGHT_WHEELS_PORT_2, pros::E_MOTOR_GEAR_600);
     right3 = new pros::Motor (RIGHT_WHEELS_PORT_3, pros::E_MOTOR_GEAR_600);
     intake_left = new pros::Motor (INTAKE_PORT_LEFT, pros::E_MOTOR_GEAR_600, pros::E_MOTOR_BRAKE_COAST);
-    intake_right = new pros::Motor (INTAKE_PORT_RIGHT, pros::E_MOTOR_GEAR_200, pros::E_MOTOR_BRAKE_COAST);
-    intake_right->set_reversed(true);
-    cata = new pros::Motor(CATA_PORT, pros::E_MOTOR_GEAR_100);
+    intake_right = new pros::Motor (INTAKE_PORT_RIGHT, pros::E_MOTOR_GEAR_200, true);
+    cata = new pros::Motor(CATA_PORT, pros::E_MOTOR_GEAR_100, pros::E_MOTOR_BRAKE_COAST);
     wings = new pros::ADIDigitalOut (WING_1_PORT);
     wings_back = new pros::ADIDigitalOut (WING_2_PORT);
-    pto = new pros::ADIDigitalOut (PTO);
+    pto_cata = new pros::ADIDigitalOut (PTO_CATA);
+    pto_climb = new pros::ADIDigitalOut (PTO_CLIMB);
+    pto_intake = new pros::ADIDigitalOut (PTO_INTAKE);
     encoder_left = new pros::Rotation (ENCODER_PORT_1, true);
     encoder_right = new pros::Rotation (ENCODER_PORT_2);
     encoder_center = new pros::Rotation (ENCODER_PORT_3);
@@ -54,7 +55,9 @@ Items::~Items() {
     delete cata;
     delete wings;
     delete wings_back;
-    delete pto;
+    delete pto_cata;
+    delete pto_climb;
+    delete pto_intake;
     delete encoder_left;
     delete encoder_right;
     delete encoder_center;

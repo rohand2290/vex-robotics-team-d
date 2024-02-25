@@ -1,14 +1,16 @@
 #ifndef AUTONS_H
 #define AUTONS_H
 
+#include "depend.h"
+
 class PID {
 private:
     double KP;
     double KI;
     double KD;
+public:
     double integral;
     double prev_error;
-public:
     /// @brief Default constructor.. Enter PID values here
     /// @param kp Proportion constant
     /// @param ki Integral constant
