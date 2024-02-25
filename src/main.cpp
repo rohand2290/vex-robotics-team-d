@@ -104,7 +104,7 @@ std::vector<Waypoint> spawn1 = {
 	// {"move", 10},
 	// // going to go climb
 	// {"turn", 90},
-<<<<<<< HEAD
+//<<<<<<< HEAD
 	// {"power", -120000, 700},
 	// {"move", -20},
 	// {"turn", -100},
