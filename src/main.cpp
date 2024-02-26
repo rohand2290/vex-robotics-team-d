@@ -104,72 +104,6 @@ std::vector<Waypoint> spawn1 = {
 	// {"move", 10},
 	// // going to go climb
 	// {"turn", 90},
-//<<<<<<< HEAD
-	// {"power", -120000, 700},
-	// {"move", -20},
-	// {"turn", -100},
-	// {"move", 10},
-	// {"turn", 90},
-	// {"power", -120000, 700},
-	// {"move", -10}
-	// ========================== WINPOINT
-
-	// ================================================ WINPOINT:
-	// 	{"pass"},
-	// 	{"bwings"},
-	// 	{"move", -10},
-	// 	{"turn", 45},
-	// 	{"bwings"},
-	// 	{"wait", 500},
-	// 	{"power", -120000, 500},
-	// 	{"move", 5},
-	// 	{"turn", -10},
-	// 	{"move", 5},
-	// 	{"turn", -195},
-	// 	{"move", -27.5},
-	// 	{"turn", -45},
-	// 	{"move", -33},
-};
-////////// ====================================== WINPOINT ==================
-// std::vector<Waypoint> spawn1 = {
-// 	{"pass"},
-// 	{"bwings"},
-// 	{"move", -10},
-// 	{"turn", 45},
-// 	{"bwings"},
-// 	{"wait", 500},
-// 	{"power", -120000, 500},
-// 	{"move", 5},
-// 	{"turn", -10},
-// 	{"move", 5},
-// 	{"turn", -195},
-// 	{"move", -27.5},
-// 	{"turn", -45},
-// 	{"move", -33},
-// };
-// ============================================== SKILLS ========================
-std::vector<Waypoint> skills = {
->>>>>>> 04ab319eca85ec1a30835e9dca3455e34a09e599
-	{"pass"},
-	{"bwings"},
-	{"move", -12},
-	{"turn", 60},
-	{"bwings"},
-	{"power", -63, 1000},
-	{"move", 5},
-	{"turn", -10},
-	{"move", 5},
-	{"turn", -195}, 
-	{"move", -27.5},
-	{"turn", -52.5},
-	{"move", -33},
-	// ============================ SABATOGE AUTON:
-	// {"in"},
-	// {"move", 62.5},
-	// {"wings"},
-	// {"move", -62.5},
-	// {"stop"},
-=======
 	// {"move", 60},
 	// {"turn", -90},
 	// {"rise"},
@@ -222,7 +156,6 @@ std::vector<Waypoint> skills = {
 	{"precise"},
 	{"turn", -165},
 	{"move", 36},
->>>>>>> 516142c1b8617164520ada2940b1c879fe46986f
 };
 // ============================================== Random thing that doesnt cause syntax errors ========================
 std::vector<Waypoint> SKILLS = {};
@@ -365,7 +298,12 @@ static void test_pid() {
 		} while (true); // this is why this is a test
 	}
 }
-
+static void get_mech_advantage() {
+	pros::lcd::clear();
+	pros::lcd::print(0, "Please move the bot 30 inches.");
+	pros::lcd::print(1, "Press A to continue.");
+	items.master->clear();
+}
 void opcontrol()
 {
 	//test_pid();
