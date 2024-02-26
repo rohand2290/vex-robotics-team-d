@@ -10,21 +10,21 @@
 // ======== PORTS: ===========
 
 // Left drive:
-#define LEFT_WHEELS_PORT_1 2 // Defines the 1st port of the left wheels.
-#define LEFT_WHEELS_PORT_2 3 // Defines the 2nd port of the left wheels.
-#define LEFT_WHEELS_PORT_3 4 // Defines the 3rd port of the left wheels.
+#define LEFT_WHEELS_PORT_1 20 // Defines the 1st port of the left wheels.
+#define LEFT_WHEELS_PORT_2 9 // Defines the 2nd port of the left wheels.
+#define LEFT_WHEELS_PORT_3 10 // Defines the 3rd port of the left wheels.
 // Right drive:
-#define RIGHT_WHEELS_PORT_1 7 // Defines the 1st port of the right wheels.
-#define RIGHT_WHEELS_PORT_2 8 // Defines the 2nd port of the right wheels.
-#define RIGHT_WHEELS_PORT_3 9 // Defines the 3rd port of the right wheels.
+#define RIGHT_WHEELS_PORT_1 11 // Defines the 1st port of the right wheels.
+#define RIGHT_WHEELS_PORT_2 2 // Defines the 2nd port of the right wheels.
+#define RIGHT_WHEELS_PORT_3 1 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
-#define INTAKE_PORT_LEFT 18 // Defines the 1st port of the left side of intake.
-#define INTAKE_PORT_RIGHT 15 // Defines the 2nd port of the right side of intake.
+#define INTAKE_PORT_LEFT 8 // Defines the 1st port of the left side of intake.
+#define INTAKE_PORT_RIGHT 4 // Defines the 2nd port of the right side of intake.
 
 // Catapult:
-#define CATA_PORT 10 // Defines the port of the cata.
-#define CATA_ENCODER 1 // Define the encoder port for cata
+#define CATA_PORT 69 // Defines the port of the cata.
+#define CATA_ENCODER 3 // Define the encoder port for cata
 #define CATA_REST 80 // Defines the resting position of the cata...
 
 // Pistons:
@@ -36,7 +36,7 @@
 #define WING_2_PORT 'A'
 
 // IMU:
-#define IMU_PORT 6
+#define IMU_PORT 19
 
 // ======== PREFERENCES: =========
 

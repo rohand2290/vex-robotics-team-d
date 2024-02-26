@@ -152,20 +152,22 @@ void Robot::set_intake(int analog1, int analog2, int pist)
     //     }
     // }
     if (analog1) {
-        // set intake to high
+        items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         set_in(-127, items);
     }
     else if (analog2) {
-        // set intake to high
+        items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         set_in(127, items);
     }
     else {
-        // set intake to low
         set_in(0, items);
     }
 }
 
 void Robot::set_cata(int analog) {
+    
     if (!analog) {
         // P Stuff:
         //double power = CATA_KP * (CATA_REST - get_cata_position());
@@ -173,10 +175,12 @@ void Robot::set_cata(int analog) {
         // items.cata->move(0);
 
         // disable cata pto
+        items.pto_cata->set_value(0);
         set_in(0, items);
     } else {
         // engage cata pto
         // items.cata->move_voltage(120000);
+        items.pto_cata->set_value(1);
         set_in(127, items);
     }
 }
@@ -197,15 +201,9 @@ void Robot::set_blocker(int analog, int lock) {
     if (analog) items.intake_pos = !items.intake_pos;
     
     if (items.intake_pos) {
+        items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
         items.pto_climb->set_value(1);
-        if (lock) lock_state = !lock_state;
-        if (lock_state) {
-            items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-            items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        } else {    
-            items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-            items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-        }
     } else {
         items.pto_climb->set_value(0);
         lock_state = 0;

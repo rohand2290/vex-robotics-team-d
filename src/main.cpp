@@ -305,6 +305,8 @@ void opcontrol()
 	//autonomous(); // disable if testing autonomous
 	//get_raw_coordinates();
 	//get_stats(maping);
+	/*Tester test(robot, items);
+	test.test_chassis();*/
 
 	items.autonmous = false;
 	items.stop();
