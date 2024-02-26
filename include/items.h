@@ -11,6 +11,7 @@ public:
     int intake_pos;
     int wing_back_pos;
     int autonmous;
+    int cata_state;
     pros::Controller* master;
     pros::Motor* left1; // front
     pros::Motor* left2; // middle

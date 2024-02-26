@@ -72,7 +72,7 @@
 #define TURN_KI 0.00001
 #define TURN_KD 0.001
 // cata:
-#define CATA_KP 1
+#define CATA_KP 2.5
 // break:
 #define BREAK_KP 0.1
 // swing:

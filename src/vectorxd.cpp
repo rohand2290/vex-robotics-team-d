@@ -39,7 +39,7 @@ VectorXD<N> VectorXD<N>::mult(double X) {
 }
 template <int N>
 VectorXD<N> VectorXD<N>::div(double X) {
-    VectorXD<N> v();
+    VectorXD<N> v;
     for (int i = 0; i < N; ++i) c_arr[i] /= X;
     return v;
 }

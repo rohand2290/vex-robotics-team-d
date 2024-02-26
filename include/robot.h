@@ -64,7 +64,7 @@ public:
     void set_wings_back(int stick);
     /// @brief Set the catapult...
     /// @param analog input button
-    void set_cata(int analog);
+    void set_cata(int analog, int analog2);
     /// @brief Set the blocker...
     /// @param analog imput button
     void set_blocker(int analog, int lock);

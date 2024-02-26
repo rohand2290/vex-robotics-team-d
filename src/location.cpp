@@ -133,6 +133,9 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         if (turn && error <= 0) timer = MIN_ALLOWED_ERROR_TIME; 
         else if (abs(error_turn_casual) < MIN_ALLOWED_ERROR_DEG && !turn) timer++;
 
+        if (robot->items.master->get_digital(pros::E_CONTROLLER_DIGITAL_A))
+            robot->items.master->print(0, 0, "%f", error);
+
         abs_timer++;
         return v;
     } else if (goal.command == "power") {
