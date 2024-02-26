@@ -85,8 +85,8 @@ void Robot::set_both_sides(int right, int left)
 {
     if (items.autonmous) {
         // sensitive for auton:
-        right *= 120000.0 / 127;
-        left *= 120000.0 / 127;
+        right *= -120000.0 / 127;
+        left *= -120000.0 / 127;
         items.right1->move_voltage(right);
         items.left1->move_voltage(left);
         items.left2->move_voltage(left);
@@ -266,6 +266,8 @@ void Robot::break_absolute() {
     items.right2->move(0);
     items.right3->move(0);
 }
+
+
 #include "depend.h"
 #include "api.h"
 #include "robot.h"
