@@ -180,7 +180,7 @@ void Robot::set_cata(int analog, int analog2) {
     else {
         // engage cata pto
         // items.cata->move_voltage(120000);
-        set_in(127, items);
+        set_in(-127, items);
     }
 }
 
