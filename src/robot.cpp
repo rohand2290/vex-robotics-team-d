@@ -62,7 +62,8 @@ void Robot::initialize(Items& i)
     items.imu->reset(true);
     items.imu->tare();
     items.imu->set_heading(0);
-    brake_pid.initialize(BREAK_KP, 0, 0);
+    brake_pid_left.initialize(BREAK_KP, 0, 0);
+    brake_pid_right.initialize(BREAK_KP, 0, 0);
 }
 
 Robot::~Robot() {}
@@ -81,12 +82,29 @@ void Robot::set_left_side(int analog)
     items.right3->move(analog);
 }
 
-void Robot::set_both_sides(int right, int left)
+void Robot::set_both_sides(int right, int left, bool slew)
 {
     if (items.autonmous) {
         // sensitive for auton:
-        right *= 120000.0 / 127;
-        left *= 120000.0 / 127;
+        right *= 12000.0 / 127;
+        left *= 12000.0 / 127;
+        if (slew) {
+            if (abs(right - prev_volt_right) > SLEW_RATE && abs(right) < 12000) {
+                if (right < prev_volt_right) right = prev_volt_right - SLEW_RATE;
+                else right = prev_volt_right + SLEW_RATE;
+            }
+            if (abs(left - prev_volt_left) > SLEW_RATE && abs(left) < 12000) {
+                if (left < prev_volt_left) left = prev_volt_left - SLEW_RATE;
+                else left = prev_volt_left + SLEW_RATE;
+            }
+            prev_volt_left = left;
+            prev_volt_right = right;
+        }
+        else {
+            prev_volt_left = 0;
+            prev_volt_right = 0;
+        }
+
         items.right1->move_voltage(right);
         items.left1->move_voltage(left);
         items.left2->move_voltage(left);

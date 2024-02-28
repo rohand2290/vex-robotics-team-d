@@ -97,6 +97,7 @@ static double toTheta(double x, double y) {
 
 std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_line, CartesianLine& goal_line, bool turn) {
     if (goal.command == "move") {
+        abs_timer++;
         error_turn_casual = angleDifference(robot->items.imu->get_rotation(), old_angle);
         double turn = turn_casual.update(error_turn_casual);
         
@@ -105,7 +106,6 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         if (robot->items.master->get_digital(pros::E_CONTROLLER_DIGITAL_A))
             robot->items.master->print(0, 0, "%f", error);
         double power = dis.update(error);
-        abs_timer++;
 
         if (power > 127) power = 127;
         else if (power < -127) power = -127;
@@ -119,7 +119,9 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         }
         return v;
 
-    } else if (goal.command == "turn") {
+    } 
+    else if (goal.command == "turn") {
+        abs_timer++;
         is_turning = true;
         if (goal.param2 == 1)
             error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
@@ -135,16 +137,16 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
 
         if (robot->items.master->get_digital(pros::E_CONTROLLER_DIGITAL_A))
             robot->items.master->print(0, 0, "%f", error);
-
-        abs_timer++;
         return v;
-    } else if (goal.command == "power") {
+    } 
+    else if (goal.command == "power") {
         is_bashing = true;
         robot->set_both_sides(goal.param1, goal.param1);
         pros::delay(goal.param2);
         robot->break_absolute();
         return {0, 0};
-    } else if (goal.command == "curve") { //// @TODO
+    } 
+    else if (goal.command == "curve") { //// @TODO
         // // curve PID: (first val is mag, second is ending theta)
         // double x = sin(robot->degrees_to_radians(goal.param2)) * goal.param1;
         // double y = cos(robot->degrees_to_radians(goal.param2)) * goal.param1;
@@ -202,7 +204,8 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
 
         //     if (error < MIN_ALLOWED_ERROR) ti++;
         // }
-    } else if (goal.command == "swing") {
+    } 
+    else if (goal.command == "swing") {
         error_turn_casual = angleDifference(robot->items.imu->get_rotation(), goal.param1);
         double turn = swing.update(error);
         std::vector<double> v;
@@ -212,7 +215,8 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         if (abs(error_turn_casual) < MIN_ALLOWED_ERROR_DEG) timer++;
         abs_timer++;
         return v;
-    } else if (goal.command == "raw") {
+    } 
+    else if (goal.command == "raw") {
         double dx = goal.param1 - cx;
         double dy = goal.param2 - cy;
         error_turn_casual = angleDifference(robot->items.imu->get_rotation(), standrad_to_bearing(toTheta(dx, dy)));
@@ -241,6 +245,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
         return v;
         // return {0, 0};
     }
+    
     return {0, 0};
 }
 
@@ -377,7 +382,7 @@ void Autotuner::run(Waypoint command, int time) {
         double diff = 0;
         int i = 0;
         for (; i < model.size(); ++i) {
-            diff += proportional[i] / p[i];
+            diff += model[i] / p[i];
         }
         diff /= i;
         for (int i = 0; i < p.size(); ++i) {
@@ -386,7 +391,7 @@ void Autotuner::run(Waypoint command, int time) {
 
         double error = get_avg_error(model, p);
         if (error < best_error) { 
-            nKP = diff;
+            nKP = abs(diff);
             best_error = error; 
         }
     }
@@ -398,7 +403,7 @@ void Autotuner::run(Waypoint command, int time) {
         double diff = 0;
         int i = 0;
         for (; i < model.size(); ++i) {
-            diff += proportional[i] / (p[i] + d[i]);
+            diff += model[i] / (p[i] + d[i]);
         }
         diff /= i;
         for (int i = 0; i < d.size(); ++i) {
@@ -407,7 +412,7 @@ void Autotuner::run(Waypoint command, int time) {
 
         double error = get_avg_error(model, p, d);
         if (error < best_error) { 
-            nKD = diff;
+            nKD = abs(diff);
             best_error = error; 
         }
     }
@@ -416,7 +421,7 @@ void Autotuner::run(Waypoint command, int time) {
     pros::lcd::clear();
     pros::lcd::print(0, "PID Values:");
     pros::lcd::print(2, "KP: %f", nKP);
-    pros::lcd::print(3, "KI: Just do some small number...");
+    pros::lcd::print(3, "KI: 0.00001");
     pros::lcd::print(4, "KD: %f", nKD);
     // step 4 terminate...
     robot.items.stop();

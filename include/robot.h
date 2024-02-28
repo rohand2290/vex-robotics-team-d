@@ -8,7 +8,10 @@ private:
     int intake_state = 0;
     int lock_state = 0;
     double current_val = 0;
-    PID brake_pid;
+    int prev_volt_right = 0;
+    int prev_volt_left = 0;
+    PID brake_pid_left;
+    PID brake_pid_right;
 public:
     Items items;
     double x;
@@ -44,7 +47,8 @@ public:
     /// @brief Sets both sides of the chasis to a specific speed. Use this if loop delay is small.
     /// @param right analog of the right 
     /// @param left analog of the left
-    void set_both_sides(int right, int left);
+    /// @param slew slew mode
+    void set_both_sides(int right, int left, bool slew=true);
     /// @brief Set the speed of all the wheels on the chassis, depending on commands given from controller.
     /// @param y the y axis info.
     /// @param x the x axis info.

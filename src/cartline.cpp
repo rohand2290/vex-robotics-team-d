@@ -46,6 +46,7 @@ CartesianCircle::CartesianCircle(double H, double K, double R): h(H), k(K), r(R)
 double* CartesianCircle::eval(double x) {
     double c = sqrt(r*r - x*x);
     double tor[] = {c, -c};
+    return nullptr;
 }
 
 double CartesianCircle::derivative_at(double x) {

@@ -49,10 +49,10 @@ private:
 	double rel_l = 0;
 	double rel_r = 0;
     double rel_th = 0;
+public:
     // PID timer:
     int timer = 0;
     int abs_timer = 0;
-public:
     // PID Class:
     PID dis;
     PID turn_casual;

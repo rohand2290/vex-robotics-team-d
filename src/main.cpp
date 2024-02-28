@@ -132,7 +132,7 @@ std::vector<Waypoint> spawn1 = {
 	////// ================================================ DISRUPTION WINPOINT:
 	{"precise"},
 	{"out"},
-	{"move", 50.5},
+	{"move", 45},
 	{"wings"},
 	{"turn", 80},
 	{"pass"},
@@ -141,21 +141,26 @@ std::vector<Waypoint> spawn1 = {
 	{"wings"},
 	{"turn", 105},
 	{"in"},
-	{"move", 43},
+	{"move", 38.5},
 	{"stop"},
-	{"turn", 90},
+	{"turn", 105},
 	{"move", 12},
 	{"turn", 60},
+	{"move", 17},
+	{"turn", 45},
 	{"power", 63, 750},
 	{"move", -17.5},
 	{"turn", -45},
 	{"bwings"},
-	{"move", -20},
-	{"turn", -60},
+	{"move", -18},
+	{"turn", -85},
 	{"bwings"},
 	{"precise"},
-	{"turn", -165},
-	{"move", 36},
+	/*{"turn", -165},*/
+	{"move", -36},
+	{"hold"},
+	{"wait", 1000},
+	{"coast"},
 };
 // ============================================== Random thing that doesnt cause syntax errors ========================
 std::vector<Waypoint> SKILLS = {};
@@ -203,7 +208,7 @@ void autonomous()
 			else
 				break;
 
-			robot.set_both_sides(vect[1], vect[0]);
+			robot.set_both_sides(vect[1], vect[0], (current_goal.command == "turn") ? false : true);
 			maping.update();
 			pros::delay(AUTON_LOOP_DELAY);
 		} while (maping.is_running());
@@ -211,9 +216,9 @@ void autonomous()
 		robot.set_both_sides(0, 0);
 
 		// I dont think we need to reset this...
-		// maping.cx = 0;
-		// maping.cy = 0;
-		// maping.reset_all();
+		maping.cx = 0;
+		maping.cy = 0;
+		maping.reset_all();
 	}
 
 	// robot.set_both_sides(127, 127);
@@ -267,7 +272,7 @@ static void get_stats(Location& maping) {
 static void test_pid() {
 	std::vector<Waypoint> spawn1 = {
 		// TEST MOVEMENT:
-		{"turn", 90},
+		{"turn", 180},
 		//// or TEST TURN
 		// {"turn", 90},
 	};
@@ -292,7 +297,7 @@ static void test_pid() {
 			else
 				break;
 
-			robot.set_both_sides(vect[1], vect[0]);
+			robot.set_both_sides(vect[1], vect[0], (current_goal.command == "turn") ? false : true);
 			maping.update();
 			pros::delay(AUTON_LOOP_DELAY);
 		} while (true); // this is why this is a test
@@ -312,9 +317,13 @@ void opcontrol()
 	//get_stats(maping);
 	/*Tester test(robot, items);
 	test.test_chassis();*/
+	/*Autotuner a(maping, robot);
+	a.run({"move", 20}, 450);*/
 
 	items.autonmous = false;
 	items.stop();
+	items.master->clear();
+	pros::lcd::print(0, "I am in opcontroll");
 	// Driver Code:
 	while (true)
 	{
@@ -333,6 +342,10 @@ void opcontrol()
 		robot.set_cata(items.master->get_digital(DIGITAL_Y)
 			,items.master->get_digital_new_press(DIGITAL_X));
 		robot.set_blocker(items.master->get_digital_new_press(DIGITAL_B), items.master->get_digital_new_press(DIGITAL_A));
+		/*items.intake_left->move(127);
+		items.intake_right->move(127);*/
+		pros::lcd::print(0, "%f", items.imu->get_rotation());
+
 		pros::delay(OPCONTROL_LOOP_DELAY);
 	}
 }

@@ -10,13 +10,13 @@
 // ======== PORTS: ===========
 
 // Left drive:
-#define LEFT_WHEELS_PORT_1 20 // Defines the 1st port of the left wheels.
-#define LEFT_WHEELS_PORT_2 9 // Defines the 2nd port of the left wheels.
-#define LEFT_WHEELS_PORT_3 10 // Defines the 3rd port of the left wheels.
+#define LEFT_WHEELS_PORT_1 11 // Defines the 1st port of the left wheels.
+#define LEFT_WHEELS_PORT_2 2 // Defines the 2nd port of the left wheels.
+#define LEFT_WHEELS_PORT_3 1 // Defines the 3rd port of the left wheels.
 // Right drive:
-#define RIGHT_WHEELS_PORT_1 11 // Defines the 1st port of the right wheels.
-#define RIGHT_WHEELS_PORT_2 2 // Defines the 2nd port of the right wheels.
-#define RIGHT_WHEELS_PORT_3 1 // Defines the 3rd port of the right wheels.
+#define RIGHT_WHEELS_PORT_1 20 // Defines the 1st port of the right wheels.
+#define RIGHT_WHEELS_PORT_2 9 // Defines the 2nd port of the right wheels.
+#define RIGHT_WHEELS_PORT_3 10 // Defines the 3rd port of the right wheels.
 
 // Intake mechanism:
 #define INTAKE_PORT_LEFT 8 // Defines the 1st port of the left side of intake.
@@ -46,7 +46,7 @@
 // ============== Auton: ================
 // gamemode:
 //#define SKILLS
-#define JOYSTICK_DEADZONE 10 // deadzone analog value for which drive wont be triggered.
+#define JOYSTICK_DEADZONE 5 // deadzone analog value for which drive wont be triggered.
 // trackion wheels:
 #define WHEEL_C 8.63937979737 // wheel circumference
 #define TICKS_PER_REVOLUTION 300
@@ -64,13 +64,13 @@
 #define MAX_I_VAL 360
 #define MIN_I_VAL -360
 // power:
-#define POWER_KP 0.899
-#define POWER_KI 0.00001
-#define POWER_KD 0
+#define POWER_KP 9.5 //0.899
+#define POWER_KI 0.001
+#define POWER_KD 0.1
 // turn:
-#define TURN_KP 0.17
-#define TURN_KI 0.00001
-#define TURN_KD 0.001
+#define TURN_KP 1.225
+#define TURN_KI 0.0000001
+#define TURN_KD 0.01
 // cata:
 #define CATA_KP 2.5
 // break:
@@ -84,11 +84,11 @@
 #define SENSITIVE_FACTOR 2.7 // leave same if doesnt work
 // ======================= ODOM: ========================
 #define ERROR_MEASUREMENT 0.05
-#define MECH_ADVANTAGE 0.6 // mechanical advantage between drive motors and wheels.
+#define MECH_ADVANTAGE 0.70356244544 // mechanical advantage between drive motors and wheels.
 
 // maximum allowed error:
 #define MIN_ALLOWED_ERROR 1.7
-#define MIN_ALLOWED_ERROR_DEG 6.5
+#define MIN_ALLOWED_ERROR_DEG 4.5
 #define MIN_ALLOWED_ERROR_TIME 100
 #define MIN_ALLOWED_ERROR_TIMEOUT_DEG 1000
 #define MIN_ALLOWED_ERROR_TIMEOUT 3000
@@ -103,8 +103,9 @@
 #define AUTON_LOOP_DELAY 1 // ms
 #define PI 3.141592653589793
 #define ROBOT_WIDTH 3.54331 // in
+#define SLEW_RATE 270 // some unit...
 // accuracy adjustments: the smaller, the more accurate. avoid making it 0
-#define ACCURACY 0.01
+#define ACCURACY 0.25
 #define G 9.80665
 
 #endif // VARIABLES_H
