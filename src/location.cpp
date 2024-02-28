@@ -317,7 +317,7 @@ static double get_avg_error(std::vector<double> model, std::vector<double> depic
  * @param command sample command to follow
  * @param time amt of time to take for movement
  */
-constexpr int MAX_ITERATIONS = 100;
+constexpr int MAX_ITERATIONS = 3;
 void Autotuner::run(Waypoint command, int time) {
     std::vector<double> proportional;
     std::vector<double> integral;

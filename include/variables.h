@@ -29,11 +29,11 @@
 
 // Pistons:
 #define INTAKE_PISTON_PORT 69
-#define PTO_CATA 'C'
+#define PTO_CATA 'H'
 #define PTO_INTAKE 'C'
-#define PTO_CLIMB 'C'
-#define WING_1_PORT 'B'
-#define WING_2_PORT 'A'
+#define PTO_CLIMB 'H'
+#define WING_1_PORT 'F'
+#define WING_2_PORT 'G'
 
 // IMU:
 #define IMU_PORT 19
