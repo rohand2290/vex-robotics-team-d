@@ -3,8 +3,8 @@
 #include "robot.h"
 
 static void set_in(int a, Items& items) {
-    items.intake_left->move(a);
-    items.intake_right->move(a);
+    items.intake_left->move_voltage(a * 120000.0 / 127);
+    items.intake_right->move_voltage(a * 120000.0 / 127);
 }
 
 double Robot::get_cata_position() {
@@ -88,7 +88,7 @@ void Robot::set_both_sides(int right, int left, bool slew)
         // sensitive for auton:
         right *= 12000.0 / 127;
         left *= 12000.0 / 127;
-        if (slew) {
+        /*if (slew) {
             if (abs(right - prev_volt_right) > SLEW_RATE && abs(right) < 12000) {
                 if (right < prev_volt_right) right = prev_volt_right - SLEW_RATE;
                 else right = prev_volt_right + SLEW_RATE;
@@ -103,7 +103,7 @@ void Robot::set_both_sides(int right, int left, bool slew)
         else {
             prev_volt_left = 0;
             prev_volt_right = 0;
-        }
+        }*/
 
         items.right1->move_voltage(right);
         items.left1->move_voltage(left);
@@ -175,11 +175,11 @@ void Robot::set_intake(int analog1, int analog2, int pist)
         // set intake to high
         set_in(-127, items);
     }
-    else if (analog2) {
+    if (analog2) {
         // set intake to high
         set_in(127, items);
     }
-    else {
+    if (!analog1 && !analog2) {
         // set intake to low
         set_in(0, items);
     }
@@ -193,7 +193,7 @@ void Robot::set_cata(int analog, int analog2) {
         // items.cata->move(0);
 
         // disable cata pto
-        set_in(0, items);
+        //set_in(0, items);
     }
     else {
         // engage cata pto
