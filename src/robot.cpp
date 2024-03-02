@@ -3,8 +3,17 @@
 #include "robot.h"
 
 static void set_in(int a, Items& items) {
-    items.intake_left->move_voltage(a * 120000.0 / 127);
-    items.intake_right->move_voltage(a * 120000.0 / 127);
+    if (a > 0) {
+        items.intake_left->move_velocity(100);
+        items.intake_right->move_velocity(100);
+    } else if (a < 0) {
+        items.intake_left->move_velocity(-100);
+        items.intake_right->move_velocity(-100);
+    }
+    else {
+        items.intake_left->brake();
+        items.intake_right->brake();
+    }
 }
 
 double Robot::get_cata_position() {
@@ -193,12 +202,18 @@ void Robot::set_cata(int analog, int analog2) {
         // items.cata->move(0);
 
         // disable cata pto
+        items.pto_cata->set_value(0);
         //set_in(0, items);
     }
     else {
-        // engage cata pto
+        if (items.intake_pos) {
+            items.intake_pos = 0;
+            items.pto_climb->set_value(0);
+        }
+        items.pto_cata->set_value(1);
         // items.cata->move_voltage(120000);
-        set_in(-127, items);
+        items.intake_left->move_velocity(50);
+        items.intake_right->move_velocity(50);
     }
 }
 

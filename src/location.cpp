@@ -249,7 +249,7 @@ std::vector<double> Location::updatePID(Waypoint& goal, CartesianLine& robot_lin
     return {0, 0};
 }
 
-void Location::reset_all()
+void Location::reset_all(bool angle)
 {
     robot->items.left2->tare_position();
 	robot->items.right2->tare_position();
@@ -259,7 +259,7 @@ void Location::reset_all()
 	robot->items.right3->tare_position();
 
     old_angle += robot->items.imu->get_rotation();
-    robot->items.imu->tare_rotation();
+    if (!angle) robot->items.imu->tare_rotation();
     dis.reset();
     turn_casual.reset();
     swing.reset();

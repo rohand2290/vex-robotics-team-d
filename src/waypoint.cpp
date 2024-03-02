@@ -55,12 +55,20 @@ bool Waypoint::execute_aux_command(Robot* robot) {
         robot->items.wings_back->set_value(robot->items.wing_back_pos);
     } else if (command == "rise") {
         robot->items.pto_climb->set_value(1);
+        robot->items.intake_left->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        robot->items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     } else if (command == "fall") {
         robot->items.pto_climb->set_value(0);
+        robot->items.intake_left->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        robot->items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     } else if (command == "coast") {
         robot->set_coast();
+        robot->items.intake_left->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        robot->items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     } else if (command == "hold") {
         robot->set_hold();
+        robot->items.intake_left->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        robot->items.intake_right->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     } else if (command == "wait") {
         pros::delay(param1);
     } else if (command == "spamcata") {

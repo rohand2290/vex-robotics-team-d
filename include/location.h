@@ -89,7 +89,7 @@ public:
     /// @return Vector of motor values. (0 is left, 1 is right)
     std::vector<double> updatePID(Waypoint& goal, CartesianLine& robot_line, CartesianLine& goal_line, bool turn = false);
     /// @brief Resets all encoders to 0
-    void reset_all();
+    void reset_all(bool angle=false);
     /// @brief Checks if PID is still running...
     /// @return true (done) or false (not done)
     bool is_running();
